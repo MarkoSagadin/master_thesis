@@ -1,0 +1,103 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage{anyfontsize}    % For setting exact font size
+\usepackage{geometry}
+\geometry{a4paper, left = 35 mm, right = 25mm, top = 30mm, bottom = 30mm}   % Margins
+\usepackage[utf8]{inputenc}     % For slovenian characters
+
+\usepackage{sectsty}    % For setting font size of chapters 
+\usepackage{titlesec}   % For setting the shape of chapters
+
+\def\poglavje{\fontsize{18}{18}\selectfont}
+\def\podpoglavje{\fontsize{14}{18}\selectfont}
+% Use for thesis
+\titleformat{\chapter}[hang]
+  {\poglavje\bfseries}{\thechapter }{0pt}{\poglavje}
+
+\titleformat{\section}[hang]
+  {\poglavje\bfseries}{\thesection }{0pt}{\poglavje}
+  %{\normalfont}{\thesection}{0pt}{\podpoglavje}    %Use for thesis
+\usepackage{lipsum}  
+\frenchspacing     % One space after period dot
+
+\begin{document}
+\input{titlepage/titlepage}
+
+\section{ Opredelitev oz. opis problema ter raziskovalna vprašanja, ki so predmet zaključnega dela}
+
+Inštitut IRNAS se ukvarja z razvojem naprednih aplikativnih sistemov. 
+Njihovi produkti obsegajo področja kot so brezžični optični sistemi, IOT naprave in senzorji ter 3D bioprinterji. 
+Arribada Initiative je ekipa iz Londona, Velike Britanije, ki uporablja odprto kodne tehnološke rešitve za namene ohranjanja živalskih vrst. 
+Smart Parks je organizacija, ki s pomočjo modernih tehnologij podpira ohranjanje živalskih vrst in preprečuje ilegalni lov. 
+Njihov nedavni projekt je reševanje konfliktov med ljudmi in sloni v Assamu, Indiji. Cilj Arribade in Smart Parks-a je skupaj z Inštitutom Irnas razviti opozorilni varnostni sistem, ki bo opozarjal lokalne skupnosti o prisotnosti slonov v njihovi bližini. 
+Sistem bi zajemal slike okolice s termalno kamero in s pomočjo algoritmov strojnega učenja prepoznaval, če je na zajetih slikah slon. 
+V primeru uspešne prepoznave slona bi naprava preko brezžične povezave poslala sporočilo na strežnik, ta bi pa obvestil lokalno skupnost.
+
+\vspace{\baselineskip}
+
+
+\section{ Cilji in teze}
+
+Cilj magisterskega dela je načrtati in zasnovati napravo, ki bo sposobna detektirati slona s pomočjo modela strojnega učenja in opozorilo poslati preko brezžičnega omrežja na strežnik. 
+Potrebno bo načrtati in izdelati elektronsko vezje, ustvariti model strojnega učenja, optimiziran za mikrokrmilnike, ki bo sposoben zaznave slonov iz termalnih slik in naučen model implementirati na mikrokrmilniku. Cilj je tudi zasnovati celotni sistem tako da bo poraba energije čim manjša, saj bo naprava baterijsko napajana.
+
+\vspace{\baselineskip}
+
+
+\section{ Predpostavke in omejitve}
+
+Predpostavljamo, da bo naprava postavljena nekje v gozdu, daleč od podporne infrastrukture.
+Naprava mora opravljati svojo nalogo neglede na vremenske razmere in svetlobne pogoje. 
+Naprava mora biti majhna, mobilna, preprosta za namestitev na drevesa ali druge objekte.
+
+Osnovna predpostavka je da bo naprava zajemala termalne slike s pomočjo modula FLIR Lepton. 
+Modul je izbrala skupina Arribada, ki je z njim že posnela vrsto slik slonov.
+Od zajetja slike slona do tega, da bližnja lokalna skupnost prejme opozorilo ne sme miniti veliko časa.
+Naučen model strojnega učenja, ki bo prepoznaval slone, mora biti dovoj preprost in hiter, da bo deloval na mikrokrmilniku v realnem času.
+Hkrati mora tudi mikrokrmilnik biti dovolj zmogljiv.
+Zahteva se, da je zmožen sprocesirati sliko v največ petih sekundah. 
+
+Ker bo naprava nekje v divjini, je zahtevano baterijsko napajanje, kakor tudi solarni panel. 
+Kapaciteta polnilnih baterij tipa Litij-Ion naj omogoča avtonomijo normalnega delovanja naprave za vsaj en teden.
+
+Komunikacija med napravo in strežnikom bo potekala preko brezžičnega omrežja LoRa.
+Ta tehnologija je bila izbrana zato, ker omogoča komunikacijo na daljše razdalje (10 km in več) in ne potrebuje veliko energije za oddajanje ali sprejemanje podatkov.
+Hkrati pa bo ta tehnologija predstavljala omejitev prenosa podatkov, saj bomo lahko preko omrežja LoRa pošiljali samo 500 bajtov dnevno. 
+
+\vspace{\baselineskip}
+
+
+\section{ Predvidene metode}
+
+Elektronsko vezje bo načrtano s pomočjo programa Altium Designer.
+Model strojnega učenja bo realiziran s programskim ogrodjem TensorFlow Lite ali Keras.
+Koda za mikrokrmilnik bo napisana v programskih jezikih C in C++.
+Koda za strežnik bo napisana v programskih jezikih NodeRed, JavaScript in Python.
+
+\vspace{\baselineskip}
+
+
+\section{ Predvidena struktura poglavij}
+\begin{itemize}
+    \item Uvod 
+    \item Teoretični opis gradnikov sistema
+    \item Načrtovanje in zasnova sistema  
+    \item Meritve in rezultati
+    \item Zaključek 
+    \item Viri in literatura
+\end{itemize}
+\vspace{\baselineskip}
+
+\section{ Seznam predvidene literature in virov}
+
+\begin{itemize}
+    \item Aurélien Géron. Hands-on Machine Learning with Scikit-Learn and TensorFlow, O’Reilly (2017)
+    \item Daniel Situnayake, Pete Warden. TinyMl, O’Reilly (2019)
+    \item Reiner Korthauer. Lithium-Ion Batteries: Basics and Applications, Springer (2018)
+    \item Perry Lea. Internet of Things for Architects: Architecting IoT Solutions by Implementing Sensors, Communication Infrastructure, Edge Computing, Analytics, and Security, Packt (2018)
+    \item Klaus-Peter Möllmann, Michael Vollmer. Infrared Thermal Imaging: Fundamentals, Research and Applications, 2nd edition, Wiley, (2018)
+\end{itemize}
+
+\end{document}
+
