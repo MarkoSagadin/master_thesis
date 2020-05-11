@@ -1,0 +1,5 @@
+PWD D:\Ostalo staro\Magisterska\dispozicija\titlepage
+INPUT C:\Users\MarkoSagadin\AppData\Local\MiKTeX\2.9\miktex\data\le\pdftex\pdflatex.fmt
+INPUT titlepage.tex
+OUTPUT titlepage.log
+INPUT D:\Program Files\latex\fonts\tfm\public\cm\cmbx10.tfm

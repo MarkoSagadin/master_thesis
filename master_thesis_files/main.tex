@@ -1,0 +1,62 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage{anyfontsize}    % For setting exact font size
+\usepackage{geometry}       % For setting margins
+\geometry{a4paper, left = 35 mm, right = 25mm, top = 30mm, bottom = 30mm}
+\usepackage[utf8]{inputenc}     % For slovenian characters
+
+\usepackage{sectsty}    % For setting font size of chapters 
+\usepackage{titlesec}   % For setting the shape of chapters
+
+\def\poglavje{\fontsize{18}{18}\selectfont}
+\def\podpoglavje{\fontsize{14}{18}\selectfont}
+
+% Use for thesis
+\titleformat{\chapter}[hang]
+  {\poglavje\bfseries}{\thechapter }{0pt}{\poglavje}
+
+\titleformat{\section}[hang]
+  {\poglavje\bfseries}{\thesection }{0pt}{\poglavje}
+  %{\normalfont}{\thesection}{0pt}{\podpoglavje}    %Use for thesis
+\usepackage{lipsum}  
+\frenchspacing     % One space after period dot
+
+\begin{document}
+
+%Zaključno delo, izdelano v tujem jeziku, mora vsebovati:
+%• naslov zaključnega dela v tujem in slovenskem jeziku,
+%• razširjen povzetek v slovenskem jeziku, ki mora po količini obsegati najmanj 5 %
+%celotnega dela (od prvega do zadnjega poglavja, brez seznama virov ter prilog),
+%•zaključno delo mora biti lektorirano s strani lektorja angleškega jezika.
+
+
+
+% Mandatory parts of thesis, should delete later
+
+% naslovna stran na platnici, tega ni v latex dokumentu
+% • notranja naslovna stran v zaključnem delu,
+% • naslednja notranja naslovna stran
+% • zahvala
+% • stran z naslovom, ključnimi besedami, UDK [1] klasifikacijo in povzetkom
+% zaključnega dela v slovenskem jeziku,
+% •
+% stran z naslovom, ključnimi besedami, UDK 1 klasifikacijo in povzetkom zaključnega
+% dela v angleškem jeziku,
+% • kazalo vsebine,
+% • kazalo slik,
+% • kazalo grafov
+% • kazalo tabel,
+% • seznam uporabljenih simbolov in kratic,
+% • vsebina zaključnega dela,
+% • seznam uporabljenih virov in literature,
+% • priloge k zaključnemu delu,
+% • izjava o avtorstvu in istovetnosti tiskane in elektronske oblike zaključnega dela v
+% trdo vezanem izvodu (v preostalih izvodih naj bo fotokopija),
+
+\input{chapters/titlepage/titlepage}
+\input{chapters/second_titlepage/second_titlepage}
+
+
+\end{document}
+
