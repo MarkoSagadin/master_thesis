@@ -1,3 +1,6 @@
 tags
 *.dvi
 *.synctex.gz
+*.fls
+*.log
+*.fdb_latexmk
