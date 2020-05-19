@@ -1,14 +1,14 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[a4paper,12pt]{report}
 \usepackage{graphicx}
 \graphicspath{ {./images/} }
 \usepackage{anyfontsize}    % For setting exact font size
 \usepackage{geometry}       % For setting margins
 \geometry{a4paper, left = 35 mm, right = 25mm, top = 30mm, bottom = 30mm}
 \usepackage[utf8]{inputenc}     % For slovenian characters
-
 \usepackage{sectsty}    % For setting font size of chapters 
 \usepackage{titlesec}   % For setting the shape of chapters
 \usepackage{lipsum}     % Lorem ipsum package for dummy text
+\usepackage[parfill]{parskip}   % No indent
 
 \def\poglavje{\fontsize{18}{18}\selectfont}
 \def\podpoglavje{\fontsize{14}{18}\selectfont}
@@ -17,10 +17,14 @@
 \titleformat{\chapter}[hang]
   {\poglavje\bfseries}{\thechapter }{0pt}{\poglavje}
 
+\titlespacing{\chapter}{0pt}{25mm}{18pt}
+
 \titleformat{\section}[hang]
   {\poglavje\bfseries}{\thesection }{0pt}{\poglavje}
   %{\normalfont}{\thesection}{0pt}{\podpoglavje}    %Use for thesis
+
 \usepackage{lipsum}  
+
 \frenchspacing     % One space after period dot
 
 \begin{document}
@@ -38,14 +42,17 @@
 % naslovna stran na platnici, tega ni v latex dokumentu
 % • notranja naslovna stran v zaključnem delu,
 % done
+
 % • naslednja notranja naslovna stran
 % nevem če je pravi naziv za krambergerja in vojislava preveri
+
 % • zahvala
+% layout ok, so problemi če je preveč teksta, dejansko še moraš napisati zahvalo.  
 % • stran z naslovom, ključnimi besedami, UDK [1] klasifikacijo in povzetkom
 % zaključnega dela v slovenskem jeziku,
-% •
-% stran z naslovom, ključnimi besedami, UDK 1 klasifikacijo in povzetkom zaključnega
+% • stran z naslovom, ključnimi besedami, UDK 1 klasifikacijo in povzetkom zaključnega
 % dela v angleškem jeziku,
+% Izgleda ok, potrebno je dopolniti
 % • kazalo vsebine,
 % • kazalo slik,
 % • kazalo grafov
@@ -57,9 +64,25 @@
 % • izjava o avtorstvu in istovetnosti tiskane in elektronske oblike zaključnega dela v
 % trdo vezanem izvodu (v preostalih izvodih naj bo fotokopija),
 
-\input{chapters/titlepage/titlepage}
-\input{chapters/second_titlepage/second_titlepage}
-\input{chapters/acknowledgement/acknowledgement}
-dsjladkjas
+\input{chapters/titlepage}
+\input{chapters/second_titlepage}
+\input{chapters/acknowledgement}
+\input{chapters/abstract}
+
+\chapter{ Introduction}
+\input{chapters/chapter1}
+
+\chapter{ Theoretical description of system building blocks}
+\input{chapters/chapter2}
+
+\chapter{ Planning and design of system}
+\input{chapters/chapter3}
+
+\chapter{ Planning and design of system}
+\input{chapters/chapter4}
+
+\chapter{ Measurements and results}
+\input{chapters/chapter5}
+
 \end{document}
 
