@@ -9,21 +9,24 @@
 \usepackage{titlesec}   % For setting the shape of chapters
 \usepackage{lipsum}     % Lorem ipsum package for dummy text
 \usepackage[parfill]{parskip}   % No indent
-
+\usepackage{setspace}   % For 1 and half spacing between lines
+\linespread{1.5}       % Look above
+\usepackage{hyperref}
+\usepackage{cite}
 \def\poglavje{\fontsize{18}{18}\selectfont}
 \def\podpoglavje{\fontsize{14}{18}\selectfont}
+\def\podpodpoglavje{\fontsize{14}{18}\selectfont}
 
 % Use for thesis
 \titleformat{\chapter}[hang]
   {\poglavje\bfseries}{\thechapter }{0pt}{\poglavje}
 
-\titlespacing{\chapter}{0pt}{25mm}{18pt}
-
 \titleformat{\section}[hang]
-  {\poglavje\bfseries}{\thesection }{0pt}{\poglavje}
-  %{\normalfont}{\thesection}{0pt}{\podpoglavje}    %Use for thesis
+  {\podpoglavje}{\thesection }{0pt}{\podpoglavje}
 
-\usepackage{lipsum}  
+\titleformat{\subsection}[hang]
+  {\podpoglavje}{\thesubsection }{0pt}{\podpodpoglavje}
+
 
 \frenchspacing     % One space after period dot
 
@@ -86,6 +89,9 @@
 
 \chapter{ Measurements and results}
 \input{chapters/chapter5}
+\cite{latexcompanion}
 
+\bibliographystyle{myunsrt}
+\bibliography{chapters/literature}
 \end{document}
 

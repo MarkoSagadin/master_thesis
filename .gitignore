@@ -4,3 +4,10 @@ tags
 *.fls
 *.log
 *.fdb_latexmk
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.out
+*.run.xml
+*.swp
