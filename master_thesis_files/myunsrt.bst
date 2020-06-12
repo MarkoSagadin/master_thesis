@@ -284,8 +284,9 @@ FUNCTION {format.month}
 }
 
 FUNCTION {format.year}
-{ year }
+{ year 
 }
+
 FUNCTION {format.btitle}
 { title emphasize
 }
@@ -763,16 +764,21 @@ FUNCTION {mastersthesis}
 
 FUNCTION {misc}
 { output.bibitem
-  format.authors output
-  title howpublished new.block.checkb
-  format.title output
-  howpublished new.block.checka
-  howpublished output
-  format.date output
+  format.authors "Author" output.check
   new.block
-  note output
+  format.title "title" output.check
+  new.block
+  "Available on: " howpublished * output
+%  new.block
+  %title howpublished new.block.checkb
+  %format.title output
+  %howpublished new.block.checka
+  %howpublished output
+  %format.date output
+  %new.block
+  "[" note * "]" * output
   fin.entry
-  empty.misc.check
+  %empty.misc.check
 }
 
 FUNCTION {phdthesis}
