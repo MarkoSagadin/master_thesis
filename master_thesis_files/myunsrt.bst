@@ -764,7 +764,7 @@ FUNCTION {mastersthesis}
 
 FUNCTION {misc}
 { output.bibitem
-  format.authors "Author" output.check
+  format.authors output
   new.block
   format.title "title" output.check
   new.block
