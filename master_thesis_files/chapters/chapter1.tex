@@ -11,7 +11,7 @@ Unexpected encounters can turn deadly for for both sides.
 As wide ranging animals, tigers need large areas where they can roam, hunt and breed\cite{wildlabs-tigers}.
 When their natural prey population is depleted they often turn their attention to poorly protected livestock. 
 Their attacks often have economic, social and psychological consequences.
-According to WILDLABS, tigers killed 101 people, between years 2013 and 2016, in India alone\cite{wildlabs-tigers}.
+According to WILDLABS, tigers killed 101 people between years 2013 and 2016, in India alone\cite{wildlabs-tigers}.
 
 As herbivores, elephants might be seen as less problematic when compared to polar bears or tigers, but this assumption could not be further from the truth.
 Although exact numbers vary between sources, casualties from human-elephant conflicts are much higher compared to conflicts involving polar bears or tigers.
@@ -40,3 +40,28 @@ Although above mentioned measures function to some degree, they are not effectiv
 One important component of minimizing human-elephant conflicts is a reliable early detection system. 
 System able of detecting presence of nearby elephants would warn nearby communities and give them enough time to prepare and respond nonviolently.
 Same kind of system would also provide information about common elephants paths, thus giving farmers knowledge how to better construct and place their fences, barricades, to minimize human-elephant conflict.
+System should consist of of several small, deployed devices with mounted cameras, that will detect elephants and one server, which will aggregate alerts and forward them somewhere where local community will see them.
+TODO: MAYBE A PICTURE OF SETUP???
+
+Obvious workflow would be that a deployed device makes a picture of its surrounding and sends it over wireless network to main server for processing.
+Although most of villages in Sonitpur district have access to cell phones and internet, the connectivity can be unreliable\cite{wildlabs-elephants}. 
+Additionally devices will be placed quite far from main server, which makes sending large amount of data a problem. 
+This limits choice of wireless networks to long range technologies.
+It is therefore preferable that elephant detection is done on deployed device and only results (which can be big few bytes) are send over some radio network to main server.
+Deployed devices will be placed in forests, fields, with no access to electricity, therefore they need to be battery powered.
+Low maintenance of deployed devices is a desirable quality, which means that they should be functional for longer periods of time without any human interactions.
+To achieve that with limited power source, they should be energy efficient, equipped with solar panels and a low power radio.
+Device should spent most of their time in sleep mode, conserving energy, only waking up to make a photo, processing it and sending results to main server.
+As most of the human-elephant conflicts happen during night\cite{wildlabs-elephants}, thermal camera is needed.
+
+Elephant recognition is can be done with a help of convolutional neural network (CNN) running inference on a microcontroller. 
+Making this possible is the focus of this master's thesis.
+
+
+\section{ IRNAS, Arribada and Smart Parks}
+
+Above described system is currently in development at IRNAS in collaboration with Arribada Initiative and Smart Parks.
+Slovenia based Institute IRNAS offers a complete development service, bringing idea to the finished product. 
+Its previous projects cover a wide range of different fields, from free space optical systems, bio-printing, to IoT solutions which cover industrial and nature conservative use cases.
+Arribada Initiative is London based team, that uses open source solutions for purposes of nature conservation.
+Smart Parks from Netherlands is a company which uses modern technologies to preserve animal species and prevent poaching.
