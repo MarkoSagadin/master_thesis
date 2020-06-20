@@ -54,14 +54,31 @@ To achieve that with limited power source, they should be energy efficient, equi
 Device should spent most of their time in sleep mode, conserving energy, only waking up to make a photo, processing it and sending results to main server.
 As most of the human-elephant conflicts happen during night\cite{wildlabs-elephants}, thermal camera is needed.
 
-Elephant recognition is can be done with a help of convolutional neural network (CNN) running inference on a microcontroller. 
-Making this possible is the focus of this master's thesis.
+Elephant recognition can be done with a help of convolutional neural network (CNN) running inference on a microcontroller. 
+Making this possible and evaluating the solution is the focus of this master's thesis.
 
 
-\section{ IRNAS, Arribada and Smart Parks}
+\section{ IRNAS and Arribada Initiative}
 
-Above described system is currently in development at IRNAS in collaboration with Arribada Initiative and Smart Parks.
-Slovenia based Institute IRNAS offers a complete development service, bringing idea to the finished product. 
+Above described system is currently in development at IRNAS in collaboration with Arribada Initiative.
+Slovenia based Institute IRNAS offers a complete development service, starting with idea on paper and ending with the finished product. 
 Its previous projects cover a wide range of different fields, from free space optical systems, bio-printing, to IoT solutions which cover industrial and nature conservative use cases.
-Arribada Initiative is London based team, that uses open source solutions for purposes of nature conservation.
-Smart Parks from Netherlands is a company which uses modern technologies to preserve animal species and prevent poaching.
+Arribada Initiative is a London based team, that uses open source solutions for purposes of nature conservation.
+As winner of WWF and WILDLABS Human Widlife Conflict Tech Challenge\cite{wildlabs-winners}, Arribada received funding to develop early detection system.
+They spent some time in Assam, India, where they did testing of proof-of-concept design\cite{arribada-assam}.
+They decided on devices with thermal cameras, as human-elephant conflicts often happen during the night.
+Sensor of choice was FLIR Lepton 2.5 and or 3.5.
+They also created large dataset of elephants pictures while filming elephants in Whipsnade's zoo in United Kingdom. 
+This dataset will be important for training neural network and it will be discussed in TODO: ADD CHAPTER NUMBER.
+To create a final embedded system with on device machine learning, Arribada chose to work with IRNAS.
+
+
+\section{ Machine learning on embedded devices}
+
+It is worth describing the field of machine learning and its current position in world of small, embedded devices before continuing to objectives of this master's thesis.
+According to Arthur Samuel (qtd. in Geron \cite{geron}) machine learning is a field of study that gives computers the ability to learn without being explicitly programmed.\cite{tinyml}
+Pioneering research was done in 1950s, but several factors like reduced funding and interest, combined with incapable technology prevented machine learning to expand.
+In early 2000s several new methods are invented and in 2010s deep learning, sub-field of machine learning, becomes feasible because of advances in computer technology.TODO CITATES NEEDED.
+Today machine learning algorithms are present in many software products that we often use. 
+They can be found in email spam detection, Youtube recommendation algorithms, autonomous cars and robots.
+
