@@ -76,9 +76,55 @@ To create a final embedded system with on device machine learning, Arribada chos
 \section{ Machine learning on embedded devices}
 
 It is worth describing the field of machine learning and its current position in world of small, embedded devices before continuing to objectives of this master's thesis.
-According to Arthur Samuel (qtd. in Geron \cite{geron}) machine learning is a field of study that gives computers the ability to learn without being explicitly programmed.\cite{tinyml}
-Pioneering research was done in 1950s, but several factors like reduced funding and interest, combined with incapable technology prevented machine learning to expand.
-In early 2000s several new methods are invented and in 2010s deep learning, sub-field of machine learning, becomes feasible because of advances in computer technology.TODO CITATES NEEDED.
+We will only mention some high level concepts of machine learning in this section, low level details specific to neural networks will be described in section TODO: ADD SECTION NUMBER.
+
+According to Arthur Samuel (qtd. in Geron \cite{geron}) machine learning is a field of study that gives computers the ability to learn without being explicitly programmed.
+This ability to learn is the property of various machine learning algorithms.
+We will be using "machine learning" and "learning" terms interchangeably. 
+In order to learn, these learning algorithms need to be trained on a collection of examples of some phenomenon\cite{burkovml}. 
+These collections are called \textbf{datasets} and can be generated artificially or collected in nature.
+
+An example of a learning algorithm is a system that can predict type of animal movement from an accelerometer sensor.
+To train such system, also known as a \textbf{model}, we need expose it to a dataset which would contain accelerometer measurements of different types of movement, such a walking, running, jumping and standing still.
+Input to the system could be either raw measurements from all three axis or components extracted from raw measurements such as frequency or amplitude. 
+These inputs are also known as \textbf{features}, they are values that describe phenomenon being observed\cite{burkovml}. 
+Output of the system would be a predicted type of movement.
+Although we would label each example of measurement data what type of movement it represents, we would not directly define the relationship between the two.
+Instead we would let the model to figure out connection by itself, through process of training.
+Trained model should be general enough so it can correctly predict type of movement on unseen accelerometer data.
+
+There exists a large variety of different learning algorithms. 
+Algorithms like K-nearest neighbours, linear and logistic regression, support vector machines fall into category of supervised learning algorithms.
+Training data that is fed into them includes solutions, also known as \textbf{labels}\cite{geron}.
+Described example would be solved with a supervised learning algorithm.
+Algorithms like k-Means, Expectation Maximization, Principal Component Analysis fall into category of unsupervised learning algorithms.
+Training data is unlabeled, algorithms are trying to find similarities in data by itself\cite{geron}.
+Neural networks, algorithms inspired by neurons in human brains\cite{geron}\cite{cs231n}, can fall into either of categories. 
+
+
+
+
+
+Describe state of ML in embedded
+
+
+
+
+
+There is a large variety of different learning algorithms: regression, classification, decision trees, neural networks, etc. 
+These algorithms are capable of automating tasks that humans can do instantly, like price predictions, movie genre recommendations, recognition of objects, recognition of outlier values, driving cars and others.
+Writing deterministic algorithms for before mentioned tasks is hard, as we can not capture every possible input of real world in code, writing an algorithm that can recognize a cat from a picture would be an impossible task.
+
+There are however two important aspects of machine learning that make learning algorithms to use in practice, when compared to deterministic ones.
+First one is large amount of training data.
+In order for machine learning algorithms to learn, they need to be trained on data that will represent actual input that algorithms will receive once they will be deployed in the real world. 
+Creating such datasets is usually hard
+
+
+
+
+
+
 Today machine learning algorithms are present in many software products that we often use. 
 They can be found in email spam detection, Youtube recommendation algorithms, autonomous cars and robots.
 
