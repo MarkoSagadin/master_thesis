@@ -107,15 +107,30 @@ There exist other categories such as semi-supervised learning which is a combina
 
 Neural networks, algorithms inspired by neurons in human brains\cite{geron}\cite{cs231n}, can fall into either of categories. 
 They are appropriate for solving complex problems like image classification, speech recognition and autonomous driving, but they require large amount of data and computing power to function correctly.
+They fall into deep learning, which is a sub-field of machine learning.
 
 Today machine learning algorithms are present in many software products that we often use. 
 They can be found in email spam detection, recommendation algorithms on Facebook and Youtube, speech recognition on smartphones and virtual personal assistants. 
 
+Training of deep learning algorithms is computationally demanding and is usually done on powerful servers or computers with dedicated graphic processing units to speed up training time.
+After model has been trained, they can fed it data and get prediction in return. 
+This process is also known as \textbf{inference}.
+Inference is less computationally intensive compared to training process, so with properly optimized model we can run inference on personal computers, smartphones, tablets and even directly in internet browsers.
+
 
 \subsection{ Machine learning on embedded devices}
 
+Machine learning on embedded devices is an emerging field, resources directly connected with are scarce.
+Most of the information about it can be found in form of scientific papers, blog posts and machine learning framework documentation.TODO: CITE STUFF
 
-Describe state of ML in embedded
 
+There have been several papers on this topic
+https://arxiv.org/abs/1711.07128
+https://arxiv.org/abs/1906.05721
+https://edge.seas.harvard.edu/publications/towards-deep-learning-using-tensorflow-lite-risc-v
+
+* Not many resources availible
+* Train, convert model, deploy to micro
+* Possible ways to do this, no framework, tflite, stm, cmsis
 
 
