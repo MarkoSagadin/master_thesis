@@ -7,17 +7,17 @@ In more severe cases these conflicts end in defensive or retaliatory killings of
 
 Polar bears, tigers and elephants are generally considered to be most problematic \cite{philip-wildlife}.
 In Arctic, as a consequence of reduction of their natural habitat, polar bears are drawn to human settlements, food dumps, while searching for food\cite{wildlabs-polarbears}.
-Unexpected encounters can turn deadly for for both sides.
+Unexpected encounters can turn deadly for both sides.
 As wide ranging animals, tigers need large areas where they can roam, hunt and breed\cite{wildlabs-tigers}.
-When their natural prey population is depleted they often turn their attention to poorly protected livestock. 
+When their natural prey population is depleted, they often turn their attention to poorly protected livestock. 
 Their attacks often have economic, social and psychological consequences.
 According to WILDLABS, tigers killed 101 people between years 2013 and 2016, in India alone\cite{wildlabs-tigers}.
 
 As herbivores, elephants might be seen as less problematic when compared to polar bears or tigers, but this assumption could not be further from the truth.
-Although exact numbers vary between sources, casualties from human-elephant conflicts are much higher compared to conflicts involving polar bears or tigers.
+Although exact numbers vary between sources, casualties from human-elephant conflicts (HEC) are much higher compared to conflicts involving polar bears or tigers.
 According to WILDLABS, an average of 400 people and 100 elephants are killed every year in India\cite{wildlabs-elephants}. 
 Leading cause of death of elephants is electrocution (by electric fences, unprotected power lines), followed by train accidents, poaching and poisoning\cite{cause-of-death}.
-One of human-elephant conflict hotspots is in Sonitpur District in Assam province, India. 
+One of HEC hotspots is in Sonitpur District, Assam province, India. 
 In 5300 km\textsuperscript{2} large area around 200,000 people and 200 elephants share the same space\cite{wildlabs-elephants}.
 Elephants often venture into paddy fields which represent livelihood for local communities.
 A single elephant can quickly trample fields of rice crops in few hours, causing big financial problems to already impoverished farmers\cite{wildlabs-elephants}.
@@ -38,16 +38,16 @@ Although above mentioned measures function to some degree, they are not effectiv
 \section{ Early detection system}
 
 One important component of minimizing human-elephant conflicts is a reliable early detection system. 
-System able of detecting presence of nearby elephants would warn nearby communities and give them enough time to prepare and respond nonviolently.
-Same kind of system would also provide information about common elephants paths, thus giving farmers knowledge how to better construct and place their fences, barricades, to minimize human-elephant conflict.
+System capable of detecting presence of nearby elephants would warn nearby communities and give them enough time to prepare and respond nonviolently.
+Same kind of system would also provide information about common elephants paths, thus giving farmers knowledge how to better construct and place their fences, barricades, to minimize HEC.
 System should consist of of several small, deployed devices with mounted cameras, that will detect elephants and one server, which will aggregate alerts and forward them somewhere where local community will see them.
 TODO: MAYBE A PICTURE OF SETUP???
 
-Obvious workflow would be that a deployed device makes a picture of its surrounding and sends it over wireless network to main server for processing.
+Appropriate workflow would be that a deployed device makes a picture of its surrounding and sends it over wireless network to main server for processing.
 Although most of villages in Sonitpur district have access to cell phones and internet, the connectivity can be unreliable\cite{wildlabs-elephants}. 
-Additionally devices will be placed quite far from main server, which makes sending large amount of data a problem. 
+Furthermore devices will be placed quite far from main server, which makes sending large amount of data a problem. 
 This limits choice of wireless networks to long range technologies.
-It is therefore preferable that elephant detection is done on deployed device and only results (which can be big few bytes) are send over some radio network to main server.
+It is therefore preferable that elephant detection is done on a deployed device and only results (which can be big few bytes) are send over some radio network to main server.
 Deployed devices will be placed in forests, fields, with no access to electricity, therefore they need to be battery powered.
 Low maintenance of deployed devices is a desirable quality, which means that they should be functional for longer periods of time without any human interactions.
 To achieve that with limited power source, they should be energy efficient, equipped with solar panels and a low power radio.
@@ -64,7 +64,7 @@ Above described system is currently in development at IRNAS in collaboration wit
 Slovenia based Institute IRNAS offers a complete development service, starting with idea on paper and ending with the finished product. 
 Its previous projects cover a wide range of different fields, from free space optical systems, bio-printing, to IoT solutions which cover industrial and nature conservative use cases.
 Arribada Initiative is a London based team, that uses open source solutions for purposes of nature conservation.
-As winner of WWF and WILDLABS Human Widlife Conflict Tech Challenge\cite{wildlabs-winners}, Arribada received funding to develop early detection system.
+As winner of WWF and WILDLABS Human Wildlife Conflict Tech Challenge\cite{wildlabs-winners}, Arribada received funding to develop early detection system.
 They spent some time in Assam, India, where they did testing of proof-of-concept design\cite{arribada-assam}.
 They decided on devices with thermal cameras, as human-elephant conflicts often happen during the night.
 Sensor of choice was FLIR Lepton 2.5 and or 3.5.
@@ -110,27 +110,62 @@ They are appropriate for solving complex problems like image classification, spe
 They fall into deep learning, which is a sub-field of machine learning.
 
 Today machine learning algorithms are present in many software products that we often use. 
-They can be found in email spam detection, recommendation algorithms on Facebook and Youtube, speech recognition on smartphones and virtual personal assistants. 
+They can be found in email spam detection, recommendation algorithms on Facebook and YouTube, speech recognition on smartphones and virtual personal assistants. 
 
 Training of deep learning algorithms is computationally demanding and is usually done on powerful servers or computers with dedicated graphic processing units to speed up training time.
 After model has been trained, they can fed it data and get prediction in return. 
 This process is also known as \textbf{inference}.
-Inference is less computationally intensive compared to training process, so with properly optimized model we can run inference on personal computers, smartphones, tablets and even directly in internet browsers.
+Inference is computationally less intensive compared to training process, so with properly optimized models we can run inference on personal computers, smartphones, tablets and even directly in internet browsers.
 
 
 \subsection{ Machine learning on embedded devices}
 
-Machine learning on embedded devices is an emerging field, resources directly connected with are scarce.
-Most of the information about it can be found in form of scientific papers, blog posts and machine learning framework documentation.TODO: CITE STUFF
+Machine learning on embedded devices is an emerging field, which nicely coincides with Internet of things (IoT).
+Resources about it are limited, especially when compared to wast number of resources connected with machine learning on computers or servers.
+Most of the information about it can be found in form of scientific papers, blog posts and machine learning framework documentation\cite{hello_edge}\cite{tflite_risc-v}\cite{pete_tiny}.
 
+Running learning algorithms directly on smart devices comes with many benefits.
+One of them is reduced power consumption.
+In most IoT applications devices send raw sensor data over wireless network to the server, which process it either for visualization or for making informed decisions about the system as whole. 
+Wireless communication is one of more power hungry operations that an embedded device can do, while computation is one of more energy efficient\cite{pete_tiny}.
+For example, a Bluetooth communication might use up to 100 milliwatts, while MobileNetV2 image classification network running 1 inference per second would use up to 110 microwatts\cite{pete_tiny}
+As deployed devices are usually battery powered, it is important to keep any wireless communication to a minimum, minimizing the amount of data that we send is paramount.
+Instead sending everything we capture, is much more efficient to process raw data on the device and only send results.
 
-There have been several papers on this topic
-https://arxiv.org/abs/1711.07128
-https://arxiv.org/abs/1906.05721
-https://edge.seas.harvard.edu/publications/towards-deep-learning-using-tensorflow-lite-risc-v
+Another benefit of using ML on embedded devices is decreased time between event and action.
+If device can extract high level information from raw data, it can act on it immediately, instead of sending it to the cloud and waiting for response. 
+Getting an result now takes milliseconds, instead of seconds.
 
-* Not many resources availible
-* Train, convert model, deploy to micro
-* Possible ways to do this, no framework, tflite, stm, cmsis
+Such benefits do come with some drawbacks.
+Embedded devices are more resource constrained environment when compared to personal computers or servers.
+Because of limited processing power it is not feasible to train ML models directly on microcontrollers.
+Also is not feasible to do online learning with microcontrollers, meaning that they would learn while being deployed.
+Models also need to be small enough to fit on a device. 
+Most of general purpose microcontrollers only offer several hundred kilobytes of flash, up to 2 megabytes.
+For comparison, MobileNet v1 image classification model, optimized for mobile phones, is 16.9 MB in size\cite{daniel_edgeimpulse}.
+To make it fit on a microcontroller, we would have to simplify it.
 
+Usual workflow, while developing machine learning models for microcontrollers, is to train a model on training data on some powerful computer or server. 
+When we are satisfied with accuracy of the model we then quantize it (more about quantization in chapter TODO: ADD CHAPTER NUMBER) and convert it into format understandable to our microcontroller.
+
+There are several frameworks, proprietary and open-sourced, that can be used to develop ML applications on microcontrollers.
+STMicroelectronics created X-CUBE-AI, a tool which converts pre-trained model created by one of various Deep Learning frameworks into an optimized library. 
+X-CUBE-AI works only with STM32 microcontrollers and is proprietary.
+Another framework, TensorFlow Lite, was created as an extension of TensorFlow, an open-source software library used for ML applications.
+It provides converter tools and C++ implementations of common ML operations, that can run on any microcontroller.
+
+\section{ Objective}
+
+Objective of this master's thesis is to build a device that will be able to recognize elephants and humans from images captured by a thermal camera and report its results to a remote server.
+For that we will have to train a neural network model capable of classifying elephants and humans from thermal images.
+After we implement this model on a microcontroller, we will design a printed circuit board (PCB) that will connect microcontroller with various sensors and peripherals.
+Device will be battery powered, so minimizing power consumption will necessary.
+Device will use LoRa radio to communicate with remote server.
+
+\section{ Master's thesis outline}
+This chapter provided an overview of motivation, some background knowledge about machine learning and objectives of this thesis.
+Chapter 2 will provide theoretical description of system building blocks. Thermal camera FLIR Lepton, LoRa, neural networks, TensorFlow Lite and others will be discussed there.
+Chapter 3 will revolve around design and implementation of the device, from hardware and software point of perspective.
+In chapter 4 we will test our device and present results.
+Chapter 5 will present our findings, described limitations of our project and suggest paths for further research.
 
