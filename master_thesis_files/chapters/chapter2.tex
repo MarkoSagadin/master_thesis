@@ -87,7 +87,7 @@ That meant that camera needed to have decent resolution and low NETD.
 Cameras were tested in Whipsnade Zoo and the Yorkshire Wildlife Park where images of elephants and polar bears could be made.
 
 They tested two thermopile cameras (Heimann 80x64, MELEXIS MLX90640) and two microbolometer cameras (ULIS Micro80 Gen2, FLIR Lepton 2.5).
-Although thermopile cameras were cheaper from microbolometer cameras, quality of images they produced was inferior, as an be seen on Figure \cite{}
+Although thermopile cameras were cheaper from microbolometer cameras, quality of images they produced was inferior, as can be seen on Figure \ref{thermal_comparison_images}
 MELEXIS MLX90640 camera had resolution of 32 x 24 pixels and NETD of 100 \si{\milli\kelvin}, while Heimann camera had resolution of 80 x 64 pixels and NETD of 400 \si{\milli\kelvin}.
 \newline
 
@@ -123,24 +123,13 @@ Microbolometers produced better results.
 Both Ulis Micro80 and FLIR Lepton had similar resolution, 80 x 80 and 80 x 60 respectively, but Ulis Micro80 had two times bigger NETD compared to FLIR Lepton camera, 100 \si{\milli\kelvin} and 50 \si{\milli\kelvin}, respectively.
 Images produced by FLIR Lepton were much cleaner, so it was chosen as appropriate camera for the task.
 
-TODO: zaključi poglavje, povej nekaj o shutteru.
+It is important to note that FLIR Lepton, as all microbolometers, requires frequent calibration to function properly.
+In temperature non-stabilized cameras small temperature drifts can have a major impact on image quality\cite{thermal_book}.
+Calibration is done either by internal algorithms of the camera or by exposing the camera to uniform thermal scene.
+FLIR Lepton camera comes with a shutter, which acts as a uniform thermal signal and enables regular calibration.
+Calibration in FLIR Lepton is by default automatic, triggering at startup and every 3 minutes afterwards or if camera temperature drifts for more than 1.5 \si{\celsius}.
 
 
-
-
-
-
-
-Kako deluje microbolometer
-https://www.sciencedirect.com/science/article/pii/S0961129006717641
-
-    - Zakjaj boš uporabal določeno kamero, flir lepton, Kako deluje termalna kamera, na kakšen način lahko kamera spremni output, resolucija, refresh, zunanji vplivi
-
- 2. Theoretical description of system building blocks
-    Not sure what to write here, before starting to talk about building blocks. Some general stuff? Should be short, half a page.
-    2.1 Thermal cameras
-        What basic types exist, why was flir chosen, from here on only things connected with flir: How they work, what are some external things that can mess them up, what are they suitable for, pictures from datasheet, how we can communicate with them, resolution, refresh, difference between 2.5 and 3.5.
-TODO: is 2.2 needed in this shape?
     2.2 Wireless technologies in IOT world
         different technologies, tradeoffs, why do we want lora. 
         2.2.2 LoRa 
