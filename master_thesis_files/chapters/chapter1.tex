@@ -17,6 +17,33 @@ As herbivores, elephants might be seen as less problematic when compared to pola
 Although exact numbers vary between sources, casualties from human-elephant conflicts (HEC) are much higher compared to conflicts involving polar bears or tigers.
 According to WILDLABS, an average of 400 people and 100 elephants are killed every year in India\cite{wildlabs-elephants}. 
 The leading cause of death of elephants is electrocution (by electric fences, unprotected power lines), followed by train accidents, poaching, and poisoning\cite{cause-of-death}.
+Reasons for HEC are similar to the conflicts with polar bears and tigers.
+Their habitat is continuously shrunk and replaced with crop fields and plantations.
+As their food options decrease, surrounding agricultural landscapes become inviting.  
+Various HEC can be seen in figure \ref{various_hec}.
+
+\begin{figure}[ht]
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth, height=5cm]{hec_a.jpg} 
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth, height=5cm]{hec_b.jpg} 
+    \end{subfigure}
+    %
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth, height=5cm]{hec_c.jpg} 
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth, height=5cm]{hec_d.jpg} 
+    \end{subfigure}
+    \caption{Various human-elephant conflicts. Top left: two elephants running from a mob hurling flaming tar balls, top-right: damage done by elephants to palms inside palm platation, bottom-left: elephant crossing the protective barrier, bottom-right: elephant that died cause of HEC.\cite{thermal_comparison}}
+    \label{various_hec}
+\end{figure}
+
 One of HEC hotspots is in Sonitpur District, Assam province, India. 
 In 5300 km\textsuperscript{2} large area around 200,000 people and 200 elephants share the same space\cite{wildlabs-elephants}.
 Elephants often venture into paddy fields which represent livelihood for local communities.
@@ -92,20 +119,21 @@ Using a ML approach we can train the algorithm on a image dataset and let it fig
 \subsection{ Implementation of machine learning algorithms}
 
 Since ML algorithms are at it's core normal math operations, they can be implemented (although might not efficiently) in any programming language and on any hardware platform from scratch.
-However to avoid reinventing the wheel and wasting the time on algorithm optimization, it is more logical to use one of many ML frameworks.
+However to avoid reinventing the wheel and wasting the time on algorithm optimization, it is more logical to use one of ML frameworks.
 Frameworks such as scikit-learn, Keras, Caffe and TensorFlow enable programmers to write application code in high level language such as Python, which at run time translates to efficient C/C++ code. 
 These frameworks abstract away low-level details of ML algorithms, enabling programmers to deal only with application code and not its underlying implementation.
 
 In several past years there has been a growing desire to expand ML applications to embedded devices.
-Running ML algorithms directly on microcontrollers has benefits and challenges, compared to on computers and servers, this is further described in TODO: ADD chapter reference.
+Running ML algorithms directly on microcontrollers has benefits and challenges, compared to on computers and servers, this will be further described in section \ref{ml_on_embedded}.
 There are several frameworks, proprietary and open-sourced, that can be used to develop ML applications on microcontrollers.
 STMicroelectronics created X-CUBE-AI, tool that converts the pre-trained model created by one of the various Deep Learning frameworks into an optimized library. 
 X-CUBE-AI works only with STM32 microcontrollers and is proprietary.
-Another framework, TensorFlow Lite, was created as an extension of TensorFlow.
+Another framework, TensorFlow Lite for microcontrollers, was created as an extension of TensorFlow Lite, which was used to develop ML models for mobile applications.
 It provides converter tools and C++ implementations of common ML operations.
 In year 2019 another framework, \si{\micro}Tensor, was merged with TensorFlow Lite, providing it with support for efficient CMSIS-NN library developed by ARM.
 
-For this thesis TensorFlow Lite will be used. It can be used with any family of microcontrollers and is open-source so we can study it's internal code.
+For this thesis TensorFlow Lite for microcontrollers will be used. 
+It can be used with any family of microcontrollers and is open-source so we can study it's internal code.
 
 
 \subsection{ Edge Impulse}
@@ -113,6 +141,11 @@ For this thesis TensorFlow Lite will be used. It can be used with any family of 
 Regardless of many Ml frameworks on the market, companies that specialise in ML on embedded devices are scarce.
 One of them is Edge Impulse, recently founded company, from San Jose, USA.
 They provide users with end to end web solution for developing ML applications for embedded devices.
+Instead of designing and writing specific programs that deal with preprocessing of training data and creation and training of ML models, Edge Impulse does this automatically for their customers.
+After the ML model is created and converted into optimized format for embedded systems, customers get immediate first approximation how much RAM and FLASH memory will model take and how fast it will run.
+We can then run the model on the local machine or deploy to a variety of different platforms such as Arduino, STM32, OpenMV, Zeyphr and others.
+
+
 Their solution will be used as a benchmark for our work with TensorFlow Lite.
 
 
