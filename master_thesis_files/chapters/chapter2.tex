@@ -6,7 +6,7 @@ We will be using terms "machine learning" and "learning" interchangeably.
 In order to learn, these learning algorithms need to be trained on a collection of examples of some phenomenon\cite{burkovml}. 
 These collections are called \textbf{datasets} and can be generated artificially or collected in nature.
 
-We can describe a typical ML workflow on an example application.
+In order to better understand how ML approach can solve problems, we can examine an example application.
 Let us say that we would like to build a system that can predict a type of animal movement from an accelerometer data.
 To train its learning algorithm, also known as a \textbf{model}, we need to expose it to a dataset which would contain accelerometer measurements of different types of movement, such a walking, running, jumping and standing still.
 Input to the system could be either raw measurements from all three axis or components extracted from raw measurements such as frequency or amplitude. 
@@ -17,10 +17,10 @@ Instead, we would let the model figure out connection by itself, through the pro
 The trained model should be general enough so it can correctly predict the type of movement on unseen accelerometer data.
 
 There exists a large variety of different learning algorithms. 
-We can broadly categorize them in several ways, one of them depends on how much supervision learning algorithms need in the training process. 
+We can broadly categorize them in several ways, one of them depends on how much supervision learning algorithm needs in the training process. 
 Algorithms like K-nearest neighbours, linear and logistic regression, support vector machines fall into the category of supervised learning algorithms.
 Training data that is fed into them includes solutions, also known as \textbf{labels}\cite{geron}.
-Described example is an example of a supervised learning problem.
+Described above example is an example of a supervised learning problem.
 
 Algorithms like k-Means, Expectation Maximization, Principal Component Analysis fall into the category of unsupervised learning algorithms.
 Here training data is unlabeled, algorithms are trying to find similarities in data by itself\cite{geron}.
@@ -31,16 +31,20 @@ They are appropriate for solving complex problems like image classification, spe
 They fall into field of deep learning, which is a sub-field of machine learning.
 
 Training of deep learning algorithms is computationally demanding and is usually done on powerful servers or computers with dedicated graphic processing units to speed up training time.
-After a model has been trained, they can feed it data and get prediction in return. 
+After a model has been trained, data can be fed in and prediction is returned. 
 This process is also known as \textbf{inference}.
 The inference is computationally less intensive compared to the training process, so with properly optimized models, we can run inference on personal computers, smartphones, tablets, and even directly in internet browsers.
 
+
+\subsection{ Common machine learning workflow}
+
 There are several steps in ML workflow that have to occur in order to get from an idea to a working ML based system as seen on Figure \ref{ml_workflow}.
-First problem has to be studied, it has to be understood what are objectives and what approach will be used. Here we decide on rough architecture of the ML model that we will use.
+First problem has to be studied, it has to be understood what are objectives and which approach will be used. 
+Here we decide on rough architecture of the ML model that we will use.
 In second step we collect and clean up data.
 We should always strive to collect large amount of quality and diverse data that represents real word phenomenon.
 Collecting that kind of data can be hard and expensive, but we can use various tools of for producing synthetic data from our original data, thus increasing data size and variety.
-Third we train ML model.
+Third, we train ML model.
 We might create something from scratch or use an existing model. 
 We can train several different types of models and chose the one that performs the best.
 To achieve desired accuracy, steps two and three can be repeated many times.
@@ -52,6 +56,7 @@ In step four we deploy our model and monitor its accuracy. We can also use it to
         \caption{ Workflow of solving a generic machine learning problem. Icons source: www.icons8.com}
         \label{ml_workflow}
 \end{figure}
+
 
 \subsection{ Machine learning on embedded devices} \label{ml_on_embedded}
 
@@ -74,7 +79,7 @@ Getting a result now takes milliseconds, instead of seconds.
 Such benefits do come with some drawbacks.
 Embedded devices are a more resource constrained environment when compared to personal computers or servers.
 Because of limited processing power, it is not feasible to train ML models directly on microcontrollers.
-Also is not feasible to do online learning with microcontrollers, meaning that they would learn while being deployed.
+Also it is not feasible to do online learning with microcontrollers, meaning that they would learn while being deployed.
 Models also need to be small enough to fit on a device. 
 Most general purpose microcontrollers only offer several hundred kilobytes of flash, up to 2 megabytes.
 For comparison, MobileNet v1 image classification model, optimized for mobile phones, is 16.9 MB in size\cite{daniel_edgeimpulse}.
@@ -83,8 +88,91 @@ To make it fit on a microcontroller and still have space for our application, we
 Usual workflow, while developing machine learning models for microcontrollers, is to train a model on training data on some powerful computer or server. 
 When we are satisfied with the accuracy of the model we then quantize it (more about quantization in chapter TODO: ADD CHAPTER NUMBER, SHOULD THIS BE A FOOTNOTE?) and convert it into a format understandable to our microcontroller.
 
+
 \subsection{ Neural networks}
-TODO: Need to add it
+
+Although first models of neural networks (NN) were presented in 1943 (by McCulloch and Pitts)\cite{geron} and hailed as the starting markers of the artificial intelligence era, it had to pass several decades of research and technological progress before they could be applied to practical, everyday problems.
+Early models of NNs, such as the one proposed by McCulloch and Pitts were inspired by how real biological neural systems work. 
+They proved that a very simple model of an artificial neuron, with one or more binary inputs and one binary output is capable of computing any logical proposition when used as a part of a larger network\cite{geron}.
+
+To learn how NNs work we can refer to Figure \ref{neuron_model}, which shows a generic version of an artificial neuron.
+\newline
+
+\begin{figure}[ht] 
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{neuron_model.jpeg} 
+        \caption{Artificial neuron}
+        \label{neuron_model}
+    \end{subfigure}
+    \unskip\ \vrule\ 
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{neural_net.jpeg} 
+        \caption{ 3-layer neural network}
+        \label{neural_net}
+    \end{subfigure}
+    
+    \caption{ (a) Mathematical model of an artificial neuron, similarities with biological neurons can be seen. (b) Fully connected 3-layer neural network. Image source: \cite{cs231n}}
+    \label{neural}
+\end{figure}
+
+Neuron takes several inputs, multiplies each input with its \textbf{weight} and sums them up.
+It adds to the sum the \textbf{bias} term and then applies an activation function.
+
+NNs consist of many neurons, which are organized into \textbf{layers}.
+Neurons inside the same layer do not share any connections, but they connect to layers before and after them.
+First layer is known as \textbf{input} layer and last one is known as \textbf{output} layer. 
+Any layers between are said to be \textbf{hidden}. 
+On Figure \ref{neural_net} we can see neural network with an input layer with three inputs, two hidden layers with four neurons each and a output layer with just one neuron.
+If all inputs of neurons in one layer are connected to all outputs from previous layer, we say that a layer is \textbf{fully connected} or \textbf{dense}, Figure \ref{neural_net} is an example of one.
+NNs with many hidden layers fall into category of deep neural networks (DNN).
+
+
+\subsubsection{ Activation functions}
+
+Activation functions introduce non-linearity to chain of otherwise linear transformations, which enables ANNs to approximate any continuous function\cite{geron}.
+There are many different kinds of activation functions as seen on Figure \ref{activation_functions}, such as sigmoid function and rectified linear activation function (ReLu).
+Sigmoid function was commonly used in the past, as it was seen as a good model for a firing rate of a biological neuron: 0 when not firing at all and 1 when fully saturated and firing at maximal frequency\cite{cs231n}.
+It basically takes a real number and squeezes it into range between 0 and 1.
+It was later shown that training NNs with sigmoid activation function often hinders training process as saturated outputs cut of parts of networks, thus preventing training algorithm reaching all neurons and correctly configuring the weights\cite{cs231n}.
+It has since fallen out of practice and is nowadays replaced by ReLu or some other activation function.
+
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=1.0\linewidth]{activation_func.pdf} 
+        \caption{Different activation functions and their equations.}
+        \label{activation_functions}
+\end{figure}
+
+\subsubsection{ Backpropagation}
+
+Training of neural networks is done with a training algorithm, known as \textbf{backpropagation}.
+As mentioned before, we train the neural network by showing it a large amount of training data with labels.
+At the start of the training phase, all weights and biases are set to randomly small values.
+During each training step neural network is shown a small batch of training data. 
+Each instance is feed into NN and final output label is calculated.
+This is known as \textbf{forward pass}, which is exactly the same as making predictions, except that intermediate results from each neuron in every layer are stored.
+Calculated output is compared to an expected one using a \textbf{loss} (also known as \textbf{cost}) function.
+Loss function returns a single value, which tells us how badly is our NN performing, higher it is, worse is our NN performing.
+The goal is to minimize the loss function, thus increasing the accuracy of our NN.
+In the context of multivariable calculus this means that we have to calculate negative gradient of weights and biases which will tell us in which direction we have to change each weight and bias so that value of loss function decreases. 
+
+Doing this for all weights and biases at the same time would be complicated, so backpropagation algorithm does this in steps.
+After computing loss function algorithm analytically calculates how much each output connection contributed to loss function (essentially local gradient) with the help of previously stored intermidiate values.
+This step is recursively done for each layer until first input layer is reached.
+At that moment algorithm knows in which direction should each weight and bias change so that value of loss function lowers.
+Procedure known as \textbf{Gradient Descent} is then performed.
+All local gradients are multiplied with a small number known as \textbf{learning rate} and then subtracted from all weights and biases.
+This way in each step we slowly change weights and biases in the right direction, while minimizing loss function.
+Gradient Descent is not only used when training neural networks, but also when training other ML algorithms.
+
+We do not have to execute backpropagation algorithm for each training instance, instead we can calculate predictions for a small set of training data, calculate average loss function and then apply backpropagation.
+
+
+\subsection{ Convolutional neural networks}
+
+As an aside, in practice it is often the case that 3-layer neural networks will outperform 2-layer nets, but going even deeper (4,5,6-layer) rarely helps much more. This is in stark contrast to Convolutional Networks, where depth has been found to be an extremely important component for a good recognition system (e.g. on order of 10 learnable layers). One argument for this observation is that images contain hierarchical structure (e.g. faces are made up of eyes, which are made up of edges, etc.), so several layers of processing make intuitive sense for this data domain.
 
 \section{ Thermal cameras}
 
@@ -101,13 +189,13 @@ Since photon detectors are expensive, large and therefore unsuitable for our use
 \begin{figure}[ht]
     \begin{subfigure}{0.5\textwidth}
         \centering
-        \includegraphics[width=1.0\linewidth, height=5cm]{thermal_sample_a.png} 
+        \includegraphics[width=1.0\linewidth, height=5cm]{thermal_sample_b.png} 
     \end{subfigure}
     \begin{subfigure}{0.5\textwidth}
         \centering
-        \includegraphics[width=1.0\linewidth, height=5cm]{thermal_sample_b.png}
+        \includegraphics[width=1.0\linewidth, height=5cm]{thermal_sample_a.png}
     \end{subfigure}
-    \caption{Comparsion between a picture taken with a normal camera (left) and image taken with a low resolution thermal camera FLIR Lepton 2.5 (right). Image source: Arribada Initiative\cite{thermal_comparison}}
+    \caption{Comparison between a picture taken with a normal camera (left) and image taken with a low resolution thermal camera FLIR Lepton 2.5 (right). Image source: Arribada Initiative\cite{thermal_comparison}}
     \label{thermal_comparison1}
 \end{figure}
 
@@ -130,13 +218,13 @@ Each bolometer consists of an absorber material connected to an readout integrat
     \begin{subfigure}{0.5\textwidth}
         \centering
         \includegraphics[width=1.0\linewidth, height=5cm]{FPA.png} 
-        \caption{}
+        \caption{Focal point array}
         \label{FPA}
     \end{subfigure}
     \begin{subfigure}{0.5\textwidth}
         \centering
         \includegraphics[width=1.0\linewidth, height=5cm]{FPA_pixel.png}
-        \caption{}
+        \caption{Bolometer}
         \label{FPA_pixel}
     \end{subfigure}
 
