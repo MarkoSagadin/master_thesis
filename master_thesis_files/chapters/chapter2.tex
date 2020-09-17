@@ -36,10 +36,18 @@ This process is also known as \textbf{inference}.
 The inference is computationally less intensive compared to the training process, so with properly optimized models, we can run inference on personal computers, smartphones, tablets, and even directly in internet browsers.
 
 
-\subsection{ Common machine learning workflow}
+\subsection{ General machine learning workflow}
 
 There are several steps in ML workflow that have to occur in order to get from an idea to a working ML based system as seen on Figure \ref{ml_workflow}.
-First problem has to be studied, it has to be understood what are objectives and which approach will be used. 
+
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=1.0\linewidth]{ml_workflow.pdf} 
+        \caption{ Workflow of solving a generic machine learning problem. Icons source: www.icons8.com}
+        \label{ml_workflow}
+\end{figure}
+
+First problem has to be studied, it has to be understood what are objectives and decided which approach will be used. 
 Here we decide on rough architecture of the ML model that we will use.
 In second step we collect and clean up data.
 We should always strive to collect large amount of quality and diverse data that represents real word phenomenon.
@@ -49,14 +57,6 @@ We might create something from scratch or use an existing model.
 We can train several different types of models and chose the one that performs the best.
 To achieve desired accuracy, steps two and three can be repeated many times.
 In step four we deploy our model and monitor its accuracy. We can also use it to collect more data and retrain the model.
-
-\begin{figure}[h]
-        \centering
-        \includegraphics[width=1.0\linewidth]{ml_workflow.pdf} 
-        \caption{ Workflow of solving a generic machine learning problem. Icons source: www.icons8.com}
-        \label{ml_workflow}
-\end{figure}
-
 
 \subsection{ Machine learning on embedded devices} \label{ml_on_embedded}
 
@@ -89,7 +89,7 @@ Usual workflow, while developing machine learning models for microcontrollers, i
 When we are satisfied with the accuracy of the model we then quantize it (more about quantization in chapter TODO: ADD CHAPTER NUMBER, SHOULD THIS BE A FOOTNOTE?) and convert it into a format understandable to our microcontroller.
 
 
-\subsection{ Neural networks}
+\section{ Neural networks}\label{neural_networks_section}
 
 Although first models of neural networks (NN) were presented in 1943 (by McCulloch and Pitts)\cite{geron} and hailed as the starting markers of the artificial intelligence era, it had to pass several decades of research and technological progress before they could be applied to practical, everyday problems.
 Early models of NNs, such as the one proposed by McCulloch and Pitts were inspired by how real biological neural systems work. 
@@ -129,7 +129,7 @@ If all inputs of neurons in one layer are connected to all outputs from previous
 NNs with many hidden layers fall into category of deep neural networks (DNN).
 
 
-\subsubsection{ Activation functions}
+\subsection{ Activation functions}
 
 Activation functions introduce non-linearity to chain of otherwise linear transformations, which enables ANNs to approximate any continuous function\cite{geron}.
 There are many different kinds of activation functions as seen on Figure \ref{activation_functions}, such as sigmoid function and rectified linear activation function (ReLu).
@@ -145,7 +145,7 @@ It has since fallen out of practice and is nowadays replaced by ReLu or some oth
         \label{activation_functions}
 \end{figure}
 
-\subsubsection{ Backpropagation}
+\subsection{ Backpropagation}
 
 Training of neural networks is done with a training algorithm, known as \textbf{backpropagation}.
 As mentioned before, we train the neural network by showing it a large amount of training data with labels.
@@ -172,7 +172,122 @@ We do not have to execute backpropagation algorithm for each training instance, 
 
 \subsection{ Convolutional neural networks}
 
-As an aside, in practice it is often the case that 3-layer neural networks will outperform 2-layer nets, but going even deeper (4,5,6-layer) rarely helps much more. This is in stark contrast to Convolutional Networks, where depth has been found to be an extremely important component for a good recognition system (e.g. on order of 10 learnable layers). One argument for this observation is that images contain hierarchical structure (e.g. faces are made up of eyes, which are made up of edges, etc.), so several layers of processing make intuitive sense for this data domain.
+Convolutional neural networks (CNN) are a kind of neural networks that work specially well with image data.
+Like NNs they have found inspiration in nature, in their case visual cortex of the brain\cite{geron}.
+It was shown that different cells in visual cortex responded differently to different visual stimuli\cite{cs231n}.
+Some were activated when shown a horizontal line in specific location, some were activated by vertical lines.
+More complex cells responded to boxes, circles and so on.
+CNNs also detect simpler shapes first and use them to detect more complex ones later.
+
+On Figure \ref{convnet} we can see an example of CNN which takes an image of a car as a input and outputs probability results in five different classes.
+\newline
+
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=1.0\linewidth]{convnet.jpeg} 
+        \caption{CNNs usually consist of alternating convolutional layers and pooling layers. Last polling layer is flattened out and feed into fully connected NN. Image source:\cite{cs231n}}
+        \label{convnet}
+\end{figure}
+
+Specific to CNNs are two different types of layers, \textbf{convolutional} layers and \textbf{pooling} layers.
+Each convolutional layer detects some sort of shapes, first ones detect different kinds of edges, later ones detect more complex shapes and objects, like wheels, legs, eyes, ears.
+Pooling layers downsample the data in spatial dimension, thus decreasing the number of parameters and operations needed in CNN.
+After few alternating pairs of convolutional and pooling layers the output of the last pooling layer is flattened out into one dimensional vector and feed into fully connected NN which produces probability results in given classes.
+
+It makes sense to explain how convolutional and pooling layers work in greater detail as this will be important later when we will be designing our CNN models in chapter TODO.
+
+
+\subsubsection{Convolutional layers}
+
+Data that CNNs operate on are 3 dimensional matrices, where width and height correspond to image resolution and depth corresponds to the number of color channels, 3 for colorful images (red, green, blue) and 1 for greyscale.
+When speaking about this data we will relate to them as volumes.
+
+Convolution layers perform dot products between input volume and several \textbf{filters} or \textbf{kernels} to produce output volume.
+In these layers filters are being configured through training phase.
+We can see a concrete example on Figure \ref{conv1}.
+2D filter with size 2 x 2 covers part of input volume, element-wise multiplication is computed, elements are summed and result is written into first element of output volume.
+
+\begin{figure}[ht] 
+    \centering
+    \begin{subfigure}[b]{0.75\textwidth}
+        \includegraphics[width=1\linewidth]{conv1.png} 
+        \caption{Example of dot product operation}
+        \label{conv1}
+    \end{subfigure}
+    \vspace{0.5cm}
+    \hrule
+    \vspace{0.5cm}
+    \begin{subfigure}[b]{0.5\textwidth}
+        \includegraphics[width=1.0\linewidth]{conv2.jpeg} 
+        \caption{ Convolutional layer}
+        \label{con2v}
+    \end{subfigure}
+    
+    \caption{ (a) Filter moves over zero-padded input matrix. (b) To produce output layer with depth 5, this layer would have 5 different filters. Image sources: \cite{conv_layer_img}\cite{cs231n}}
+    \label{conv_layer}
+\end{figure}
+
+Filter then moves a fixed width or \textbf{stride} and process is repeated.
+It is important to note that although we can choose width and height of filter, depth of filter is always equal to the depth of the input volume.
+If depth is larger than one then dot products are done for each 2D matrix in depth dimension separately and then element-wise sum between these matrices is performed.
+To avoid loosing information from the image pixels that are on the edges (as they would be included in dot products less times compared to central ones) we often pad input images with zeros.
+
+The size of output volume depends on several factors as seen in \ref{size_eq}.
+
+\begin{equation}\label{size_eq}
+V_{o} = (V_{i} - F + 2P) / S + 1
+\end{equation}
+
+Where:
+
+$V_{i}$ - Input volume size, only width or height
+
+$V_{o}$ - Output volume size, only width or height
+
+$F$ - Filter or receptive field size
+
+$P$ - Amount of zero padding used on the border
+
+$S$ - Stride length
+
+If we examine example on Figure \ref{conv1} we can see that input with a size 3 x 3, stride 1, padding 1 and filter with a size 2 x 2 produces output with size 4 x 4.
+
+Depth of output volume is equal to the number of filters used in convolutional layer, it is a norm that a single convolutional layer uses large number of filters to produce a deep output volume\cite{cs231n}.
+It is also common to set padding, stride and filter size so that width and height of input volume are preserved.
+This prevents the information at the edges to be lost too quickly\cite{cs231n}.
+
+In the end of convolutional layer output volume is fed into neuron similar to one described in section \ref{neural_networks_section}. 
+All elements in same depth are affected by a same bias term and fed into activation function.
+In this step size of volume is preserved.
+
+\subsubsection{ Pooling layers}
+
+Polling layers perform downsampling of input volumes in width and height dimensions.
+This is done by sliding a filter of fixed size over input and doing MAX operation on elements that filter covers, only the largest value element is copied into output (Figure \ref{pool_layer}).
+Pooling is done on each depth slice separately of other slices, so depth size is preserved through the layer.
+
+\begin{figure}[ht] 
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{pool1.jpeg} 
+        \caption{Max pooling operation}
+        \label{pool1}
+    \end{subfigure}
+    \unskip\ \vrule\ 
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{pool2.jpeg} 
+        \caption{ Effect of polling on input dimensions}
+        \label{pool2}
+    \end{subfigure}
+    \caption{ Polling layer, Image source: \cite{cs231n}}
+    \label{pool_layer}
+\end{figure}
+
+It is common to select pool size 2 x 2 and stride 2.
+Like this inputs are downsampled by two in height and width dimensions, discarding 75 \% activations.
+Pooling layers therefore reduce number of activations and prepare them to be flattened out and fed into fully connected layer.
+
 
 \section{ Thermal cameras}
 
@@ -196,7 +311,7 @@ Since photon detectors are expensive, large and therefore unsuitable for our use
         \includegraphics[width=1.0\linewidth, height=5cm]{thermal_sample_a.png}
     \end{subfigure}
     \caption{Comparison between a picture taken with a normal camera (left) and image taken with a low resolution thermal camera FLIR Lepton 2.5 (right). Image source: Arribada Initiative\cite{thermal_comparison}}
-    \label{thermal_comparison1}
+    \label{thermal_comparison}
 \end{figure}
 
 Common examples of thermal detectors are thermopiles and microbolometers. 
