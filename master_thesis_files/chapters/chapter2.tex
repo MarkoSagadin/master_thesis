@@ -288,6 +288,68 @@ It is common to select pool size 2 x 2 and stride 2.
 Like this inputs are downsampled by two in height and width dimensions, discarding 75 \% activations.
 Pooling layers therefore reduce number of activations and prepare them to be flattened out and fed into fully connected layer.
 
+\section{ TensorFlow}
+
+TensorFlow is a free and open-source framework for numerical computation.
+It is particularly suited for large-scale machine learning applications\cite{geron}.
+TensorFlow started as a proprietary project developed by a Google Brain team at Google in 2011, but it became open-source in late 2015.
+It is used in many Google's products such as Gmail, Google Cloud Speech and Google Search.
+
+TensorFlow is currently now the most popular deep learning networking judging by number of citations from scientific papers, adoptions in professional settings, stars on GitHub.
+It provides data scientists and programmers with several functionalities that make TensorFlow stand above its alternatives, such as PyTorch, Microsoft's CNTK and NEXT.
+
+It is relatively easy to use. TODO Maybe change this with distributed computing?
+When using the TensorFlow the hardest part of ML project is usually data preparation.
+After this is done, the creation of ML model, training and evaluation can be done in few lines of Python code.
+
+A lot of details are abstracted from programmer.
+Programmer can write high level code in Python API, which calls highly efficient C++ code.
+Developers do not have to write architecture specific code, it is a trivial task to switch from running on a CPU to GPU or TPU.
+
+TensorFlow supports Keras high level API for building ML models. 
+Keras is a Python library that functions as a wrapper for TensorFlow.
+When building ML models developers can use Keras Sequential API, where each layer in a model is represented as one line of code.
+Users do not need to care about connections between the layers, they only need to choose the type of layer (convolutional, max pool, fully connected), its size and few other specific parameters.
+Sequential API is used most of the time, if finer level of control is needed TensorFlow provides low level math operations as well.
+
+And finally, TensorFlow's trained output model is portable\cite{geron}.
+Models can be trained in one environment and executed in another.
+This means that we can train our model by writing Python code on Linux machine and execute it with Java on Android device.
+
+This last functionality is important for running ML models on microcontrollers.
+
+\subsection{ TensorFlow Lite for Microcontrollers}
+
+TensorFlow Lite (TFLite) is a set of tools and libraries that enable running ML inferences on constrained devices\cite{tensorflow_github}.
+It provides support for Android and iOS devices, embedded Linux.
+TensorFlow Lite for Microcontrollers (TFLite Micro) is a recent port of TFLite (as of mid 2019) dedicated to running ML models on microcontrollers.
+TFLite provides API in different languages, such as Java, Swift, Python and C++.
+TFLite Micro uses C++ API, specifically C++11, which reuses large part of the general TensorFlow codebase.
+
+TFLite Micro library does not require any specific microcontroller peripherals, it only expects that users implement their own \verb|printf| function.
+This means that the same C++ code that implements ML inference can be compiled to run on a microcontroller or a personal computer.
+As microcontroller binaries are usually quite big, flashing firmware to a microcontroller is a time consuming procedure.
+It makes sense to first test and debug the program that includes only ML inference specific code on a personal computer before moving on to a microcontroller, in order to save time.
+
+TFLite Micro library is publicly available as a part of a much larger TensorFlow project on GitHub\cite{tensorflow_github}.
+To use the library for embedded development the whole project has to be cloned from the GitHub.
+TensorFlow team provides users with several example projects that have been ported to several different platforms such as Mbed, Arduino, OpenMV and ESP32.
+Example projects show how to use TFLite API while showcasing different ML applications: motion detection, wake word detection and person detection.
+
+
+Because microcontrollers come in a variety of different architectures, platforms and are produced by a large number of different vendors that offer their own versions of IDEs it is sometimes hard to port external libraries
+
+Libary is on github, use it for embedded. 
+Examples for different platforms, name them
+Kernel implementations are shared.
+API can use kernel implementations either for micros or pcs
+
+How are you building them, no special tools needed, makefiles,
+workflow from trained model on.
+Converter and interpreter.
+
+
+
 
 \section{ Thermal cameras}
 

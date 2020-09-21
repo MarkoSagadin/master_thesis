@@ -1,21 +1,12 @@
-\contentsline {chapter}{\numberline {1} Introduction}{1}{chapter.1}%
-\contentsline {section}{\numberline {1.1} Motivation}{1}{section.1.1}%
-\contentsline {section}{\numberline {1.2} Early detection system}{3}{section.1.2}%
-\contentsline {section}{\numberline {1.3} IRNAS and Arribada Initiative}{4}{section.1.3}%
-\contentsline {section}{\numberline {1.4} Reasoning for machine learning approach}{5}{section.1.4}%
-\contentsline {subsection}{\numberline {1.4.1} Implementation of machine learning algorithms}{6}{subsection.1.4.1}%
-\contentsline {subsection}{\numberline {1.4.2} Edge Impulse}{7}{subsection.1.4.2}%
-\contentsline {section}{\numberline {1.5} Objective}{7}{section.1.5}%
-\contentsline {section}{\numberline {1.6} Master's thesis outline}{8}{section.1.6}%
-\contentsline {chapter}{\numberline {2} Theoretical description of system building blocks}{9}{chapter.2}%
-\contentsline {section}{\numberline {2.1} Machine learning}{11}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1} General machine learning workflow}{12}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2} Machine learning on embedded devices}{13}{subsection.2.1.2}%
-\contentsline {section}{\numberline {2.2} Neural networks}{15}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1} Activation functions}{16}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2} Backpropagation}{17}{subsection.2.2.2}%
-\contentsline {subsection}{\numberline {2.2.3} Convolutional neural networks}{18}{subsection.2.2.3}%
-\contentsline {subsubsection}{\numberline {2.2.3.1}Convolutional layers}{19}{subsubsection.2.2.3.1}%
-\contentsline {subsubsection}{\numberline {2.2.3.2} Pooling layers}{21}{subsubsection.2.2.3.2}%
-\contentsline {section}{\numberline {2.3} Thermal cameras}{21}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1} Choosing the thermal camera}{24}{subsection.2.3.1}%
+\contentsline {chapter}{\numberline {1} Theoretical description of system building blocks}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1} Machine learning}{2}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1} General machine learning workflow}{4}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2} Machine learning on embedded devices}{5}{subsection.1.1.2}%
+\contentsline {section}{\numberline {1.2} Neural networks}{6}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1} Activation functions}{7}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2} Backpropagation}{8}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3} Convolutional neural networks}{9}{subsection.1.2.3}%
+\contentsline {subsubsection}{\numberline {1.2.3.1}Convolutional layers}{10}{subsubsection.1.2.3.1}%
+\contentsline {subsubsection}{\numberline {1.2.3.2} Pooling layers}{12}{subsubsection.1.2.3.2}%
+\contentsline {section}{\numberline {1.3} Thermal cameras}{13}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1} Choosing the thermal camera}{16}{subsection.1.3.1}%
