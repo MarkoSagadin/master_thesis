@@ -250,7 +250,7 @@ $P$ - Amount of zero padding used on the border
 
 $S$ - Stride length
 
-If we examine example on Figure \ref{conv1} we can see that input with a size 3 x 3, stride 1, padding 1 and filter with a size 2 x 2 produces output with size 4 x 4.
+If we examine example on Figure \ref{conv1} we can see that input with a size 3 x 3, stride 1, padding 1 and filter with a size 2 x 2 produces output with size a 4 x 4.
 
 Depth of output volume is equal to the number of filters used in convolutional layer, it is a norm that a single convolutional layer uses large number of filters to produce a deep output volume\cite{cs231n}.
 It is also common to set padding, stride and filter size so that width and height of input volume are preserved.
@@ -321,31 +321,32 @@ This last functionality is important for running ML models on microcontrollers.
 \subsection{ TensorFlow Lite for Microcontrollers}
 
 TensorFlow Lite (TFLite) is a set of tools and libraries that enable running ML inferences on constrained devices\cite{tensorflow_github}.
-It provides support for Android and iOS devices, embedded Linux.
+It provides support for Android and iOS devices, and embedded Linux.
 TensorFlow Lite for Microcontrollers (TFLite Micro) is a recent port of TFLite (as of mid 2019) dedicated to running ML models on microcontrollers.
-TFLite provides API in different languages, such as Java, Swift, Python and C++.
+TFLite itself provides API in different languages, such as Java, Swift, Python and C++.
 TFLite Micro uses C++ API, specifically C++11, which reuses large part of the general TensorFlow codebase.
 
-TFLite Micro library does not require any specific microcontroller peripherals, it only expects that users implement their own \verb|printf| function.
-This means that the same C++ code that implements ML inference can be compiled to run on a microcontroller or a personal computer.
+TFLite Micro library does not require any specific hardware peripherals, which means that the same C++ code can be compiled to run on a microcontroller or a personal computer with minimal changes.
+Users are only expected to implement their own version of \verb|printf()| function.
 As microcontroller binaries are usually quite big, flashing firmware to a microcontroller is a time consuming procedure.
-It makes sense to first test and debug the program that includes only ML inference specific code on a personal computer before moving on to a microcontroller, in order to save time.
+It makes sense to first test and debug the program that includes only ML inference specific code on a personal computer, before moving on to a microcontroller in order to save time.
+Implementation of test setup is described in TODO ADD REFERENCE.
 
 TFLite Micro library is publicly available as a part of a much larger TensorFlow project on GitHub\cite{tensorflow_github}.
 To use the library for embedded development the whole project has to be cloned from the GitHub.
 TensorFlow team provides users with several example projects that have been ported to several different platforms such as Mbed, Arduino, OpenMV and ESP32.
 Example projects show how to use TFLite API while showcasing different ML applications: motion detection, wake word detection and person detection.
 
+Part of this thesis was concerned with porting TFLite Micro to \textbf{libopencm3}, our platform of choice.
+To compile source files and build binaries TFLite Micro uses build automation tool \textbf{GNU Make}.
+One large makefile that includes several platform specific makefiles dictates how firmware is built, by providing command line arguments user can decide which example has to be compiled and for which platform.
+The build system makes some assumptions about locations of the platform specific files, which in case of example projects are scattered over GitHub repository.
+This and several other reasons make library hard to use when porting it to a new platform.
+In section TODO ADD REFERENCE we describe our build system that keeps library and application specific code separated in a clear and concise manner.
 
-Because microcontrollers come in a variety of different architectures, platforms and are produced by a large number of different vendors that offer their own versions of IDEs it is sometimes hard to port external libraries
-
-Libary is on github, use it for embedded. 
-Examples for different platforms, name them
-Kernel implementations are shared.
-API can use kernel implementations either for micros or pcs
-
-How are you building them, no special tools needed, makefiles,
-workflow from trained model on.
+Is important to know that TFLite is just an extension of existing TensorFlow project.
+General steps for creating a trained ML model are exactly the same (Figure \ref{ml_workflow}), no matter if the model will run on a server or an embedded device.
+Figure TODO shows a workflow specific to deploying a model on a microcontroller, after a model was trained.
 Converter and interpreter.
 
 
