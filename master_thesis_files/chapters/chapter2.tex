@@ -280,7 +280,7 @@ Pooling is done on each depth slice separately of other slices, so depth size is
         \caption{ Effect of polling on input dimensions}
         \label{pool2}
     \end{subfigure}
-    \caption{ Polling layer, Image source: \cite{cs231n}}
+    \caption{ Polling layer. Image source: \cite{cs231n}}
     \label{pool_layer}
 \end{figure}
 
@@ -345,11 +345,34 @@ This and several other reasons make library hard to use when porting it to a new
 In section TODO ADD REFERENCE we describe our build system that keeps library and application specific code separated in a clear and concise manner.
 
 Is important to know that TFLite is just an extension of existing TensorFlow project.
-General steps for creating a trained ML model are exactly the same (Figure \ref{ml_workflow}), no matter if the model will run on a server or an embedded device.
-Figure TODO shows a workflow specific to deploying a model on a microcontroller, after a model was trained.
-Converter and interpreter.
+General steps for creating a trained ML model are still same (Figure \ref{ml_workflow}), although we have to be aware of some details.
+Figure \ref{micro_workflow} shows all steps that are needed to prepare a ML model for running on a microcontroller.
 
+\begin{figure}[ht] 
+    \centering
+    \includegraphics[width=1.0\linewidth]{micro_workflow.pdf} 
+    \caption{  Workflow of preparing a ML model for an inference on a microcontroller. Icons source: www.icons8.com}
+    \label{micro_workflow}
+\end{figure}
 
+We start with a small but inaccurate model that can still accomplish basic criteria that our objective demands.
+When the end of this workflow process is reached and we made sure that model can fit into flash memory area of our target microcontroller, we can start adding more layers in order to increase accuracy.
+We are allowed to use only operations that have supported implementations on microcontrollers.
+This is usually not a restriction as many operations are supported.
+Model that we created is usually in saved in Hierarchical Data Format with extension h5.
+Model in this shape is usually very big and it needs to be converted with TensorFlow Lite Converter tool.
+This tool can be either used as a command line tool or as a function in a Python script.
+We input model in .h5 file, choose if we want specific optimization or not and as an output we receive our model in a .tflite format.
+When optimized conversion is used the size of the model can decrease for a factor of 4, while speed of execution can increase 3 times when compared to a non-optimized converted model.
+Accuracy does decrease with optimization, but usually for only one or two percents.
+After we created and evaluated our .tflite model we need to convert it into a format that is understandable to a microcontroller.
+This is done with the xxd, a Linux command line tool which creates a hex dump out of any input file.
+As a input parameter we give xxd tool our .tflite model, set the -i flag and save the output into a .c file.
+Xxd tool will then create a hex dump of our model and format it as a char array in C programming language. 
+We then provide a .h file with a declaration of char array which we later call from our application code.
+Model is then ready to be executed on a microcontroller, we can run it and process the results.
+Accuracy will be the same as compared to running the same .tflite model on a personal computer, but execution time will naturally be different.
+If needed we can tweak the model parameters, train a new model and repeat described workflow again.
 
 
 \section{ Thermal cameras}
