@@ -33,7 +33,7 @@ They fall into field of deep learning, which is a sub-field of machine learning.
 Training of deep learning algorithms is computationally demanding and is usually done on powerful servers or computers with dedicated graphic processing units to speed up training time.
 After a model has been trained, data can be fed in and prediction is returned. 
 This process is also known as \textbf{inference}.
-The inference is computationally less intensive compared to the training process, so with properly optimized models, we can run inference on personal computers, smartphones, tablets, and even directly in internet browsers.
+The inference is computationally less intensive compared to the training process, so with properly optimised models, we can run inference on personal computers, smartphones, tablets, and even directly in internet browsers.
 
 
 \subsection{ General machine learning workflow}
@@ -82,7 +82,7 @@ Because of limited processing power, it is not feasible to train ML models direc
 Also it is not feasible to do online learning with microcontrollers, meaning that they would learn while being deployed.
 Models also need to be small enough to fit on a device. 
 Most general purpose microcontrollers only offer several hundred kilobytes of flash, up to 2 megabytes.
-For comparison, MobileNet v1 image classification model, optimized for mobile phones, is 16.9 MB in size\cite{daniel_edgeimpulse}.
+For comparison, MobileNet v1 image classification model, optimised for mobile phones, is 16.9 MB in size\cite{daniel_edgeimpulse}.
 To make it fit on a microcontroller and still have space for our application, we would have to greatly simplify it.
 
 Usual workflow, while developing machine learning models for microcontrollers, is to train a model on training data on some powerful computer or server. 
@@ -292,21 +292,15 @@ Pooling layers therefore reduce number of activations and prepare them to be fla
 
 TensorFlow is a free and open-source framework for numerical computation.
 It is particularly suited for large-scale machine learning applications\cite{geron}.
-TensorFlow started as a proprietary project developed by a Google Brain team at Google in 2011, but it became open-source in late 2015.
+TensorFlow started as a proprietary project developed by a Google Brain team at Google in 2011 and became open-source in late 2015.
 It is used in many Google's products such as Gmail, Google Cloud Speech and Google Search.
 
-TensorFlow is currently now the most popular deep learning networking judging by number of citations from scientific papers, adoptions in professional settings, stars on GitHub.
-It provides data scientists and programmers with several functionalities that make TensorFlow stand above its alternatives, such as PyTorch, Microsoft's CNTK and NEXT.
+TensorFlow gives programmers tools for creating and training ML models, without needlessly diving into specifics of computing neural networks.
+Programmers can write high level code in Python API, which calls highly efficient C++ code.
+When using TensorFlow the hardest part of a ML project is usually data preparation.
+After that is done, the creation of a ML model, its training and evaluation can be done in a few lines of Python code.
 
-It is relatively easy to use. TODO Maybe change this with distributed computing?
-When using the TensorFlow the hardest part of ML project is usually data preparation.
-After this is done, the creation of ML model, training and evaluation can be done in few lines of Python code.
-
-A lot of details are abstracted from programmer.
-Programmer can write high level code in Python API, which calls highly efficient C++ code.
-Developers do not have to write architecture specific code, it is a trivial task to switch from running on a CPU to GPU or TPU.
-
-TensorFlow supports Keras high level API for building ML models. 
+TensorFlow also supports Keras high level API for building ML models. 
 Keras is a Python library that functions as a wrapper for TensorFlow.
 When building ML models developers can use Keras Sequential API, where each layer in a model is represented as one line of code.
 Users do not need to care about connections between the layers, they only need to choose the type of layer (convolutional, max pool, fully connected), its size and few other specific parameters.
@@ -315,14 +309,13 @@ Sequential API is used most of the time, if finer level of control is needed Ten
 And finally, TensorFlow's trained output model is portable\cite{geron}.
 Models can be trained in one environment and executed in another.
 This means that we can train our model by writing Python code on Linux machine and execute it with Java on Android device.
-
 This last functionality is important for running ML models on microcontrollers.
 
 \subsection{ TensorFlow Lite for Microcontrollers}
 
 TensorFlow Lite (TFLite) is a set of tools and libraries that enable running ML inferences on constrained devices\cite{tensorflow_github}.
 It provides support for Android and iOS devices, and embedded Linux.
-TensorFlow Lite for Microcontrollers (TFLite Micro) is a recent port of TFLite (as of mid 2019) dedicated to running ML models on microcontrollers.
+TensorFlow Lite for Microcontrollers (TFLite Micro) is a recent port of TFLite (as of mid 2019), dedicated to running ML models on microcontrollers.
 TFLite itself provides API in different languages, such as Java, Swift, Python and C++.
 TFLite Micro uses C++ API, specifically C++11, which reuses large part of the general TensorFlow codebase.
 
@@ -339,13 +332,14 @@ Example projects show how to use TFLite API while showcasing different ML applic
 
 Part of this thesis was concerned with porting TFLite Micro to \textbf{libopencm3}, our platform of choice.
 To compile source files and build binaries TFLite Micro uses build automation tool \textbf{GNU Make}.
-One large makefile that includes several platform specific makefiles dictates how firmware is built, by providing command line arguments user can decide which example has to be compiled and for which platform.
+One large makefile that includes several platform specific makefiles dictates how firmware is built.
+By providing command line arguments users decide which example has to be compiled and for which platform.
 The build system makes some assumptions about locations of the platform specific files, which in case of example projects are scattered over GitHub repository.
 This and several other reasons make library hard to use when porting it to a new platform.
 In section TODO ADD REFERENCE we describe our build system that keeps library and application specific code separated in a clear and concise manner.
 
 Is important to know that TFLite is just an extension of existing TensorFlow project.
-General steps for creating a trained ML model are still same (Figure \ref{ml_workflow}), although we have to be aware of some details.
+General steps for creating a trained ML model are still the same as seen in Figure \ref{ml_workflow}, although we have to be aware of some details.
 Figure \ref{micro_workflow} shows all steps that are needed to prepare a ML model for running on a microcontroller.
 
 \begin{figure}[ht] 
@@ -356,23 +350,42 @@ Figure \ref{micro_workflow} shows all steps that are needed to prepare a ML mode
 \end{figure}
 
 We start with a small but inaccurate model that can still accomplish basic criteria that our objective demands.
-When the end of this workflow process is reached and we made sure that model can fit into flash memory area of our target microcontroller, we can start adding more layers in order to increase accuracy.
+When the end of this workflow process is reached and we made sure that the model can fit into a flash memory area of our target microcontroller, we can start adding more layers in order to increase accuracy.
 We are allowed to use only operations that have supported implementations on microcontrollers.
-This is usually not a restriction as many operations are supported.
-Model that we created is usually in saved in Hierarchical Data Format with extension h5.
-Model in this shape is usually very big and it needs to be converted with TensorFlow Lite Converter tool.
+This is usually not a restriction as many of them are supported.
+Model that we created is usually saved in Hierarchical Data Format with extension h5.
+Model in this shape is usually very big and needs to be converted with TensorFlow Lite Converter tool.
 This tool can be either used as a command line tool or as a function in a Python script.
-We input model in .h5 file, choose if we want specific optimization or not and as an output we receive our model in a .tflite format.
-When optimized conversion is used the size of the model can decrease for a factor of 4, while speed of execution can increase 3 times when compared to a non-optimized converted model.
-Accuracy does decrease with optimization, but usually for only one or two percents.
+We input model in .h5 file, choose if and which specific optimisation we want to use and as an output we receive our model in a .tflite format.
 After we created and evaluated our .tflite model we need to convert it into a format that is understandable to a microcontroller.
-This is done with the xxd, a Linux command line tool which creates a hex dump out of any input file.
-As a input parameter we give xxd tool our .tflite model, set the -i flag and save the output into a .c file.
+This is done with the \textbf{xxd}, a Linux command line tool which creates a hex dump out of any input file.
+As a input parameter we give xxd our .tflite model, set the -i flag and save the output into a .c file.
 Xxd tool will then create a hex dump of our model and format it as a char array in C programming language. 
-We then provide a .h file with a declaration of char array which we later call from our application code.
+We then create a .h file with a declaration of char array which we can later call from our application code.
 Model is then ready to be executed on a microcontroller, we can run it and process the results.
 Accuracy will be the same as compared to running the same .tflite model on a personal computer, but execution time will naturally be different.
 If needed we can tweak the model parameters, train a new model and repeat described workflow again.
+
+
+\subsubsection{ Post-training quantization}
+
+By using quantization optimisation we approximate floating-point numbers in a different format, usually with 8-bit integers.
+When computing neural networks we can quantize weights, biases and intermidiate values outputted by separate neurons. 
+Quantization has a dramatic effect on size of the model and its execution speed.
+By changing 32-bit floating-point numbers with 8-bit integers size decreases by a factor of 4.
+Floating-point math is by nature slow to compute, many microcontrollers do not even have a floating-point unit.
+In comparison integer math is faster to compute, therefore quantized models are executed faster.
+
+TensorFlow Lite Converter offers 3 different quantization methods: float16, dynamic range and full integer quantization\cite{quantization}.
+Float16 quantization quantizes weights from 32-bit to 16-bit floating-point values. 
+Model size is split in half and accuracy decrease is minimal, but there is no boost in execution speed.
+Dynamic range quantization stores weights as 8-bit values, but operations are still done in a floating-point math.
+Models are 4 times smaller and execution speed is faster when compared to float16 optimization but slower from full integer optimization.
+Full integer optimization also quantinizes math operations, thus even more increasing execution speed.
+This is an ideal choice for running models on microcontollers, however it should be noted that not all operations have full integer math implementations in TFLite Micro.
+
+Model accuracy decreases after using any of quantization methods decribed above, but it is usually only a percent or two.
+ 
 
 
 \section{ Thermal cameras}
