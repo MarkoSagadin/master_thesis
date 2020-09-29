@@ -1,0 +1,13 @@
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Workflow of solving a generic machine learning problem. Icons source: www.icons8.com\relax }}{5}{figure.caption.2}%
+\contentsline {figure}{\numberline {1.2}{\ignorespaces (a) Mathematical model of an artificial neuron, similarities with biological neurons can be seen. (b) Fully connected 3-layer neural network. Image source: \cite {cs231n}\relax }}{7}{figure.caption.3}%
+\contentsline {figure}{\numberline {1.3}{\ignorespaces Different activation functions and their equations.\relax }}{9}{figure.caption.4}%
+\contentsline {figure}{\numberline {1.4}{\ignorespaces CNNs usually consist of alternating convolutional layers and pooling layers. Last polling layer is flattened out and feed into fully connected NN. Image source:\cite {cs231n}\relax }}{10}{figure.caption.5}%
+\contentsline {figure}{\numberline {1.5}{\ignorespaces (a) Filter moves over zero-padded input matrix. (b) To produce output layer with depth 5, this layer would have 5 different filters. Image sources: \cite {conv_layer_img}\cite {cs231n}\relax }}{12}{figure.caption.6}%
+\contentsline {figure}{\numberline {1.6}{\ignorespaces Polling layer. Image source: \cite {cs231n}\relax }}{13}{figure.caption.7}%
+\contentsline {figure}{\numberline {1.7}{\ignorespaces Workflow of preparing a ML model for an inference on a microcontroller. Icons source: www.icons8.com\relax }}{16}{figure.caption.8}%
+\contentsline {figure}{\numberline {1.8}{\ignorespaces Lora signal (left) and different properties of LoRa with their effects on range, bit rate, receiver sensitivity, time on air and consumption (right). Image sources:\cite {lora_github}\cite {lora_philly}\relax }}{20}{figure.caption.9}%
+\contentsline {figure}{\numberline {1.9}{\ignorespaces Comparison between a picture taken with a normal camera (left) and image taken with a low resolution thermal camera FLIR Lepton 2.5 (right). Image source: Arribada Initiative\cite {thermal_comparison}\relax }}{21}{figure.caption.10}%
+\contentsline {figure}{\numberline {1.10}{\ignorespaces (a) Focal point array under electronic microscope. (b) Bolometer with $\lambda /4$ resonant cavity. Image source: Vollmer, Möllmann\cite {thermal_book}\relax }}{22}{figure.caption.11}%
+\contentsline {figure}{\numberline {1.11}{\ignorespaces Comparison of images of the same object taken with cameras with different NETD values. Low NETD values are more appropriate for object recognition. Image source: MoviTherm \cite {NETD}\relax }}{23}{figure.caption.12}%
+\contentsline {figure}{\numberline {1.12}{\ignorespaces Comparison of image quality made by different thermal cameras}}{24}{figure.caption.13}%

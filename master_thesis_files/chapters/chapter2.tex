@@ -1,3 +1,5 @@
+\listoffigures
+
 \section{ Machine learning}
 
 According to Arthur Samuel (qtd. in Geron \cite{geron}) machine learning is a field of study that gives computers the ability to learn without being explicitly programmed.
@@ -197,7 +199,7 @@ After few alternating pairs of convolutional and pooling layers the output of th
 It makes sense to explain how convolutional and pooling layers work in greater detail as this will be important later when we will be designing our CNN models in chapter TODO.
 
 
-\subsubsection{Convolutional layers}
+\subsubsection{ Convolutional layers}
 
 Data that CNNs operate on are 3 dimensional matrices, where width and height correspond to image resolution and depth corresponds to the number of color channels, 3 for colorful images (red, green, blue) and 1 for greyscale.
 When speaking about this data we will relate to them as volumes.
@@ -381,12 +383,78 @@ Float16 quantization quantizes weights from 32-bit to 16-bit floating-point valu
 Model size is split in half and accuracy decrease is minimal, but there is no boost in execution speed.
 Dynamic range quantization stores weights as 8-bit values, but operations are still done in a floating-point math.
 Models are 4 times smaller and execution speed is faster when compared to float16 optimization but slower from full integer optimization.
-Full integer optimization also quantinizes math operations, thus even more increasing execution speed.
-This is an ideal choice for running models on microcontollers, however it should be noted that not all operations have full integer math implementations in TFLite Micro.
+Full integer optimization also quantizes math operations, thus even more increasing execution speed.
+This is an ideal choice for running models on microcontrollers, however it should be noted that not all operations have full integer math implementations in TFLite Micro.
 
-Model accuracy decreases after using any of quantization methods decribed above, but it is usually only a percent or two.
+Model accuracy decreases after using any of quantization methods described above, but it is usually only a percent or two.
  
 
+\section{ IoT and wireless technologies}
+
+Internet of things, or IoT, is a system of uniquely identifiable devices, which communicate with each other or other systems over wireless networks\cite{IoT}.
+Device or a thing would be battery powered embedded system such as smart watch, heart monitor or animal tracker which would transmit collected sensor data to an IoT gateway, which would relay the data over to the cloud.
+This data can then be analyzed and displayed in such fashion which would provide businesses or users with valuable information.
+Examples of this would be tracking energy consumption of machines in factories, monitoring conditions of crops in agriculture or monitoring locations of endangered specimens in African conservation parks.
+
+Important part of IoT system is a wireless network that is used to transport data from edge devices to gateways.
+Choice of a wireless network is highly depended on a type of a problem a IoT solution is trying to solve.
+Factors such as required battery life, amount of data being sent, distance that data has to travel and environment conditions of edge device itself are important.
+
+Because our early detection system demands a decent battery life of several months and needs to send a small amount of data over one or two kilometers we will focus on wireless technologies such as NB-IoT, SigFox and LoRa.
+
+Narrowband IoT or NB-IoT is a radio technology standard developed by 3GPP standard organization\cite{lora_nbiot}.
+NB-IoT was made specifically with embedded devices in mind, can reach up to 15 \si{\kilo\meter} and it has deep indoor penetration\cite{lora_nbiot}.
+Compared to SigFox and LoRa it has better latency and higher data rate, but also higher power consumption\cite{lora_nbiot_sigfox}.
+However it is unsuitable for our use case as it operates on the network provided by the cellular base towers, which is inconvenient as mobile connection in Assam, India can be inconsistent\cite{wildlabs-elephants}.
+
+SigFox is a radio technology developed by the company of the same name that operates on unlicensed industrial, scientific and medical (ISM) radio band.
+In many views it is similar to LoRa, as it has comparative range and power consumption\cite{lora_nbiot_sigfox}.
+There is are few important differences however.
+Although SigFox modules are a bit cheaper when compared to Lora modules, each message is payed, devices are limited to 12 bytes per uplink, 140 uplinks per day and only 4 downlinks are available per day.
+SigFox devices can also only communicate with base stations, installed by the SigFox company\cite{lora_nbiot_sigfox}.
+This means that users can not build their own network and are dependent on the coverage provided by SigFox.
+
+This leaves us with Lora protocol which covers our use case from points of long range, low power consumption and ability to setup our own network. 
+
+
+\subsection{ LoRa and LoRaWAN}
+
+LoRa (Long Range) is a physical layer protocol that what defines how information is modulated and transmitted over the air\cite{lora_article}\cite{lora_nbiot}.
+Protocol is proprietary and owned by a semiconductor company Semtech, which means that only they can design and manufacture radio chips that use LoRa protocol.
+Although not all information about LoRa is publicly available, it is known that LoRa uses a modulation similar to chirp spread spectrum modulation\cite{lora_article}.
+Example of a LoRa signal that was captured with a software defined radio can be seen on Figure \ref{lora1}.
+Each symbol is modulated into a radio signal whose frequency is either increasing or decreasing with constant rate inside of a specified bandwidth.
+When bandwidth boundary is reached, signal "wraps around" and appears at the other boundary.
+Although frequency is always changing with constant rate, it is not continuous inside the bandwidth window, but it can immediately change to a different frequency and continue from there.
+
+\begin{figure}[ht]
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=0.5\linewidth, height=6cm]{lora_signal.png} 
+        \caption{ LoRa signal}
+        \label{lora1}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=1\linewidth, height=6cm]{lora_properties.png}
+        \caption{ LoRa properties}
+        \label{lora2}
+    \end{subfigure}
+    \caption{Lora signal (left) and different properties of LoRa with their effects on range, bit rate, receiver sensitivity, time on air and consumption (right). Image sources:\cite{lora_github}\cite{lora_philly}}
+    \label{lora}
+\end{figure}
+
+This kind of modulation gives LoRa extreme resiliency against interference of other radio frequency signals that might be using the same frequency band\cite{lora_article}\cite{lora_philly}.
+For example on a lower part of Figure \ref{lora1} we can see a signal with constant frequency transmitting inside bandwidth window that LoRa signal is using.
+This kind of interference is easily filtered out by LoRa receiver.
+Size of a bandwidth window, rate of frequency change (also known as a spreading factor) and transmitting power further define LoRa signal.
+With these factors we influence range, power consumption and bit rate.
+
+            How LoRa works
+            what are its qualities, high sensitivity, low power and so on
+            How LoRaWan works 
+            Comparison with other similar technologies is needed
+            How embedded engineers use it
 
 \section{ Thermal cameras}
 
@@ -514,8 +582,7 @@ Although thermopile cameras were cheaper from microbolometer cameras, quality of
         \includegraphics[width=1.0\linewidth, height=4.5cm]{thermal_comparison_d.png} 
         \label{thermal_comparison_d}
     \end{subfigure}
-
-\caption{Comparison of image quality made by different thermal cameras, MELEXIS MLX90640 (top left), Heimann 80x64 (top right), ULIS Micro80 Gen2 (bottom left) and FLIR Lepton 2.5 (bottom right). Image source: Arribada Initiative \cite{thermal_comparison}}
+\caption[Comparison of image quality made by different thermal cameras]{, MELEXIS MLX90640 (top left), Heimann 80x64 (top right), ULIS Micro80 Gen2 (bottom left) and FLIR Lepton 2.5 (bottom right). Image source: Arribada Initiative \cite{thermal_comparison}}
     \label{thermal_comparison_images}
 \end{figure}
 
