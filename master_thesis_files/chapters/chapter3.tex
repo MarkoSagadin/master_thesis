@@ -48,11 +48,66 @@ To summarize:
 \end{itemize}
 
 
-\section{ Exploring the dataset}
+\section{ Exploring the dataset} \label{exploring_dataset}
+
+As mentioned in section \ref{arribada_init} thermal image dataset was provided by Arribada Initiative\cite{wildlabs-winners}\cite{arribada-assam}.
+Images in dataset come from two different locations: Assam region in India and ZSL Whipsnade Zoo in United Kingdom.
+
+Assam, India served as a testing ground.
+Arribada team positioned two camera traps on two locations that overlook paths commonly used by elephants.
+Cameras consisted out of Raspberry Pi, PIR sensor, FLIR Lepton 2.5 camera and batteries, which were enclosed in plastic housing.
+Insides of the camera and an example of deployed camera can be seen on Figure \ref{assam_camera}.
+
+\begin{figure}[ht]
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth, height=5cm]{assam_camera1.jpg} 
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth, height=5cm]{assam_camera2.jpg}
+    \end{subfigure}
+
+    \caption{Camera trap used in Assam, India. Image source: Arribada Initiative \cite{arribada-assam}}
+    \label{assam_camera}
+\end{figure}
+
+PIR sensor functioned as photo trigger, whenever an object passed in front of it camera made a picture.
+This setup provided Arribada with elephant images in real life scenarios, however they could not capture elephants in variety of different conditions, such as different angles and distances.
+
+This was accomplished in ZSL Whipsnade Zoo, where they could take many images of elephants in variety different conditions\cite{dataset_collection}.
+PIR sensor trigger approach was dropped in favor of a 5 second time lapse trigger.
+
+Images of elephants that came from both locations can be seen on Figure \ref{four_elephants}.
+
+\begin{figure}[ht]
+    \centering
+    \scalebox{.35}{\includegraphics{four_elephants.pdf}}
+    \caption{Thermal images of elephants from dataset.}
+    \label{four_elephants}
+\end{figure}
+
+Thermal image dataset was given to us in form of a Google Drive folder, which we downloaded to our computer.
+After examining the folder, we came to several conclusions.
+
+Firstly, we saw that the primary focus of Arribada team was to build an object localization model, not an image classification model.
+In object localization neural network draws bounding boxes around objects that it recognizes and assigns them labels, while image classification model only labels the image as whole.
+Object localization produces a bigger and more complex model then image classification, which is unsuitable for running on a microcontroller.
+All major work that was done by Arribada team was contained in one folder where each image had accompanying text file of the same name.
+Text files were produced by a DeepLabel software, which is used for preparing images for training object localization models.
+Each line in a text file described a location of the bounding box and its label.
+This dataset format was not suitable for us, as many images contained more bounding boxes, which would be troublesome to sort into a distinct label.
+We later saw that there were few folder with names such as "Human", "Single Elephant", "Cows", "Goats" and so on, which contained sorted images that we could use.
+
+Secondly, we found out that all images were documented in a large excel database.
+For each image there was a row in database that connected image file name with information where image was taken and with what sensor.
+This was useful for tracking the image metadata later on.
+
+
 Show images, 
-how and by who were they made, 
 what was their original purpose
 show ratios of different meta data
+
 what is missing from dataset
 Describe how you made missing pictures
 make a picture of a setup
