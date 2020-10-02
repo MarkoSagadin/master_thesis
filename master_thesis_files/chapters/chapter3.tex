@@ -1,2 +1,73 @@
-\lipsum
+In this chapter we will describe the design of neural network that will be able to process thermal images and decide what object they contain.
+Workflow that we will follow will largely be a combination of workflows presented in Figures \ref{ml_workflow} and \ref{micro_workflow}.
 
+We will first set concrete objectives, which will dictate what exactly we want to accomplish, while keeping in consideration various constraints.
+We will then explore the dataset provided by Arribada Initiative, analyze different class representations and decide if it is appropriate for accomplishing objectives that we set earlier.
+
+After dataset exploration we had to setup our development environment.
+As software for creating and training ML models consists of many components and dependencies it is important to start with something that we know it works.
+We will describe our AWS server setup, how we moved image data on it and why we decided to use Python Notebooks for algorithm development.
+
+Image preparation was important step before model creation, as wanted to keep track of various metadata labels that were assigned to each image.
+This involved parsing a large excel table and connecting images with correct labels.
+Image preprocessing such as mean normalization and augmentation was then done.
+We then designed and trained few CNN models with varying complexities and observed how well they behave on thermal image dataset.
+We then optimized models with TFLite tools and compared accuracies and model sizes.
+Models were then converted into a C char array format, ready to be tested on a actual microcontroller.
+
+We will finish this chapter by describing the same workflow, but by using tools that Edge Impulse provides to the point where we will have our model ready to run on a microcontroller.
+Using Edge Impulse will generally require less knowledge, less time and will lead to better results when compared to our setup.
+
+
+\section{ Objectives}
+
+The accuracy of our early detection system should be equal or similar to the one of human observer, no matter if we are operating in the daytime or nighttime.
+Although our system will be placed on the paths that are regularly traversed by elephants, this does not mean that they will be only possible object on a image taken by a thermal camera.
+Humans and various livestock, such as goats and cows, could also be photographed.
+This means that we want to avoid reporting false positives, which means that our system should not incorrectly label a human or a livestock animal as an elephant.
+At the same time we want avoid false negatives, where an elephant could pass by our system undetected.
+These kind of mistakes could undermine the community's confidence of our early detection system and defeat our purpose.
+This means that besides elephant detection, we should also focus on correctly labeling humans and livestock, while also providing a nature/random class for all other unexpected objects or simply images of nature.
+
+It would be beneficial if thermal camera can take several pictures of the same object, thus increasing the confidence of computed label of the object.
+However this is constrained by the image processing time and camera's field of view.
+Thermal camera FLIR Lepton has a horizontal field of view of 57 degrees.
+The closer elephant passes by the thermal camera the quicker he will traverse the camera's field of view, thus giving the camera less time for capture.
+This problem can be solved by optimizing the execution time of the ML model or by placing the early detection system on far enough position from expected elephant's path.
+As latter option might not be always possible, we should strive to keep the whole image processing time as short as possible.
+
+Finally, as our neural network will be deployed on a microcontroller and not on a computer or a server we have to keep it simple and small.
+Extra model complexity that might bring us few percents of accuracy will not matter much, if our model would be too large to fit on a microcontroller or too slow to run.
+
+
+To summarize:
+\begin{itemize}
+    \item We will create an image classification ML model that will be capable of processing a thermal image and sorting it into one of possible 4 categories: elephant, human, cows and nature/random.
+    \item Total image processing time should be as short as possible, we should try to keep it under 2 seconds.
+    \item Model should be small enough to fit on a microcontroller of our choice, while still leaving some space for application code. Microcontroller of our choice (STM32F767) has 2 MB of flash memory so model size should be smaller than that.
+\end{itemize}
+
+
+\section{ Exploring the dataset}
+Show images, 
+how and by who were they made, 
+what was their original purpose
+show ratios of different meta data
+what is missing from dataset
+Describe how you made missing pictures
+make a picture of a setup
+
+\section{ Development enviroment }
+Linux server on AWS with Tensorflow preinstalled
+Python Notebooks
+How and why did you chose this setup
+\section{ Image preparation}
+
+\section{ Model creation and training (Rethink title)}
+train few different models
+with different accuracies
+
+\section{ Optimising models}
+Comparison between different sizes and accuracies
+
+\section{ Edge Impulse (SHOULD this be here like that, how should i go about this)}

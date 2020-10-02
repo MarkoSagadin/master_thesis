@@ -1,5 +1,3 @@
-\listoffigures
-
 \section{ Machine learning}
 
 According to Arthur Samuel (qtd. in Geron \cite{geron}) machine learning is a field of study that gives computers the ability to learn without being explicitly programmed.
@@ -60,6 +58,7 @@ We can train several different types of models and chose the one that performs t
 To achieve desired accuracy, steps two and three can be repeated many times.
 In step four we deploy our model and monitor its accuracy. We can also use it to collect more data and retrain the model.
 
+
 \subsection{ Machine learning on embedded devices} \label{ml_on_embedded}
 
 Machine learning on embedded devices is an emerging field, which nicely coincides with the Internet of things.
@@ -87,9 +86,10 @@ Most general purpose microcontrollers only offer several hundred kilobytes of fl
 For comparison, MobileNet v1 image classification model, optimised for mobile phones, is 16.9 MB in size\cite{daniel_edgeimpulse}.
 To make it fit on a microcontroller and still have space for our application, we would have to greatly simplify it.
 
-Usual workflow, while developing machine learning models for microcontrollers, is to train a model on training data on some powerful computer or server. 
-When we are satisfied with the accuracy of the model we then quantize it (more about quantization in chapter TODO: ADD CHAPTER NUMBER, SHOULD THIS BE A FOOTNOTE?) and convert it into a format understandable to our microcontroller.
-
+Usual workflow, while developing machine learning models for microcontrollers, is to train a model on training data on a computer. 
+When we are satisfied with the accuracy of the model we then quantize it and convert it into a format understandable to our microcontroller.
+This is further described in section \ref{tflite_quant}.
+%This workflow is described in section \ref{tflite_quant} in greater detail.
 
 \section{ Neural networks}\label{neural_networks_section}
 
@@ -140,12 +140,13 @@ It basically takes a real number and squeezes it into range between 0 and 1.
 It was later shown that training NNs with sigmoid activation function often hinders training process as saturated outputs cut of parts of networks, thus preventing training algorithm reaching all neurons and correctly configuring the weights\cite{cs231n}.
 It has since fallen out of practice and is nowadays replaced by ReLu or some other activation function.
 
-\begin{figure}[ht]
+\begin{figure}[ht!]
         \centering
         \includegraphics[width=1.0\linewidth]{activation_func.pdf} 
         \caption{Different activation functions and their equations.}
         \label{activation_functions}
 \end{figure}
+
 
 \subsection{ Backpropagation}
 
@@ -196,7 +197,7 @@ Each convolutional layer detects some sort of shapes, first ones detect differen
 Pooling layers downsample the data in spatial dimension, thus decreasing the number of parameters and operations needed in CNN.
 After few alternating pairs of convolutional and pooling layers the output of the last pooling layer is flattened out into one dimensional vector and feed into fully connected NN which produces probability results in given classes.
 
-It makes sense to explain how convolutional and pooling layers work in greater detail as this will be important later when we will be designing our CNN models in chapter TODO.
+It makes sense to explain how convolutional and pooling layers work in greater detail as this will be important later when we will be designing our CNN models in section TODO.
 
 
 \subsubsection{ Convolutional layers}
@@ -212,15 +213,15 @@ We can see a concrete example on Figure \ref{conv1}.
 \begin{figure}[ht] 
     \centering
     \begin{subfigure}[b]{0.75\textwidth}
-        \includegraphics[width=1\linewidth]{conv1.png} 
-        \caption{Example of dot product operation}
+        \includegraphics[width=\linewidth]{conv1.png} 
+        \caption{Example of a dot product operation}
         \label{conv1}
     \end{subfigure}
     \vspace{0.5cm}
     \hrule
     \vspace{0.5cm}
     \begin{subfigure}[b]{0.5\textwidth}
-        \includegraphics[width=1.0\linewidth]{conv2.jpeg} 
+        \includegraphics[width=\linewidth]{conv2.jpeg} 
         \caption{ Convolutional layer}
         \label{con2v}
     \end{subfigure}
@@ -313,7 +314,7 @@ Models can be trained in one environment and executed in another.
 This means that we can train our model by writing Python code on Linux machine and execute it with Java on Android device.
 This last functionality is important for running ML models on microcontrollers.
 
-\subsection{ TensorFlow Lite for Microcontrollers}
+\subsection{ TensorFlow Lite for Microcontrollers} \label{tflite_quant}
 
 TensorFlow Lite (TFLite) is a set of tools and libraries that enable running ML inferences on constrained devices\cite{tensorflow_github}.
 It provides support for Android and iOS devices, and embedded Linux.
@@ -420,24 +421,25 @@ This leaves us with Lora protocol which covers our use case from points of long 
 \subsection{ LoRa and LoRaWAN}
 
 LoRa (Long Range) is a physical layer protocol that what defines how information is modulated and transmitted over the air\cite{lora_article}\cite{lora_nbiot}.
-Protocol is proprietary and owned by a semiconductor company Semtech, which means that only they can design and manufacture radio chips that use LoRa protocol.
-Although not all information about LoRa is publicly available, it is known that LoRa uses a modulation similar to chirp spread spectrum modulation\cite{lora_article}.
+Protocol is proprietary and owned by a semiconductor company Semtech, who is as sole designer and manufacturer Lora radio chips in the world.
+LoRa protocol uses a modulation similar to chirp spread spectrum modulation\cite{lora_article}.
+As the protocol is proprietary exact details of it are not known, however it was reverse engineered by radio frequency specialist\cite{lora_github}.
 Example of a LoRa signal that was captured with a software defined radio can be seen on Figure \ref{lora1}.
 Each symbol is modulated into a radio signal whose frequency is either increasing or decreasing with constant rate inside of a specified bandwidth.
 When bandwidth boundary is reached, signal "wraps around" and appears at the other boundary.
 Although frequency is always changing with constant rate, it is not continuous inside the bandwidth window, but it can immediately change to a different frequency and continue from there.
 
 \begin{figure}[ht]
-    \begin{subfigure}{0.5\textwidth}
+    \begin{subfigure}{0.3\textwidth}
         \centering
-        \includegraphics[width=0.5\linewidth, height=6cm]{lora_signal.png} 
+        \includegraphics[width=0.8\textwidth, height=6cm]{lora_signal.png} 
         \caption{ LoRa signal}
         \label{lora1}
     \end{subfigure}
-    \begin{subfigure}{0.5\textwidth}
-        \centering
-        \includegraphics[width=1\linewidth, height=6cm]{lora_properties.png}
-        \caption{ LoRa properties}
+    \hspace{0.5cm}%
+    \begin{subfigure}{0.7\textwidth}
+        \includegraphics[width=\textwidth, height=6cm]{lora_properties.png}
+        \caption{ Properties of LoRa signal}
         \label{lora2}
     \end{subfigure}
     \caption{Lora signal (left) and different properties of LoRa with their effects on range, bit rate, receiver sensitivity, time on air and consumption (right). Image sources:\cite{lora_github}\cite{lora_philly}}
@@ -445,16 +447,27 @@ Although frequency is always changing with constant rate, it is not continuous i
 \end{figure}
 
 This kind of modulation gives LoRa extreme resiliency against interference of other radio frequency signals that might be using the same frequency band\cite{lora_article}\cite{lora_philly}.
-For example on a lower part of Figure \ref{lora1} we can see a signal with constant frequency transmitting inside bandwidth window that LoRa signal is using.
-This kind of interference is easily filtered out by LoRa receiver.
-Size of a bandwidth window, rate of frequency change (also known as a spreading factor) and transmitting power further define LoRa signal.
-With these factors we influence range, power consumption and bit rate.
+For example, on a lower part of Figure \ref{lora1} we can see a signal with constant frequency transmitting inside bandwidth window that LoRa signal is using.
+This kind of interference is easily filtered out by a LoRa receiver.
 
-            How LoRa works
-            what are its qualities, high sensitivity, low power and so on
-            How LoRaWan works 
-            Comparison with other similar technologies is needed
-            How embedded engineers use it
+Size of a bandwidth window, rate of frequency change (also known as a spreading factor) and transmitting power further define LoRa signal.
+With these factors we can influence range, power consumption and bit rate of a LoRa signal.
+For example, as seen on Figure \ref{lora2}, by increasing spreading factor we increase time on air thus giving the receiver more time to sample signal, which leads to better sensitivity but increases power consumption.
+
+While LoRa defines the physical layer, LoRaWAN defines media access control protocol for wide area networks, which are built on top of LoRa\cite{lora_article}.
+Its specification is open, so any one can implement it.
+LoRaWAN takes care of communication between end devices and gateways and manages communication frequency bands, data rate and transmitting power.
+
+LoRaWAN has a star of stars topology\cite{lora_article}.
+Devices deployed in the field transmit messages on frequency bands that differ from region to region. 
+Messages are received by gateways which relay them to the network server.
+Network server displays relayed messages, decodes them and sends them to various applications.
+If the same message is heard by several gateways, the server drops all duplicates.
+Server also decides which gateway will send a downlink message to a specific device. 
+
+Because LoRaWAN operates on an unlicensed ISM band, anyone can setup up their network without any licensing fees.
+For some use cases a single gateway with internet connection is enough to provide coverage to a large number of devices.
+
 
 \section{ Thermal cameras}
 
@@ -467,6 +480,7 @@ Photon detectors convert absorbed EM radiation directly into electric signals by
 Thermal detectors covert absorbed EM radiation into thermal energy, raising the detector temperature\cite{thermal_book}. 
 Change of detector's temperature is then converted into an electrical signal.
 Since photon detectors are expensive, large and therefore unsuitable for our use case, we will not describe them in greater detail.
+\newline 
 
 \begin{figure}[ht]
     \begin{subfigure}{0.5\textwidth}
