@@ -103,7 +103,7 @@ All folders with elephant pictures we merged into one folder, as we did not care
 Secondly, we found out that all images were documented in a large Excel database.
 For each image there was a row in a database that connected image file name with information where image was taken and with what sensor.
 This enabled us to generate a graph seen on Figure \ref{nested_donut1}.
-We used a total of 9232 images from thermal image dataset, almost 88 \% of them were made in Whipsnade Zoo, the rest of them were made in Assam.
+We used a total of 13667 images from thermal image dataset, almost 88 \% of them were made in Whipsnade Zoo, the rest of them were made in Assam.
 All images from Assam were made with FLIR Lepton 2.5, while both cameras were used in Whipsnade zoo, however more photos were made with 2.5 version of the thermal camera.
 
 \begin{figure}[ht]
@@ -119,7 +119,7 @@ In case of an image classification model, this sort of training data is not desi
 We therefore dropped goat images out of our training data entirely.
 
 Additionally, we realised that there was a large class imbalance, as seen on Figure \ref{nested_donut2} in favor to elephant class.
-Number of elephant images was xxx times larger from the other classes combined.
+Number of elephant images was more than 4 times larger from the number of images of the all other classes combined.
 This issue was solved with acquiring more images of the minority class, oversampling the minority class and/or undersampling the majority class and additionally augmenting images in preparation phase.
 
 \begin{figure}[ht]
@@ -132,7 +132,7 @@ This issue was solved with acquiring more images of the minority class, oversamp
 \subsection{ Gathering thermal images}
 
 As the amount of cow images was low compared to human and elephant classes and because we also did not had any images that would fit into nature/random class, we decided to gather them ourselves.
-We wanted to do this as quickly and efficiently as possible so we connected FLIR Lepton 2.5 breakout board to a Raspberry Pi Zero and powered it from power bank.
+We wanted to do this as quickly and efficiently as possible so we build a prototype camera made out of FLIR Lepton 2.5 breakout board, Raspberry Pi Zero and power bank.
 We used an open source library \cite{flir_github} for FLIR Lepton module which used a simple C program to take a single image with a thermal camera and save it to a Raspberry Pi.
 Image of the setup can be seen on Figure \ref{cow_camera}.
 
@@ -150,11 +150,29 @@ With this setup we made 365 images of cows in varying conditions, 308 images of 
 We then manually sorted images into appropriate folders and added them to the dataset.
 
 
-\section{ Development enviroment }
-Linux server on AWS with Tensorflow preinstalled
-Python Notebooks
-How and why did you chose this setup
+\section{ Development environment}
+
+All of the work around image preparation and ML model creation was done using Amazon's Elastic Compute Cloud web service.
+Elastic Compute Cloud or EC2 enables users to create an instance of a server in a cloud with specified amount of processing power and memory.
+Some instances come with dedicated software modules and dedicated graphics cards for extra boost in performance.
+
+As we did not had powerful hardware at our disposal, we created an instance of Linux server that came with TensorFlow pre-installed.
+We interacted with the server's command line through SSH protocol.
+
+Because TensorFlow has a Python API, we needed to write some Python code.
+Instead of writing Python scripts and executing them through command line, we used Juptyer Notebook. 
+Juptyer Notebook is a web-based application that can run programs that are a mix of code, explanatory text and computer output.
+Users can divide code into segments, which can be executed separately, visual output from modules such as Matplotlib is also supported.
+Separate phases of model creation can also be split in several different files to improve readability and reuse.
+To setup Juptyer Notebook on our cloud instance, we only had to install it with package manager, run it and expose default 8888 port that it uses on the Amazon's server configuration site to the public.
+We could then access web service simply through web browser by writing the IP address of the server, followed by the 8888 port.
+
+
 \section{ Image preparation}
+
+Image preparation phase is a step by step process that depends how training data is saved, if it has already been split into train, validation and test sets and what kind of normalization needs to be done on it.
+
+
 
 \section{ Model creation and training (Rethink title)}
 train few different models
