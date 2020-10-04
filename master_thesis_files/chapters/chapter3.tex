@@ -51,11 +51,11 @@ To summarize:
 \section{ Exploring the dataset} \label{exploring_dataset}
 
 As mentioned in section \ref{arribada_init} thermal image dataset was provided by Arribada Initiative\cite{wildlabs-winners}\cite{arribada-assam}.
-Images in dataset come from two different locations: Assam region in India and ZSL Whipsnade Zoo in United Kingdom.
+Images in dataset came from two different locations: Assam, India and ZSL Whipsnade Zoo, United Kingdom.
 
-Assam, India served as a testing ground.
+Assam served as a testing ground.
 Arribada team positioned two camera traps on two locations that overlook paths commonly used by elephants.
-Cameras consisted out of Raspberry Pi, PIR sensor, FLIR Lepton 2.5 camera and batteries, which were enclosed in plastic housing.
+Cameras were built otu from Raspberry Pi, PIR sensor, FLIR Lepton 2.5 camera and batteries, all of which were enclosed in a plastic housing.
 Insides of the camera and an example of deployed camera can be seen on Figure \ref{assam_camera}.
 
 \begin{figure}[ht]
@@ -67,7 +67,6 @@ Insides of the camera and an example of deployed camera can be seen on Figure \r
         \centering
         \includegraphics[width=1.0\linewidth, height=5cm]{assam_camera2.jpg}
     \end{subfigure}
-
     \caption{Camera trap used in Assam, India. Image source: Arribada Initiative \cite{arribada-assam}}
     \label{assam_camera}
 \end{figure}
@@ -77,6 +76,7 @@ This setup provided Arribada with elephant images in real life scenarios, howeve
 
 This was accomplished in ZSL Whipsnade Zoo, where they could take many images of elephants in variety different conditions\cite{dataset_collection}.
 PIR sensor trigger approach was dropped in favor of a 5 second time lapse trigger.
+Two cameras were used again, however one of them now used FLIR Lepton 3.5, with better resolution.
 
 Images of elephants that came from both locations can be seen on Figure \ref{four_elephants}.
 
@@ -92,25 +92,63 @@ After examining the folder, we came to several conclusions.
 
 Firstly, we saw that the primary focus of Arribada team was to build an object localization model, not an image classification model.
 In object localization neural network draws bounding boxes around objects that it recognizes and assigns them labels, while image classification model only labels the image as whole.
-Object localization produces a bigger and more complex model then image classification, which is unsuitable for running on a microcontroller.
+Object localization produces a bigger and more complex model then image classification and it is unsuitable for running on a microcontroller.
 All major work that was done by Arribada team was contained in one folder where each image had accompanying text file of the same name.
 Text files were produced by a DeepLabel software, which is used for preparing images for training object localization models.
 Each line in a text file described a location of the bounding box and its label.
 This dataset format was not suitable for us, as many images contained more bounding boxes, which would be troublesome to sort into a distinct label.
-We later saw that there were few folder with names such as "Human", "Single Elephant", "Cows", "Goats" and so on, which contained sorted images that we could use.
+We later saw that there were few folder with names such as "Human", "Single Elephant", "Multiple Separate Elephants", "Multiple obstructing Elephants", "Cows", "Goats" and so on, which contained sorted images that we could use.
+All folders with elephant pictures we merged into one folder, as we did not care if model can differentiate how many elephants are on a taken image, we only wanted to know if there are any elephants on it or not.
 
-Secondly, we found out that all images were documented in a large excel database.
-For each image there was a row in database that connected image file name with information where image was taken and with what sensor.
-This was useful for tracking the image metadata later on.
+Secondly, we found out that all images were documented in a large Excel database.
+For each image there was a row in a database that connected image file name with information where image was taken and with what sensor.
+This enabled us to generate a graph seen on Figure \ref{nested_donut1}.
+We used a total of 9232 images from thermal image dataset, almost 88 \% of them were made in Whipsnade Zoo, the rest of them were made in Assam.
+All images from Assam were made with FLIR Lepton 2.5, while both cameras were used in Whipsnade zoo, however more photos were made with 2.5 version of the thermal camera.
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics{nested_donut1.pdf} 
+    \caption{Distribution of used images depending on image location and type of sensor.}
+    \label{nested_donut1}
+\end{figure}
 
-Show images, 
-what was their original purpose
-show ratios of different meta data
+Thirdly, after manually inspecting the folder with goat images we saw that it mostly contained images of a goat herd, standing around a single elephant.
+This folder was usable only for object localization ML models, where each goat could be tagged with a bounding box. 
+In case of an image classification model, this sort of training data is not desirable, as it would be too similar to another separate class, in our case elephant class.
+We therefore dropped goat images out of our training data entirely.
 
-what is missing from dataset
-Describe how you made missing pictures
-make a picture of a setup
+Additionally, we realised that there was a large class imbalance, as seen on Figure \ref{nested_donut2} in favor to elephant class.
+Number of elephant images was xxx times larger from the other classes combined.
+This issue was solved with acquiring more images of the minority class, oversampling the minority class and/or undersampling the majority class and additionally augmenting images in preparation phase.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics{nested_donut2.pdf} 
+    \caption{Class distribution of thermal images.}
+    \label{nested_donut2}
+\end{figure}
+
+\subsection{ Gathering thermal images}
+
+As the amount of cow images was low compared to human and elephant classes and because we also did not had any images that would fit into nature/random class, we decided to gather them ourselves.
+We wanted to do this as quickly and efficiently as possible so we connected FLIR Lepton 2.5 breakout board to a Raspberry Pi Zero and powered it from power bank.
+We used an open source library \cite{flir_github} for FLIR Lepton module which used a simple C program to take a single image with a thermal camera and save it to a Raspberry Pi.
+Image of the setup can be seen on Figure \ref{cow_camera}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\linewidth]{cow_camera.jpg} 
+    \caption{Camera setup used for taking thermal images with FLIR Lepton 2.5.}
+    \label{cow_camera}
+\end{figure}
+
+We wrote a simple Python script which executed C program every time we pressed the trigger push-button.
+Additional shutdown button was added to call the Raspberry Pi shutdown routine, as forcibly removing power from it would corrupt freshly taken thermal images on the Raspberry Pi's SD card.
+
+With this setup we made 365 images of cows in varying conditions, 308 images of nature and 124 images of a human that were made on the go.
+We then manually sorted images into appropriate folders and added them to the dataset.
+
 
 \section{ Development enviroment }
 Linux server on AWS with Tensorflow preinstalled
