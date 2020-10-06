@@ -156,7 +156,7 @@ All of the work around image preparation and ML model creation was done using Am
 Elastic Compute Cloud or EC2 enables users to create an instance of a server in a cloud with specified amount of processing power and memory.
 Some instances come with dedicated software modules and dedicated graphics cards for extra boost in performance.
 
-As we did not had powerful hardware at our disposal, we created an instance of Linux server that came with TensorFlow pre-installed.
+As we did not had powerful hardware at our disposal, we created an instance of Linux server that came with TensorFlow, Numpy and other libraries pre-installed.
 We interacted with the server's command line through SSH protocol.
 
 Because TensorFlow has a Python API, we needed to write some Python code.
@@ -170,15 +170,149 @@ We could then access web service simply through web browser by writing the IP ad
 
 \section{ Image preparation}
 
-Image preparation phase is a step by step process that depends how training data is saved, if it has already been split into train, validation and test sets and what kind of normalization needs to be done on it.
+Image preparation phase is a pipeline process that differs from project to project.
+Our process can be seen on Figure \ref{image_preparation}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\linewidth]{image_preparation.pdf} 
+    \caption{Image preparation pipeline that was used. Icons source: www.icons8.com.}
+    \label{image_preparation}
+\end{figure}
+
+At the start of the process we compared filenames of each separate folder to the list of filenames found in Excel database.
+We imported only the images found in both sources, as lists were not identical and we wanted to keep track of different metadata information.
+As some images were made with two different FLIR Lepton camera with different resolutions (60 x 80 and 120 x 160), we just downscaled higher resolution directly in the importing process.
+After this we simply added images that were taken by us in Slovenia.
+At this point we had four separate Numpy arrays, one for every class, with 3 dimensions: first dimension was a number of different images in that class, second and third dimensions stored image's pixel values (60 and 80 pixels respectively).
+
+Next step was assigning labels to every image.
+As the output of NNs are numbers, we can not just assign labels in strings format to data.
+Instead we assigned every image a single number that represented that class, 0 for elephant, 1 for human, 2 for cow and 3 for nature/random class.
+We shuffled images inside of each class and then split them into training, validation and test sets.
+At end of this step we had 4 different Python dictionaries for each class.
+Each dictionary had 3 key-value pairs for every training, validation and test set, which held image data and encoded labels.
+
+We next applied simplest form of normalization to all images, a mean subtraction.
+We calculated a two dimensional matrix that held mean values of pixels averaged over the whole training set, which we subtracted from all images, essentially zero centering the data.
+This is a common preprocessing step in every ML image pipeline, which is usually combined with standardization\cite{cs231n}.
+Standardization scales the whole range of input pixel values into -1 and 1 interval.
+This is only needed if different input values have widely different ranges\cite{cs231n}.
+Because images that were created with FLIR camera were all 8-bit encoded, therefore same range, this was not needed.
+
+In the end we had to fix our imbalance problem.
+We achieved this by resampling the human, cow and nature/random classes.
+Human class was resampled three times, while both cow and nature/random classes were resampled six times.
+Figure \ref{resampled} shows distribution of training images before and after resampling.
+
+\begin{figure}[ht] 
+    \begin{subfigure}[b]{1\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{nested_donut3.pdf} 
+    \end{subfigure}
+    \unskip\ \hrule\ 
+    \begin{subfigure}[b]{1\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{nested_donut4.pdf} 
+    \end{subfigure}
+    
+    \caption{ Distribution of training images before and after resampling.}
+    \label{resampled}
+\end{figure}
+
+We only resampled training sets, not validation or test sets.
+If we resampled everything, model would be seeing same image several times during testing, thus reporting incorrect accuracy in validation and test phase.
+
+After resampling we merged and shuffled all data and reshaped it with Numpy from three dimensions to four, so it was ready for model training.
 
 
+\section{ Model creation and training}
 
-\section{ Model creation and training (Rethink title)}
-train few different models
-with different accuracies
+For creating CNN models we used Keras Sequential API. 
+With it programmer creates a model and adds layers one by one.
+When adding layers we are only specifying what type of layer we went, size of it and layer specific features. 
+We do not need to keep track of any connections between or in layers, this is done automatically by Keras.
+Specific architecture of models that we created can be seen in section TODO ADD REFERENCE, however in Figure \ref{} we can see Keras code and summary of the model that it created.
 
-\section{ Optimising models}
-Comparison between different sizes and accuracies
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\linespread{0.9}\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\begin{lstlisting}[language=Python]
+model = models.Sequential()
+model.add(layers.Conv2D(32, (3, 3), activation='relu', 
+        input_shape=(60,80, 1)))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(layers.Flatten())
+model.add(layers.Dense(64, activation='relu'))
+model.add(layers.Dense(4))
+
+# Show the model's architecture
+model.summary()
+
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv2d (Conv2D)              (None, 58, 78, 32)        320       
+_________________________________________________________________
+max_pooling2d (MaxPooling2D) (None, 29, 39, 32)        0         
+_________________________________________________________________
+conv2d_1 (Conv2D)            (None, 27, 37, 64)        18496     
+_________________________________________________________________
+max_pooling2d_1 (MaxPooling2 (None, 13, 18, 64)        0         
+_________________________________________________________________
+conv2d_2 (Conv2D)            (None, 11, 16, 64)        36928     
+_________________________________________________________________
+flatten (Flatten)            (None, 11264)             0         
+_________________________________________________________________
+dense (Dense)                (None, 64)                720960    
+_________________________________________________________________
+dense_1 (Dense)              (None, 4)                 260       
+=================================================================
+Total params: 776,964
+Trainable params: 776,964
+Non-trainable params: 0
+_________________________________________________________________
+\end{lstlisting}
+
+
+\section{ Model optimizations}
+
+For model optimization phase we wrote a Python script that took model in .h5 format and converted it into four differently optimized tflite models:
+\begin{itemize}
+    \item \textbf{Non-quantized tflite model,} no quantization, just basic conversion from .h5 to .tflite format is done.
+    \item \textbf{float16 model,} weights are quantized from 32-bit to 16-bit floating-point values. Model size is split in half and accuracy decrease is minimal, but there is no boost in execution speed.
+    \item \textbf{dynamic model,} weights are quantized as 8-bit values, but operations are still done in a floating-point math. Models are 4 times smaller and execution speed is faster when compared to float16 optimization but slower from full integer optimization.
+    \item \textbf{Full integer model,} weights, biases and math operations are quantized, execution speed is increased. It requires representative dataset at time of optimization.
+\end{itemize}
+
+Full integer model is an ideal choice for running models on microcontrollers, however it should be noted that not all operations have full integer math implementations in TFLite Micro.
+Script also uses tool xxd to create .c and .h files of models in c array format, for later inference on microcontroller.
 
 \section{ Edge Impulse (SHOULD this be here like that, how should i go about this)}

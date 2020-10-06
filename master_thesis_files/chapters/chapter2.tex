@@ -378,16 +378,7 @@ Quantization has a dramatic effect on size of the model and its execution speed.
 By changing 32-bit floating-point numbers with 8-bit integers size decreases by a factor of 4.
 Floating-point math is by nature slow to compute, many microcontrollers do not even have a floating-point unit.
 In comparison integer math is faster to compute, therefore quantized models are executed faster.
-
-TensorFlow Lite Converter offers 3 different quantization methods: float16, dynamic range and full integer quantization\cite{quantization}.
-Float16 quantization quantizes weights from 32-bit to 16-bit floating-point values. 
-Model size is split in half and accuracy decrease is minimal, but there is no boost in execution speed.
-Dynamic range quantization stores weights as 8-bit values, but operations are still done in a floating-point math.
-Models are 4 times smaller and execution speed is faster when compared to float16 optimization but slower from full integer optimization.
-Full integer optimization also quantizes math operations, thus even more increasing execution speed.
-This is an ideal choice for running models on microcontrollers, however it should be noted that not all operations have full integer math implementations in TFLite Micro.
-
-Model accuracy decreases after using any of quantization methods described above, but it is usually only a percent or two.
+Model accuracy decreases after using quantization, but usually for less than a percent.
  
 
 \section{ IoT and wireless technologies}
