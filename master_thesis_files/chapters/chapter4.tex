@@ -1,2 +1,10 @@
 \lipsum
 
+Part of this thesis was concerned with porting TFLite Micro to \textbf{libopencm3}, our platform of choice.
+To compile source files and build binaries TFLite Micro uses build automation tool \textbf{GNU Make}.
+One large makefile that includes several platform specific makefiles dictates how firmware is built.
+By providing command line arguments users decide which example has to be compiled and for which platform.
+The build system makes some assumptions about locations of the platform specific files, which in case of example projects are scattered over GitHub repository.
+This and several other reasons make library hard to use when porting it to a new platform.
+In section TODO ADD REFERENCE we describe our build system that keeps library and application specific code separated in a clear and concise manner.
+

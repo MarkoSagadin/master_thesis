@@ -1,15 +1,11 @@
-In this chapter we will describe the design of neural network that will be able to process thermal images and decide what object they contain.
+In this chapter we will describe the design of convolutional neural network that will be able to process thermal images and predict what object they contain.
 Workflow that we will follow will largely be a combination of workflows presented in Figures \ref{ml_workflow} and \ref{micro_workflow}.
 
 We will first set concrete objectives, which will dictate what exactly we want to accomplish, while keeping in consideration various constraints.
 We will then explore the dataset provided by Arribada Initiative, analyze different class representations and decide if it is appropriate for accomplishing objectives that we set earlier.
+We will decribe tools and development eviroment that we used in the process.
 
-After dataset exploration we had to setup our development environment.
-As software for creating and training ML models consists of many components and dependencies it is important to start with something that we know it works.
-We will describe our AWS server setup, how we moved image data on it and why we decided to use Python Notebooks for algorithm development.
-
-Image preparation was important step before model creation, as wanted to keep track of various metadata labels that were assigned to each image.
-This involved parsing a large excel table and connecting images with correct labels.
+In image preprocessing phase parsed a large excel table and connected images with correct metadata.
 Image preprocessing such as mean normalization and augmentation was then done.
 We then designed and trained few CNN models with varying complexities and observed how well they behave on thermal image dataset.
 We then optimized models with TFLite tools and compared accuracies and model sizes.
@@ -150,25 +146,27 @@ With this setup we made 365 images of cows in varying conditions, 308 images of 
 We then manually sorted images into appropriate folders and added them to the dataset.
 
 
-\section{ Development environment}
+\section{ Tools and development environment}
 
-All of the work around image preparation and ML model creation was done using Amazon's Elastic Compute Cloud web service.
+All of the work around image preparation and ML model creation was done in Python 3.6.
+Python module Numpy was used for image preprocessing, Pandas for Excel database manipulation and Matplotlib for plot generation.
+Neural networks were designed in TensorFlow 2.4, using Keras high level API.
+
+As training neural networks is a computationally demanding process, it would not be feasible to do it on a personal laptop.
+We instead used Amazon's Elastic Compute Cloud web service.
 Elastic Compute Cloud or EC2 enables users to create an instance of a server in a cloud with specified amount of processing power and memory.
 Some instances come with dedicated software modules and dedicated graphics cards for extra boost in performance.
-
-As we did not had powerful hardware at our disposal, we created an instance of Linux server that came with TensorFlow, Numpy and other libraries pre-installed.
+We created an instance of Linux server that came with TensorFlow, Numpy and other libraries pre-installed.
 We interacted with the server's command line through SSH protocol.
 
-Because TensorFlow has a Python API, we needed to write some Python code.
 Instead of writing Python scripts and executing them through command line, we used Juptyer Notebook. 
 Juptyer Notebook is a web-based application that can run programs that are a mix of code, explanatory text and computer output.
 Users can divide code into segments, which can be executed separately, visual output from modules such as Matplotlib is also supported.
-Separate phases of model creation can also be split in several different files to improve readability and reuse.
-To setup Juptyer Notebook on our cloud instance, we only had to install it with package manager, run it and expose default 8888 port that it uses on the Amazon's server configuration site to the public.
-We could then access web service simply through web browser by writing the IP address of the server, followed by the 8888 port.
+To use Juptyer Notebook on our cloud instance, we had to install it and run it.
+We could then access web service simply through web browser by writing the IP address of the server, followed by the default port that Juptyer Notebook server uses.
 
 
-\section{ Image preparation}
+\section{ Image preprocessing}
 
 Image preparation phase is a pipeline process that differs from project to project.
 Our process can be seen on Figure \ref{image_preparation}.
@@ -226,13 +224,19 @@ If we resampled everything, model would be seeing same image several times durin
 After resampling we merged and shuffled all data and reshaped it with Numpy from three dimensions to four, so it was ready for model training.
 
 
-\section{ Model creation and training}
+\section{ Model creation and training}\label{cnn_ref}
 
 For creating CNN models we used Keras Sequential API. 
 With it programmer creates a model and adds layers one by one.
 When adding layers we are only specifying what type of layer we went, size of it and layer specific features. 
 We do not need to keep track of any connections between or in layers, this is done automatically by Keras.
 Specific architecture of models that we created can be seen in section TODO ADD REFERENCE, however in Figure \ref{} we can see Keras code and summary of the model that it created.
+
+
+
+Hyperparameter selection procedure, random search?
+* Each hyperparameter of model is described.
+* Epoch, batch size, early stopping
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -302,7 +306,7 @@ _________________________________________________________________
 \end{lstlisting}
 
 
-\section{ Model optimizations}
+\section{ Model optimization}
 
 For model optimization phase we wrote a Python script that took model in .h5 format and converted it into four differently optimized tflite models:
 \begin{itemize}
@@ -315,4 +319,9 @@ For model optimization phase we wrote a Python script that took model in .h5 for
 Full integer model is an ideal choice for running models on microcontrollers, however it should be noted that not all operations have full integer math implementations in TFLite Micro.
 Script also uses tool xxd to create .c and .h files of models in c array format, for later inference on microcontroller.
 
-\section{ Edge Impulse (SHOULD this be here like that, how should i go about this)}
+\section{ Neural network model design in Edge Impulse Studio}
+
+
+Notes and remarks from other ML thesis:
+* You could rework section development enviroment to be more concise. No need to describe everything in such detail, but you need to mention all tools.
+* You did not mention data split, what was ratio and why are they used

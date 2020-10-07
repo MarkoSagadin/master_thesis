@@ -7,9 +7,9 @@ In order to learn, these learning algorithms need to be trained on a collection 
 These collections are called \textbf{datasets} and can be generated artificially or collected in nature.
 
 In order to better understand how ML approach can solve problems, we can examine an example application.
-Let us say that we would like to build a system that can predict a type of animal movement from an accelerometer data.
-To train its learning algorithm, also known as a \textbf{model}, we need to expose it to a dataset which would contain accelerometer measurements of different types of movement, such a walking, running, jumping and standing still.
-Input to the system could be either raw measurements from all three axis or components extracted from raw measurements such as frequency or amplitude. 
+Let us say that we would like to build a system that can predict a type of animal movement based on accelerometer data.
+To train its learning algorithm, also known as a \textbf{model}, we need to train it on a dataset which would contain accelerometer measurements of different types of movement, such a walking, running, jumping and standing still.
+Input to the system could be either raw measurements from all three axis or components extracted from raw measurements such as RMS, spectral power, peak frequency and/or peak amplitude. 
 These inputs are also known as \textbf{features}, they are values that describe the phenomenon being observed\cite{burkovml}. 
 The output of the system would be a predicted type of movement.
 Although we would mark each example of measurement data what type of movement it represents, we would not directly define the relationship between the two.
@@ -30,15 +30,15 @@ Neural networks, algorithms inspired by neurons in human brains\cite{geron}\cite
 They are appropriate for solving complex problems like image classification, speech recognition, and autonomous driving, but they require a large amount of data and computing power for training.
 They fall into field of deep learning, which is a sub-field of machine learning.
 
-Training of deep learning algorithms is computationally demanding and is usually done on powerful servers or computers with dedicated graphic processing units to speed up training time.
-After a model has been trained, data can be fed in and prediction is returned. 
+Training of ML models is computationally demanding and is usually done on powerful servers or computers with dedicated graphic processing units to speed up training time.
+After a model has been trained, data can be fed in and prediction is computed. 
 This process is also known as \textbf{inference}.
 The inference is computationally less intensive compared to the training process, so with properly optimised models, we can run inference on personal computers, smartphones, tablets, and even directly in internet browsers.
 
 
 \subsection{ General machine learning workflow}
 
-There are several steps in ML workflow that have to occur in order to get from an idea to a working ML based system as seen on Figure \ref{ml_workflow}.
+There are several steps in ML workflow that need to happen in order to get from an idea to a working ML based system, this is represented on Figure \ref{ml_workflow}.
 
 \begin{figure}[ht]
         \centering
@@ -47,16 +47,18 @@ There are several steps in ML workflow that have to occur in order to get from a
         \label{ml_workflow}
 \end{figure}
 
-First problem has to be studied, it has to be understood what are objectives and decided which approach will be used. 
-Here we decide on rough architecture of the ML model that we will use.
+First, problem has to be studied, it has to be understood what are objectives, what are current solutions and which approach should be used. 
+Here we decide on the rough type of the ML model that we will use, based on the problem.
 In second step we collect and clean up data.
 We should always strive to collect large amount of quality and diverse data that represents real word phenomenon.
 Collecting that kind of data can be hard and expensive, but we can use various tools of for producing synthetic data from our original data, thus increasing data size and variety.
+Sometimes data is not collected by us, in that case we should examine it and extract information that we need.
 Third, we train ML model.
 We might create something from scratch or use an existing model. 
 We can train several different types of models and chose the one that performs the best.
 To achieve desired accuracy, steps two and three can be repeated many times.
-In step four we deploy our model and monitor its accuracy. We can also use it to collect more data and retrain the model.
+In step four we deploy our model and monitor its accuracy. 
+We should always collect new data and retrain the model, if accuracy drops.
 
 
 \subsection{ Machine learning on embedded devices} \label{ml_on_embedded}
@@ -65,15 +67,15 @@ Machine learning on embedded devices is an emerging field, which nicely coincide
 Resources about it are limited, especially when compared to the wast number of resources connected with machine learning on computers or servers.
 Most of the information about it can be found in form of scientific papers, blog posts and machine learning framework documentation\cite{hello_edge}\cite{tflite_risc-v}\cite{pete_tiny}.
 
-Running learning algorithms directly on smart devices comes with many benefits.
-One of them is reduced power consumption.
+Running learning algorithms directly on embedded devices comes with many benefits.
+\textbf{Reduced power consumption} is one of them.
 In most IoT applications devices send raw sensor data over a wireless network to the server, which processes it either for visualization or for making informed decisions about the system as a whole. 
 Wireless communication is one of the more power hungry operations that embedded devices can do, while computation is one of more energy efficient\cite{pete_tiny}.
 For example, a Bluetooth communication might use up to 100 milliwatts, while MobileNetV2 image classification network running 1 inference per second would use up to 110 microwatts\cite{pete_tiny}
 As deployed devices are usually battery powered, it is important to keep any wireless communication to a minimum, minimizing the amount of data that we send is paramount.
 Instead of sending everything we capture, is much more efficient to process raw data on the devices and only send results.
 
-Another benefit of using ML on embedded devices is decreased time between event and action.
+Another benefit of using ML on embedded devices is \textbf{decreased latency time}.
 If the devices can extract high-level information from raw data, they can act on it immediately, instead of sending it to the cloud and waiting for a response. 
 Getting a result now takes milliseconds, instead of seconds.
 
@@ -84,12 +86,11 @@ Also it is not feasible to do online learning with microcontrollers, meaning tha
 Models also need to be small enough to fit on a device. 
 Most general purpose microcontrollers only offer several hundred kilobytes of flash, up to 2 megabytes.
 For comparison, MobileNet v1 image classification model, optimised for mobile phones, is 16.9 MB in size\cite{daniel_edgeimpulse}.
-To make it fit on a microcontroller and still have space for our application, we would have to greatly simplify it.
+To make it fit on a microcontroller and still have space for our application, it would have to be simplified.
 
 Usual workflow, while developing machine learning models for microcontrollers, is to train a model on training data on a computer. 
-When we are satisfied with the accuracy of the model we then quantize it and convert it into a format understandable to our microcontroller.
+When we are satisfied with the accuracy of the model we quantize it and convert it into a format understandable to our microcontroller.
 This is further described in section \ref{tflite_quant}.
-%This workflow is described in section \ref{tflite_quant} in greater detail.
 
 \section{ Neural networks}\label{neural_networks_section}
 
@@ -176,11 +177,13 @@ We do not have to execute backpropagation algorithm for each training instance, 
 \subsection{ Convolutional neural networks}
 
 Convolutional neural networks (CNN) are a kind of neural networks that work specially well with image data.
-Like NNs they have found inspiration in nature, in their case visual cortex of the brain\cite{geron}.
-It was shown that different cells in visual cortex responded differently to different visual stimuli\cite{cs231n}.
+Like NNs they have found inspiration in nature, in their case visual cortex of the brain.\footnotemark
+
+
+\footnotetext{Scientists Weisel and Hubel showed that different cells in primary visual cortex of a cat responded differently to different visual stimuli\cite{cs231n}.
 Some were activated when shown a horizontal line in specific location, some were activated by vertical lines.
 More complex cells responded to boxes, circles and so on.
-CNNs also detect simpler shapes first and use them to detect more complex ones later.
+CNNs also detect simpler shapes first and use them to detect more complex ones later.}
 
 On Figure \ref{convnet} we can see an example of CNN which takes an image of a car as a input and outputs probability results in five different classes.
 \newline
@@ -197,42 +200,29 @@ Each convolutional layer detects some sort of shapes, first ones detect differen
 Pooling layers downsample the data in spatial dimension, thus decreasing the number of parameters and operations needed in CNN.
 After few alternating pairs of convolutional and pooling layers the output of the last pooling layer is flattened out into one dimensional vector and feed into fully connected NN which produces probability results in given classes.
 
-It makes sense to explain how convolutional and pooling layers work in greater detail as this will be important later when we will be designing our CNN models in section TODO.
+It makes sense to explain how convolutional and pooling layers work in greater detail as this will be important later when we will be designing our CNN models in section \ref{cnn_ref}.
 
 
 \subsubsection{ Convolutional layers}
 
 Data that CNNs operate on are 3 dimensional matrices, where width and height correspond to image resolution and depth corresponds to the number of color channels, 3 for colorful images (red, green, blue) and 1 for greyscale.
-When speaking about this data we will relate to them as volumes.
+When speaking about this matrices we will refer to them as volumes.
 
 Convolution layers perform dot products between input volume and several \textbf{filters} or \textbf{kernels} to produce output volume.
-In these layers filters are being configured through training phase.
+In these layers, filters are configured through training phase.
 We can see a concrete example on Figure \ref{conv1}.
-2D filter with size 2 x 2 covers part of input volume, element-wise multiplication is computed, elements are summed and result is written into first element of output volume.
+2D filter with size 2 x 2 covers a part of input volume, over which element-wise multiplication is computed, elements are summed and result is written into first element of output volume.
 
 \begin{figure}[ht] 
     \centering
-    \begin{subfigure}[b]{0.75\textwidth}
-        \includegraphics[width=\linewidth]{conv1.png} 
-        \caption{Example of a dot product operation}
-        \label{conv1}
-    \end{subfigure}
-    \vspace{0.5cm}
-    \hrule
-    \vspace{0.5cm}
-    \begin{subfigure}[b]{0.5\textwidth}
-        \includegraphics[width=\linewidth]{conv2.jpeg} 
-        \caption{ Convolutional layer}
-        \label{con2v}
-    \end{subfigure}
-    
-    \caption{ (a) Filter moves over zero-padded input matrix. (b) To produce output layer with depth 5, this layer would have 5 different filters. Image sources: \cite{conv_layer_img}\cite{cs231n}}
-    \label{conv_layer}
+    \includegraphics[width=0.75\linewidth]{conv1.png} 
+    \caption{ Dot product operation between filter and zero-padded input matrix. Image sources: \cite{conv_layer_img}}
+    \label{conv1}
 \end{figure}
 
-Filter then moves a fixed width or \textbf{stride} and process is repeated.
+Filter then moves a fixed distance or \textbf{stride} and process is repeated.
 It is important to note that although we can choose width and height of filter, depth of filter is always equal to the depth of the input volume.
-If depth is larger than one then dot products are done for each 2D matrix in depth dimension separately and then element-wise sum between these matrices is performed.
+If depth is larger than one then dot products are done for each 2D matrix in depth dimension separately and then element-wise sum operation between these matrices is performed.
 To avoid loosing information from the image pixels that are on the edges (as they would be included in dot products less times compared to central ones) we often pad input images with zeros.
 
 The size of output volume depends on several factors as seen in \ref{size_eq}.
@@ -255,13 +245,21 @@ $S$ - Stride length
 
 If we examine example on Figure \ref{conv1} we can see that input with a size 3 x 3, stride 1, padding 1 and filter with a size 2 x 2 produces output with size a 4 x 4.
 
-Depth of output volume is equal to the number of filters used in convolutional layer, it is a norm that a single convolutional layer uses large number of filters to produce a deep output volume\cite{cs231n}.
+Depth of output volume is equal to the number of filters used in convolutional layer as seen on Figure \ref{conv2}, it is a norm that a single convolutional layer uses a large number of filters to produce a deep output volume\cite{cs231n}.
 It is also common to set padding, stride and filter size so that width and height of input volume are preserved.
 This prevents the information at the edges to be lost too quickly\cite{cs231n}.
 
+
+\begin{figure}[ht] 
+    \centering
+    \includegraphics[width=0.5\linewidth]{conv2.jpeg} 
+    \caption{Convolutional layer with five different filters. Image sources: \cite{conv_layer_img}\cite{cs231n}}
+    \label{conv2}
+\end{figure}
+
 In the end of convolutional layer output volume is fed into neuron similar to one described in section \ref{neural_networks_section}. 
 All elements in same depth are affected by a same bias term and fed into activation function.
-In this step size of volume is preserved.
+In this step, size of volume is preserved.
 
 \subsubsection{ Pooling layers}
 
@@ -295,7 +293,7 @@ Pooling layers therefore reduce number of activations and prepare them to be fla
 
 TensorFlow is a free and open-source framework for numerical computation.
 It is particularly suited for large-scale machine learning applications\cite{geron}.
-TensorFlow started as a proprietary project developed by a Google Brain team at Google in 2011 and became open-source in late 2015.
+It started as a proprietary project developed by a Google Brain team at Google in 2011 and became open-source in late 2015.
 It is used in many Google's products such as Gmail, Google Cloud Speech and Google Search.
 
 TensorFlow gives programmers tools for creating and training ML models, without needlessly diving into specifics of computing neural networks.
@@ -332,14 +330,6 @@ TFLite Micro library is publicly available as a part of a much larger TensorFlow
 To use the library for embedded development the whole project has to be cloned from the GitHub.
 TensorFlow team provides users with several example projects that have been ported to several different platforms such as Mbed, Arduino, OpenMV and ESP32.
 Example projects show how to use TFLite API while showcasing different ML applications: motion detection, wake word detection and person detection.
-
-Part of this thesis was concerned with porting TFLite Micro to \textbf{libopencm3}, our platform of choice.
-To compile source files and build binaries TFLite Micro uses build automation tool \textbf{GNU Make}.
-One large makefile that includes several platform specific makefiles dictates how firmware is built.
-By providing command line arguments users decide which example has to be compiled and for which platform.
-The build system makes some assumptions about locations of the platform specific files, which in case of example projects are scattered over GitHub repository.
-This and several other reasons make library hard to use when porting it to a new platform.
-In section TODO ADD REFERENCE we describe our build system that keeps library and application specific code separated in a clear and concise manner.
 
 Is important to know that TFLite is just an extension of existing TensorFlow project.
 General steps for creating a trained ML model are still the same as seen in Figure \ref{ml_workflow}, although we have to be aware of some details.
@@ -384,34 +374,34 @@ Model accuracy decreases after using quantization, but usually for less than a p
 \section{ IoT and wireless technologies}
 
 Internet of things, or IoT, is a system of uniquely identifiable devices, which communicate with each other or other systems over wireless networks\cite{IoT}.
-Device or a thing would be battery powered embedded system such as smart watch, heart monitor or animal tracker which would transmit collected sensor data to an IoT gateway, which would relay the data over to the cloud.
+Device or a thing is a battery powered embedded system such as smart watch, heart monitor or animal tracker which would transmit collected sensor data to an IoT gateway, which would relay the data over to the cloud.
 This data can then be analyzed and displayed in such fashion which would provide businesses or users with valuable information.
-Examples of this would be tracking energy consumption of machines in factories, monitoring conditions of crops in agriculture or monitoring locations of endangered specimens in African conservation parks.
+Examples of this would be tracking energy consumption of machines in factories, monitoring conditions of crops in agriculture or monitoring locations of endangered species in African conservation parks.
 
-Important part of IoT system is a wireless network that is used to transport data from edge devices to gateways.
+Important part of IoT system is a wireless network that is used to transport data from edge devices to gateways or directly to the internet.
 Choice of a wireless network is highly depended on a type of a problem a IoT solution is trying to solve.
 Factors such as required battery life, amount of data being sent, distance that data has to travel and environment conditions of edge device itself are important.
 
-Because our early detection system demands a decent battery life of several months and needs to send a small amount of data over one or two kilometers we will focus on wireless technologies such as NB-IoT, SigFox and LoRa.
+Because our early detection system demands a decent battery life of several months and needs to send a small amount of data over one or two kilometers we will focus on wireless technologies such as NB-IoT, Sigfox and LoRa.
 
 Narrowband IoT or NB-IoT is a radio technology standard developed by 3GPP standard organization\cite{lora_nbiot}.
-NB-IoT was made specifically with embedded devices in mind, can reach up to 15 \si{\kilo\meter} and it has deep indoor penetration\cite{lora_nbiot}.
-Compared to SigFox and LoRa it has better latency and higher data rate, but also higher power consumption\cite{lora_nbiot_sigfox}.
+NB-IoT was made specifically with embedded devices in mind, it has range of to 15 \si{\kilo\meter} and it has deep indoor penetration\cite{lora_nbiot}.
+Compared to Sigfox and LoRa it has better latency and higher data rate, but also higher power consumption\cite{lora_nbiot_sigfox}.
 However it is unsuitable for our use case as it operates on the network provided by the cellular base towers, which is inconvenient as mobile connection in Assam, India can be inconsistent\cite{wildlabs-elephants}.
 
-SigFox is a radio technology developed by the company of the same name that operates on unlicensed industrial, scientific and medical (ISM) radio band.
+Sigfox is a radio technology developed by the company of the same name that operates on a unlicensed industrial, scientific and medical (ISM) radio band.
 In many views it is similar to LoRa, as it has comparative range and power consumption\cite{lora_nbiot_sigfox}.
-There is are few important differences however.
-Although SigFox modules are a bit cheaper when compared to Lora modules, each message is payed, devices are limited to 12 bytes per uplink, 140 uplinks per day and only 4 downlinks are available per day.
-SigFox devices can also only communicate with base stations, installed by the SigFox company\cite{lora_nbiot_sigfox}.
-This means that users can not build their own network and are dependent on the coverage provided by SigFox.
+There is are a few important differences however.
+Although Sigfox modules are a bit cheaper when compared to Lora modules, each message is payed, devices are limited to 12 bytes per uplink, 140 uplinks per day and only 4 downlinks are available per day.
+Sigfox devices can also only communicate with base stations, installed by the Sigfox company\cite{lora_nbiot_sigfox}.
+This means that users can not build their own network and are dependent on the coverage provided by Sigfox.
 
 This leaves us with Lora protocol which covers our use case from points of long range, low power consumption and ability to setup our own network. 
 
 
 \subsection{ LoRa and LoRaWAN}
 
-LoRa (Long Range) is a physical layer protocol that what defines how information is modulated and transmitted over the air\cite{lora_article}\cite{lora_nbiot}.
+LoRa (Long Range) is a physical layer protocol that defines how information is modulated and transmitted over the air\cite{lora_article}\cite{lora_nbiot}.
 Protocol is proprietary and owned by a semiconductor company Semtech, who is as sole designer and manufacturer Lora radio chips in the world.
 LoRa protocol uses a modulation similar to chirp spread spectrum modulation\cite{lora_article}.
 As the protocol is proprietary exact details of it are not known, however it was reverse engineered by radio frequency specialist\cite{lora_github}.
@@ -603,3 +593,8 @@ In temperature non-stabilized cameras small temperature drifts can have a major 
 Calibration is done either by internal algorithms of the camera or by exposing the camera to uniform thermal scene.
 FLIR Lepton camera comes with a shutter, which acts as a uniform thermal signal and enables regular calibration.
 Calibration in FLIR Lepton is by default automatic, triggering at startup and every 3 minutes afterwards or if camera temperature drifts for more than 1.5 \si{\celsius}.
+
+FLIR Lepton camera comes in two versions, 2.5 and 3.5.
+Both cameras function exactly the same and have exact specifications, they only differ in resolution, 3.5 has resolution of 120 x 160, while 2.5 has 60 x 80.
+In process of image collection both were used.
+
