@@ -343,18 +343,14 @@ Figure \ref{micro_workflow} shows all steps that are needed to prepare a ML mode
 \end{figure}
 
 We start with a small but inaccurate model that can still accomplish basic criteria that our objective demands.
-When the end of this workflow process is reached and we made sure that the model can fit into a flash memory area of our target microcontroller, we can start adding more layers in order to increase accuracy.
+When the end of this workflow process is reached and we made sure that the model can fit into a flash memory area of our target microcontroller, we can start training more complex models in order to increase accuracy.
 We are allowed to use only operations that have supported implementations on microcontrollers.
 This is usually not a restriction as many of them are supported.
-Model that we created is usually saved in Hierarchical Data Format with extension h5.
-Model in this shape is usually very big and needs to be converted with TensorFlow Lite Converter tool.
-This tool can be either used as a command line tool or as a function in a Python script.
-We input model in .h5 file, choose if and which specific optimisation we want to use and as an output we receive our model in a .tflite format.
-After we created and evaluated our .tflite model we need to convert it into a format that is understandable to a microcontroller.
-This is done with the \textbf{xxd}, a Linux command line tool which creates a hex dump out of any input file.
-As a input parameter we give xxd our .tflite model, set the -i flag and save the output into a .c file.
-Xxd tool will then create a hex dump of our model and format it as a char array in C programming language. 
-We then create a .h file with a declaration of char array which we can later call from our application code.
+
+Model that is created is usually quite big and needs to be converted with TensorFlow Lite Converter tool.
+This tool provides a non-optimised conversion and several differnet optimized conversions.
+
+To import and use optimized model, we need to convert it ino binary format, which is done with command line tool xxd.
 Model is then ready to be executed on a microcontroller, we can run it and process the results.
 Accuracy will be the same as compared to running the same .tflite model on a personal computer, but execution time will naturally be different.
 If needed we can tweak the model parameters, train a new model and repeat described workflow again.

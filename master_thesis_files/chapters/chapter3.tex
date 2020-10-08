@@ -3,22 +3,21 @@ Workflow that we will follow will largely be a combination of workflows presente
 
 We will first set concrete objectives, which will dictate what exactly we want to accomplish, while keeping in consideration various constraints.
 We will then explore the dataset provided by Arribada Initiative, analyze different class representations and decide if it is appropriate for accomplishing objectives that we set earlier.
-We will decribe tools and development eviroment that we used in the process.
+We will describe tools and development environment that we used in the process.
 
-In image preprocessing phase parsed a large excel table and connected images with correct metadata.
-Image preprocessing such as mean normalization and augmentation was then done.
-We then designed and trained few CNN models with varying complexities and observed how well they behave on thermal image dataset.
-We then optimized models with TFLite tools and compared accuracies and model sizes.
-Models were then converted into a C char array format, ready to be tested on a actual microcontroller.
+In image preprocessing phase we imported images and connected with metadata that we parsed from excel database.
+We analysed dataset, split it into different sets and did some data corrections procedures.
+We then set a rough architecture of a CNN model with variable hyperparameters and ran a random search algorithm which would find optimal model based on accuracy.
+Few best performing models were picked and optimized with TFLite tools.
+Models were then converted into a C char array format. 
 
-We will finish this chapter by describing the same workflow, but by using tools that Edge Impulse provides to the point where we will have our model ready to run on a microcontroller.
-Using Edge Impulse will generally require less knowledge, less time and will lead to better results when compared to our setup.
+We will finish this chapter by going through the same process, but this time using tools that Edge Impulse provides to the point where we will have our model ready to run on a microcontroller.
 
 
-\section{ Objectives}
+\section{ Model objectives}
 
 The accuracy of our early detection system should be equal or similar to the one of human observer, no matter if we are operating in the daytime or nighttime.
-Although our system will be placed on the paths that are regularly traversed by elephants, this does not mean that they will be only possible object on a image taken by a thermal camera.
+Although our system will be placed on the paths that are regularly traversed by elephants, this does not mean that they are the only possible object that can appear on thermal images.
 Humans and various livestock, such as goats and cows, could also be photographed.
 This means that we want to avoid reporting false positives, which means that our system should not incorrectly label a human or a livestock animal as an elephant.
 At the same time we want avoid false negatives, where an elephant could pass by our system undetected.
@@ -29,7 +28,7 @@ It would be beneficial if thermal camera can take several pictures of the same o
 However this is constrained by the image processing time and camera's field of view.
 Thermal camera FLIR Lepton has a horizontal field of view of 57 degrees.
 The closer elephant passes by the thermal camera the quicker he will traverse the camera's field of view, thus giving the camera less time for capture.
-This problem can be solved by optimizing the execution time of the ML model or by placing the early detection system on far enough position from expected elephant's path.
+This problem can be solved by minimizing the execution time of the ML model or by placing the early detection system on position that is far away from expected elephant's path.
 As latter option might not be always possible, we should strive to keep the whole image processing time as short as possible.
 
 Finally, as our neural network will be deployed on a microcontroller and not on a computer or a server we have to keep it simple and small.
@@ -51,7 +50,7 @@ Images in dataset came from two different locations: Assam, India and ZSL Whipsn
 
 Assam served as a testing ground.
 Arribada team positioned two camera traps on two locations that overlook paths commonly used by elephants.
-Cameras were built otu from Raspberry Pi, PIR sensor, FLIR Lepton 2.5 camera and batteries, all of which were enclosed in a plastic housing.
+Cameras were built out of Raspberry Pi, PIR sensor, FLIR Lepton 2.5 camera and batteries, all of which were enclosed in a plastic housing.
 Insides of the camera and an example of deployed camera can be seen on Figure \ref{assam_camera}.
 
 \begin{figure}[ht]
@@ -72,7 +71,7 @@ This setup provided Arribada with elephant images in real life scenarios, howeve
 
 This was accomplished in ZSL Whipsnade Zoo, where they could take many images of elephants in variety different conditions\cite{dataset_collection}.
 PIR sensor trigger approach was dropped in favor of a 5 second time lapse trigger.
-Two cameras were used again, however one of them now used FLIR Lepton 3.5, with better resolution.
+Two cameras were used again, however one of them now used FLIR Lepton 3.5 camera with better resolution.
 
 Images of elephants that came from both locations can be seen on Figure \ref{four_elephants}.
 
@@ -86,9 +85,10 @@ Images of elephants that came from both locations can be seen on Figure \ref{fou
 Thermal image dataset was given to us in form of a Google Drive folder, which we downloaded to our computer.
 After examining the folder, we came to several conclusions.
 
-Firstly, we saw that the primary focus of Arribada team was to build an object localization model, not an image classification model.
+\begin{enumerate}
+    \item We saw that the primary focus of Arribada team was to build an object localization model, not an image classification model.
 In object localization neural network draws bounding boxes around objects that it recognizes and assigns them labels, while image classification model only labels the image as whole.
-Object localization produces a bigger and more complex model then image classification and it is unsuitable for running on a microcontroller.
+Object localization produces a bigger and more complex model than image classification and it is unsuitable for running on a microcontroller.
 All major work that was done by Arribada team was contained in one folder where each image had accompanying text file of the same name.
 Text files were produced by a DeepLabel software, which is used for preparing images for training object localization models.
 Each line in a text file described a location of the bounding box and its label.
@@ -96,7 +96,7 @@ This dataset format was not suitable for us, as many images contained more bound
 We later saw that there were few folder with names such as "Human", "Single Elephant", "Multiple Separate Elephants", "Multiple obstructing Elephants", "Cows", "Goats" and so on, which contained sorted images that we could use.
 All folders with elephant pictures we merged into one folder, as we did not care if model can differentiate how many elephants are on a taken image, we only wanted to know if there are any elephants on it or not.
 
-Secondly, we found out that all images were documented in a large Excel database.
+    \item We found out that all images were documented in a large Excel database.
 For each image there was a row in a database that connected image file name with information where image was taken and with what sensor.
 This enabled us to generate a graph seen on Figure \ref{nested_donut1}.
 We used a total of 13667 images from thermal image dataset, almost 88 \% of them were made in Whipsnade Zoo, the rest of them were made in Assam.
@@ -109,14 +109,15 @@ All images from Assam were made with FLIR Lepton 2.5, while both cameras were us
     \label{nested_donut1}
 \end{figure}
 
-Thirdly, after manually inspecting the folder with goat images we saw that it mostly contained images of a goat herd, standing around a single elephant.
+    \item After manually inspecting the folder with goat images we saw that it mostly contained images of a goat herd, standing around a single elephant.
 This folder was usable only for object localization ML models, where each goat could be tagged with a bounding box. 
 In case of an image classification model, this sort of training data is not desirable, as it would be too similar to another separate class, in our case elephant class.
 We therefore dropped goat images out of our training data entirely.
 
-Additionally, we realised that there was a large class imbalance, as seen on Figure \ref{nested_donut2} in favor to elephant class.
+    \item We also realised that there was a large class imbalance, as seen on Figure \ref{nested_donut2} in favor to elephant class.
 Number of elephant images was more than 4 times larger from the number of images of the all other classes combined.
-This issue was solved with acquiring more images of the minority class, oversampling the minority class and/or undersampling the majority class and additionally augmenting images in preparation phase.
+This issue was solved with acquiring more images of the minority class, oversampling the minority class and additionally augmenting images in training phase.
+\end{enumerate}
 
 \begin{figure}[ht]
     \centering
@@ -148,8 +149,8 @@ We then manually sorted images into appropriate folders and added them to the da
 
 \section{ Tools and development environment}
 
-All of the work around image preparation and ML model creation was done in Python 3.6.
-Python module Numpy was used for image preprocessing, Pandas for Excel database manipulation and Matplotlib for plot generation.
+All of the work around image preparation and ML model creation was done in Python 3.6,
+Numpy was used for image preprocessing, Pandas for Excel database manipulation and Matplotlib for plot generation.
 Neural networks were designed in TensorFlow 2.4, using Keras high level API.
 
 As training neural networks is a computationally demanding process, it would not be feasible to do it on a personal laptop.
@@ -163,7 +164,7 @@ Instead of writing Python scripts and executing them through command line, we us
 Juptyer Notebook is a web-based application that can run programs that are a mix of code, explanatory text and computer output.
 Users can divide code into segments, which can be executed separately, visual output from modules such as Matplotlib is also supported.
 To use Juptyer Notebook on our cloud instance, we had to install it and run it.
-We could then access web service simply through web browser by writing the IP address of the server, followed by the default port that Juptyer Notebook server uses.
+We could then access web service simply through web browser by writing the IP address of the server, followed by the default Juptyer Notebook server port, 8888.
 
 
 \section{ Image preprocessing}
@@ -180,25 +181,31 @@ Our process can be seen on Figure \ref{image_preparation}.
 
 At the start of the process we compared filenames of each separate folder to the list of filenames found in Excel database.
 We imported only the images found in both sources, as lists were not identical and we wanted to keep track of different metadata information.
-As some images were made with two different FLIR Lepton camera with different resolutions (60 x 80 and 120 x 160), we just downscaled higher resolution directly in the importing process.
-After this we simply added images that were taken by us in Slovenia.
+As some images were made with two different FLIR Lepton camera with different resolutions (60 x 80 and 120 x 160), we downscaled higher resolution images directly in the importing process.
+After this we added images that were taken by us in Slovenia.
 At this point we had four separate Numpy arrays, one for every class, with 3 dimensions: first dimension was a number of different images in that class, second and third dimensions stored image's pixel values (60 and 80 pixels respectively).
 
-Next step was assigning labels to every image.
+Next step was assigning labels to each image.
 As the output of NNs are numbers, we can not just assign labels in strings format to data.
 Instead we assigned every image a single number that represented that class, 0 for elephant, 1 for human, 2 for cow and 3 for nature/random class.
 We shuffled images inside of each class and then split them into training, validation and test sets.
+
+Training set is used for model training, while validation set helps to choose best model based on accuracy.
+Test set is normally set aside and used only at the end, after the model is chosen, to asses how model performs on never seen data.
+If we did not use validation set and only choose the best model according to test set, we would be overfitting a model and had no accurate measure how would our model perform on unseen data.
+
 At end of this step we had 4 different Python dictionaries for each class.
 Each dictionary had 3 key-value pairs for every training, validation and test set, which held image data and encoded labels.
 
 We next applied simplest form of normalization to all images, a mean subtraction.
 We calculated a two dimensional matrix that held mean values of pixels averaged over the whole training set, which we subtracted from all images, essentially zero centering the data.
-This is a common preprocessing step in every ML image pipeline, which is usually combined with standardization\cite{cs231n}.
-Standardization scales the whole range of input pixel values into -1 and 1 interval.
-This is only needed if different input values have widely different ranges\cite{cs231n}.
-Because images that were created with FLIR camera were all 8-bit encoded, therefore same range, this was not needed.
+This is a common preprocessing step in every ML image pipeline, which is usually combined with standardization\footnotemark.
 
-In the end we had to fix our imbalance problem.
+\footnotetext{Standardization scales the whole range of input pixel values into -1 and 1 interval.
+This is only needed if different input values have widely different ranges\cite{cs231n}.
+Because images that were created with FLIR camera were all 8-bit encoded, therefore had same range, this was not needed.}
+
+In the end we had to fix imbalance problem.
 We achieved this by resampling the human, cow and nature/random classes.
 Human class was resampled three times, while both cow and nature/random classes were resampled six times.
 Figure \ref{resampled} shows distribution of training images before and after resampling.
@@ -313,15 +320,16 @@ For model optimization phase we wrote a Python script that took model in .h5 for
     \item \textbf{Non-quantized tflite model,} no quantization, just basic conversion from .h5 to .tflite format is done.
     \item \textbf{float16 model,} weights are quantized from 32-bit to 16-bit floating-point values. Model size is split in half and accuracy decrease is minimal, but there is no boost in execution speed.
     \item \textbf{dynamic model,} weights are quantized as 8-bit values, but operations are still done in a floating-point math. Models are 4 times smaller and execution speed is faster when compared to float16 optimization but slower from full integer optimization.
-    \item \textbf{Full integer model,} weights, biases and math operations are quantized, execution speed is increased. It requires representative dataset at time of optimization.
+    \item \textbf{Full integer model,} weights, biases and math operations are quantized, execution speed is increased. It requires representative dataset at conversion time.
 \end{itemize}
 
 Full integer model is an ideal choice for running models on microcontrollers, however it should be noted that not all operations have full integer math implementations in TFLite Micro.
-Script also uses tool xxd to create .c and .h files of models in c array format, for later inference on microcontroller.
+
+Created .tflite models had to be converted into a format that is understandable to a microcontroller.
+This was done with the \textbf{xxd}, a Linux command line tool which creates a hex dump out of any input file.
+As a input parameter we give xxd our .tflite model and set the -i flag.
+Xxd tool will then create a hex dump of our model and format it as a char array in C programming language. 
+We then created .c file with char array values and a .h file with its declaration, which we can later call from our application code.
+
 
 \section{ Neural network model design in Edge Impulse Studio}
-
-
-Notes and remarks from other ML thesis:
-* You could rework section development enviroment to be more concise. No need to describe everything in such detail, but you need to mention all tools.
-* You did not mention data split, what was ratio and why are they used
