@@ -149,6 +149,21 @@ It has since fallen out of practice and is nowadays replaced by ReLu or some oth
 \end{figure}
 
 
+\begin{equation}\label{softmax_equ}
+softmax(x)_i = \frac{e(x_i)}{\sum_{j}^{ }e(x_j))}
+\end{equation}
+
+Where:
+
+$V_{i}$ - Input volume size, only width or height
+
+$V_{o}$ - Output volume size, only width or height
+
+$F$ - Filter or receptive field size
+
+$P$ - Amount of zero padding used on the border
+
+$S$ - Stride length
 \subsection{ Backpropagation}
 
 Training of neural networks is done with a training algorithm, known as \textbf{backpropagation}.

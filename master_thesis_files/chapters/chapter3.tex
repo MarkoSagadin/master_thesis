@@ -181,7 +181,7 @@ Our process can be seen on Figure \ref{image_preparation}.
 
 At the start of the process we compared filenames of each separate folder to the list of filenames found in Excel database.
 We imported only the images found in both sources, as lists were not identical and we wanted to keep track of different metadata information.
-As some images were made with two different FLIR Lepton camera with different resolutions (60 x 80 and 120 x 160), we downscaled higher resolution images directly in the importing process.
+As some images were made with two different FLIR Lepton cameras with different resolutions (60 x 80 and 120 x 160), we downscaled higher resolution images directly in the importing process.
 After this we added images that were taken by us in Slovenia.
 At this point we had four separate Numpy arrays, one for every class, with 3 dimensions: first dimension was a number of different images in that class, second and third dimensions stored image's pixel values (60 and 80 pixels respectively).
 
@@ -233,17 +233,24 @@ After resampling we merged and shuffled all data and reshaped it with Numpy from
 
 \section{ Model creation and training}\label{cnn_ref}
 
-For creating CNN models we used Keras Sequential API. 
-With it programmer creates a model and adds layers one by one.
+For creating CNN models we used Keras Sequential API and Keras Tuner model.
+Sequential API abstracts a lot of low level details of model design.
 When adding layers we are only specifying what type of layer we went, size of it and layer specific features. 
 We do not need to keep track of any connections between or in layers, this is done automatically by Keras.
-Specific architecture of models that we created can be seen in section TODO ADD REFERENCE, however in Figure \ref{} we can see Keras code and summary of the model that it created.
 
+For a rough model architecture we decided to use a simplified version of a common CNN architecture that was shown in Figure \ref{convnet}.
+The best way to present the model is by looking at the Sequential API code that created it, which is shown in Figure \ref{model_code}.
 
+Model consists of two pairs of convolutional and max pooling layers, followed by a final convolutional layer.
+Kernels are all the same size, 3 x 3, activations are set to ReLu function and padding is set to same, which means that a spatial dimension of a volume will not change in a convolutional layer.
+The output volume of the last convolutional layer is flattened out into a single vector and fed into dense layer, which is followed by a dropout layer\footnotemark.
 
-Hyperparameter selection procedure, random search?
-* Each hyperparameter of model is described.
-* Epoch, batch size, early stopping
+Last dense layer is a final output layer with only 4 neurons, each one representing one class.
+Softmax activation is used to calculate class probabilities.
+
+\footnotetext{ Dropout layer decides with probability $p$ in each training step how many activations from previous layer will be passed on to the next layer.
+It is active only during training phase, during testing phase activations are multiplied with $(1-p)$ factor to compensate.
+It is a very popular type of regularization technique which makes models more robust to the input data\cite{geron}.}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -271,46 +278,39 @@ Hyperparameter selection procedure, random search?
 
 \lstset{style=mystyle}
 
-\begin{lstlisting}[language=Python]
-model = models.Sequential()
-model.add(layers.Conv2D(32, (3, 3), activation='relu', 
-        input_shape=(60,80, 1)))
-model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-model.add(layers.Flatten())
-model.add(layers.Dense(64, activation='relu'))
-model.add(layers.Dense(4))
+\begin{figure}[ht] 
+    \begin{lstlisting}[language=Python]
+        model = models.Sequential()
 
-# Show the model's architecture
-model.summary()
+        model.add(Conv2D(filter_num_1, (3, 3), 
+                         activation='relu', 
+                         padding="same", 
+                         input_shape=(60,80, 1)))
 
-Model: "sequential"
-_________________________________________________________________
-Layer (type)                 Output Shape              Param #   
-=================================================================
-conv2d (Conv2D)              (None, 58, 78, 32)        320       
-_________________________________________________________________
-max_pooling2d (MaxPooling2D) (None, 29, 39, 32)        0         
-_________________________________________________________________
-conv2d_1 (Conv2D)            (None, 27, 37, 64)        18496     
-_________________________________________________________________
-max_pooling2d_1 (MaxPooling2 (None, 13, 18, 64)        0         
-_________________________________________________________________
-conv2d_2 (Conv2D)            (None, 11, 16, 64)        36928     
-_________________________________________________________________
-flatten (Flatten)            (None, 11264)             0         
-_________________________________________________________________
-dense (Dense)                (None, 64)                720960    
-_________________________________________________________________
-dense_1 (Dense)              (None, 4)                 260       
-=================================================================
-Total params: 776,964
-Trainable params: 776,964
-Non-trainable params: 0
-_________________________________________________________________
-\end{lstlisting}
+        model.add(MaxPooling2D((2, 2)))
+
+        model.add(Conv2D(filter_num_2, (3, 3), 
+                         activation='relu', 
+                         padding="same")
+
+        model.add(MaxPooling2D((2, 2)))
+
+        model.add(Conv2D(filter_num_3, (3, 3), 
+                         activation='relu', 
+                         padding="same")
+
+        model.add(Flatten())
+
+        model.add(Dense(dense_size, activation='relu'))
+        model.add(Dropout(dropout_rate))
+        model.add(Dense(4), activation='softmax')
+    \end{lstlisting}
+    \caption{ Distribution of training images before and after resampling.}
+    \label{model_code}
+\end{figure}
+
+
+
 
 
 \section{ Model optimization}

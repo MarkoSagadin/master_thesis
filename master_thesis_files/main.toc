@@ -8,19 +8,19 @@
 \contentsline {subsection}{\numberline {1.2.3} Convolutional neural networks}{10}{subsection.1.2.3}%
 \contentsline {subsubsection}{\numberline {1.2.3.1} Convolutional layers}{11}{subsubsection.1.2.3.1}%
 \contentsline {subsubsection}{\numberline {1.2.3.2} Pooling layers}{13}{subsubsection.1.2.3.2}%
-\contentsline {section}{\numberline {1.3} TensorFlow}{13}{section.1.3}%
-\contentsline {subsection}{\numberline {1.3.1} TensorFlow Lite for Microcontrollers}{14}{subsection.1.3.1}%
-\contentsline {subsubsection}{\numberline {1.3.1.1} Post-training quantization}{16}{subsubsection.1.3.1.1}%
-\contentsline {section}{\numberline {1.4} IoT and wireless technologies}{16}{section.1.4}%
+\contentsline {section}{\numberline {1.3} TensorFlow}{14}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1} TensorFlow Lite for Microcontrollers}{15}{subsection.1.3.1}%
+\contentsline {subsubsection}{\numberline {1.3.1.1} Post-training quantization}{17}{subsubsection.1.3.1.1}%
+\contentsline {section}{\numberline {1.4} IoT and wireless technologies}{17}{section.1.4}%
 \contentsline {subsection}{\numberline {1.4.1} LoRa and LoRaWAN}{18}{subsection.1.4.1}%
-\contentsline {section}{\numberline {1.5} Thermal cameras}{19}{section.1.5}%
-\contentsline {subsection}{\numberline {1.5.1} Choosing the thermal camera}{22}{subsection.1.5.1}%
-\contentsline {chapter}{\numberline {2} Neural network model design}{25}{chapter.2}%
-\contentsline {section}{\numberline {2.1} Model objectives}{26}{section.2.1}%
-\contentsline {section}{\numberline {2.2} Exploring the dataset}{27}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1} Gathering thermal images}{31}{subsection.2.2.1}%
-\contentsline {section}{\numberline {2.3} Tools and development environment}{32}{section.2.3}%
-\contentsline {section}{\numberline {2.4} Image preprocessing}{32}{section.2.4}%
-\contentsline {section}{\numberline {2.5} Model creation and training}{34}{section.2.5}%
-\contentsline {section}{\numberline {2.6} Model optimization}{36}{section.2.6}%
-\contentsline {section}{\numberline {2.7} Neural network model design in Edge Impulse Studio}{37}{section.2.7}%
+\contentsline {section}{\numberline {1.5} Thermal cameras}{20}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1} Choosing the thermal camera}{23}{subsection.1.5.1}%
+\contentsline {chapter}{\numberline {2} Neural network model design}{26}{chapter.2}%
+\contentsline {section}{\numberline {2.1} Model objectives}{27}{section.2.1}%
+\contentsline {section}{\numberline {2.2} Exploring the dataset}{28}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1} Gathering thermal images}{32}{subsection.2.2.1}%
+\contentsline {section}{\numberline {2.3} Tools and development environment}{33}{section.2.3}%
+\contentsline {section}{\numberline {2.4} Image preprocessing}{33}{section.2.4}%
+\contentsline {section}{\numberline {2.5} Model creation and training}{35}{section.2.5}%
+\contentsline {section}{\numberline {2.6} Model optimization}{37}{section.2.6}%
+\contentsline {section}{\numberline {2.7} Neural network model design in Edge Impulse Studio}{38}{section.2.7}%
