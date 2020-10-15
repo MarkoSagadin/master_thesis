@@ -1,38 +1,39 @@
-In this chapter we will describe the design of convolutional neural network that will be able to process thermal images and predict what object they contain.
-Workflow that we will follow will largely be a combination of workflows presented in Figures \ref{ml_workflow} and \ref{micro_workflow}.
+In this chapter we describe the design of convolutional neural network which is able to process thermal images and predict what object they contain.
+Workflow that follows will largely be a combination of workflows presented in Figures \ref{ml_workflow} and \ref{micro_workflow}.
 
-We will first set concrete objectives, which will dictate what exactly we want to accomplish, while keeping in consideration various constraints.
-We will then explore the dataset provided by Arribada Initiative, analyze different class representations and decide if it is appropriate for accomplishing objectives that we set earlier.
-We will describe tools and development environment that we used in the process.
+We first set concrete objectives, which dictate what exactly we want to accomplish, while keeping in consideration various constraints.
+We then explored the dataset provided by the Arribada Initiative, analyzed different class representations and decided, if the dataset is appropriate for accomplishing objectives that we set earlier.
+Tools and development environment used in the process are also described.
 
-In image preprocessing phase we imported images and connected with metadata that we parsed from excel database.
-We analysed dataset, split it into different sets and did some data corrections procedures.
-We then set a rough architecture of a CNN model with variable hyperparameters and ran a random search algorithm which would find optimal model based on accuracy.
-Few best performing models were picked and optimized with TFLite tools.
-Models were then converted into a C char array format. 
+In image preprocessing phase we imported images and connected them with metadata that was parsed from the excel database.
+We analysed the dataset, split it into different sets and applied image correction procedures.
+We then decided on few slightly similar CNN architectures with variable hyperparameters and ran a random search algorithm, which found several different models based on accuracy.
+In chapter/section TODO ADD REFERNCE we compared models in terms of accuracies and size.
+Chosen models were then converted into a C char array format. 
 
-We will finish this chapter by going through the same process, but this time using tools that Edge Impulse provides to the point where we will have our model ready to run on a microcontroller.
+We finish this chapter by going through the same design process again, but this time using tools that Edge Impulse provides. 
+In chapter/section TODO ADD REFERENCE we compared on device performance of our modules versus the ones created with Edge Impulse.
 
 
 \section{ Model objectives}
 
-The accuracy of our early detection system should be equal or similar to the one of human observer, no matter if we are operating in the daytime or nighttime.
-Although our system will be placed on the paths that are regularly traversed by elephants, this does not mean that they are the only possible object that can appear on thermal images.
+The accuracy of our early detection system should be equal or similar to the one of human observer, no matter if it is operating in daytime or nighttime.
+Although the system will be placed on the paths that are regularly traversed by elephants, they are not only possible objects that can appear on taken thermal images.
 Humans and various livestock, such as goats and cows, could also be photographed.
-This means that we want to avoid reporting false positives, which means that our system should not incorrectly label a human or a livestock animal as an elephant.
-At the same time we want avoid false negatives, where an elephant could pass by our system undetected.
-These kind of mistakes could undermine the community's confidence of our early detection system and defeat our purpose.
-This means that besides elephant detection, we should also focus on correctly labeling humans and livestock, while also providing a nature/random class for all other unexpected objects or simply images of nature.
+Reporting false positives should be avoided, which means that the system should not incorrectly label a human or a livestock animal as an elephant.
+At the same time false negatives also need to be avoided, in these cases an elephant could pass the system undetected.
+These kind of mistakes could undermine the community's confidence of the early detection system and defeat the purpose.
+This means that besides elephant detection, our focus should be also on correctly classifying humans and livestock, while providing a nature/random class for all other unexpected objects or simply images of nature.
 
-It would be beneficial if thermal camera can take several pictures of the same object, thus increasing the confidence of computed label of the object.
+It would be beneficial if thermal camera can take several images of the same object, thus increasing the confidence of computed label of the object.
 However this is constrained by the image processing time and camera's field of view.
 Thermal camera FLIR Lepton has a horizontal field of view of 57 degrees.
-The closer elephant passes by the thermal camera the quicker he will traverse the camera's field of view, thus giving the camera less time for capture.
+The closer elephant passes by the thermal camera, the quicker he traverses the camera's field of view, thus giving the camera less time for capture.
 This problem can be solved by minimizing the execution time of the ML model or by placing the early detection system on position that is far away from expected elephant's path.
 As latter option might not be always possible, we should strive to keep the whole image processing time as short as possible.
 
-Finally, as our neural network will be deployed on a microcontroller and not on a computer or a server we have to keep it simple and small.
-Extra model complexity that might bring us few percents of accuracy will not matter much, if our model would be too large to fit on a microcontroller or too slow to run.
+Finally, as our neural network will be deployed on a microcontroller and not on a computer or a server, we have to keep it lightweight in terms of memory.
+Extra model complexity that brings few percents of accuracy does not matter much, if the model is too large to fit on a microcontroller or takes too long to run.
 
 
 To summarize:
