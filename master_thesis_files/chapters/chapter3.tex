@@ -1,45 +1,45 @@
 In this chapter we describe the design of convolutional neural network which is able to process thermal images and predict what object they contain.
 Workflow that follows will largely be a combination of workflows presented in Figures \ref{ml_workflow} and \ref{micro_workflow}.
 
-We first set concrete objectives, which dictate what exactly we want to accomplish, while keeping in consideration various constraints.
+We first had to set concrete objectives, while keeping in consideration various constraints.
 We then explored the dataset provided by the Arribada Initiative, analyzed different class representations and decided, if the dataset is appropriate for accomplishing objectives that we set earlier.
-Tools and development environment used in the process are also described.
+Tools and development environment that we used in the process are also described.
 
 In image preprocessing phase we imported images and connected them with metadata that was parsed from the excel database.
 We analysed the dataset, split it into different sets and applied image correction procedures.
-We then decided on few slightly similar CNN architectures with variable hyperparameters and ran a random search algorithm, which found several different models based on accuracy.
+We then decided on rough CNN architecture with variable hyperparameters and ran a random search algorithm, which found several different models based on accuracy.
 In chapter/section TODO ADD REFERNCE we compared models in terms of accuracies and size.
-Chosen models were then converted into a C char array format. 
+Selected models were then converted into a C char array format. 
 
-We finish this chapter by going through the same design process again, but this time using tools that Edge Impulse provides. 
+We finish this chapter by going through the same design process again, but this time using tools provided by Edge Impulse.
 In chapter/section TODO ADD REFERENCE we compared on device performance of our modules versus the ones created with Edge Impulse.
 
 
 \section{ Model objectives}
 
 The accuracy of our early detection system should be equal or similar to the one of human observer, no matter if it is operating in daytime or nighttime.
-Although the system will be placed on the paths that are regularly traversed by elephants, they are not only possible objects that can appear on taken thermal images.
+Although the system will be placed on the paths that are regularly traversed by elephants, they are not the only possible objects that can appear on taken thermal images.
 Humans and various livestock, such as goats and cows, could also be photographed.
 Reporting false positives should be avoided, which means that the system should not incorrectly label a human or a livestock animal as an elephant.
 At the same time false negatives also need to be avoided, in these cases an elephant could pass the system undetected.
 These kind of mistakes could undermine the community's confidence of the early detection system and defeat the purpose.
-This means that besides elephant detection, our focus should be also on correctly classifying humans and livestock, while providing a nature/random class for all other unexpected objects or simply images of nature.
+This means that besides elephant detection, we should also focus on correctly classifying humans and livestock, while providing a nature/random class for all other unexpected objects or simply images of nature.
 
-It would be beneficial if thermal camera can take several images of the same object, thus increasing the confidence of computed label of the object.
+It would be beneficial, if thermal camera can take several images of the same object in short period of time, thus increasing the confidence of computed label of the object.
 However this is constrained by the image processing time and camera's field of view.
 Thermal camera FLIR Lepton has a horizontal field of view of 57 degrees.
-The closer elephant passes by the thermal camera, the quicker he traverses the camera's field of view, thus giving the camera less time for capture.
-This problem can be solved by minimizing the execution time of the ML model or by placing the early detection system on position that is far away from expected elephant's path.
+The closer object passes by thermal camera, the quicker it traverses the camera's field of view, thus giving the camera less time for capture.
+This problem can be solved by minimizing the execution time of the ML model or by placing the early detection system on position that is several meters away from expected elephant's path.
 As latter option might not be always possible, we should strive to keep the whole image processing time as short as possible.
 
-Finally, as our neural network will be deployed on a microcontroller and not on a computer or a server, we have to keep it lightweight in terms of memory.
+Finally, as our neural network has to run on a microcontroller and not on a computer or a server, we have to keep it lightweight in terms of memory.
 Extra model complexity that brings few percents of accuracy does not matter much, if the model is too large to fit on a microcontroller or takes too long to run.
 
 
 To summarize:
 \begin{itemize}
-    \item We will create an image classification ML model that will be capable of processing a thermal image and sorting it into one of possible 4 categories: elephant, human, cows and nature/random.
-    \item Total image processing time should be as short as possible, we should try to keep it under 2 seconds.
+    \item We will create an image classification ML model that will be capable of processing a thermal image and sorting it into one of possible 4 categories: elephant, human, lifestock and nature/random.
+    \item Total image processing time should be as short as possible, we should try to keep it under 1 second.
     \item Model should be small enough to fit on a microcontroller of our choice, while still leaving some space for application code. Microcontroller of our choice (STM32F767) has 2 MB of flash memory so model size should be smaller than that.
 \end{itemize}
 
@@ -67,10 +67,13 @@ Insides of the camera and an example of deployed camera can be seen on Figure \r
     \label{assam_camera}
 \end{figure}
 
-PIR sensor functioned as photo trigger, whenever an object passed in front of it camera made a picture.
-This setup provided Arribada with elephant images in real life scenarios, however they could not capture elephants in variety of different conditions, such as different angles and distances.
+PIR sensor functioned as photo trigger, whenever an object passed in front of it camera made an image.
+This setup provided Arribada with elephant images in real life scenarios, however they could not capture elephants in variety of different conditions. 
+It is important to create an image dataset, where object can be seen in different orientations, distances, angles and temperature conditions.
+Datasets like this are used to train a much more robust model, which performs better on never before seen image data, when deployed in real life.
 
 This was accomplished in ZSL Whipsnade Zoo, where they could take many images of elephants in variety different conditions\cite{dataset_collection}.
+With elephants in enclosure, researches could move cameras around and get images that were needed.
 PIR sensor trigger approach was dropped in favor of a 5 second time lapse trigger.
 Two cameras were used again, however one of them now used FLIR Lepton 3.5 camera with better resolution.
 
@@ -88,7 +91,7 @@ After examining the folder, we came to several conclusions.
 
 \begin{enumerate}
     \item We saw that the primary focus of Arribada team was to build an object localization model, not an image classification model.
-In object localization neural network draws bounding boxes around objects that it recognizes and assigns them labels, while image classification model only labels the image as whole.
+In object localization, neural network draws bounding boxes around objects that it recognizes and assigns them labels, while image classification model only labels the image as whole.
 Object localization produces a bigger and more complex model than image classification and it is unsuitable for running on a microcontroller.
 All major work that was done by Arribada team was contained in one folder where each image had accompanying text file of the same name.
 Text files were produced by a DeepLabel software, which is used for preparing images for training object localization models.
@@ -114,10 +117,11 @@ All images from Assam were made with FLIR Lepton 2.5, while both cameras were us
 This folder was usable only for object localization ML models, where each goat could be tagged with a bounding box. 
 In case of an image classification model, this sort of training data is not desirable, as it would be too similar to another separate class, in our case elephant class.
 We therefore dropped goat images out of our training data entirely.
+Livestock class was replaced with cow class.
 
     \item We also realised that there was a large class imbalance, as seen on Figure \ref{nested_donut2} in favor to elephant class.
 Number of elephant images was more than 4 times larger from the number of images of the all other classes combined.
-This issue was solved with acquiring more images of the minority class, oversampling the minority class and additionally augmenting images in training phase.
+We solved this issue with acquiring more images of the minority class and oversampling the minority class.
 \end{enumerate}
 
 \begin{figure}[ht]
@@ -129,7 +133,7 @@ This issue was solved with acquiring more images of the minority class, oversamp
 
 \subsection{ Gathering thermal images}
 
-As the amount of cow images was low compared to human and elephant classes and because we also did not had any images that would fit into nature/random class, we decided to gather them ourselves.
+As the amount of images of cows was low compared to number of human and elephant images and because we also did not had any images that could be used for nature/random class, we decided to gather them ourselves.
 We wanted to do this as quickly and efficiently as possible so we build a prototype camera made out of FLIR Lepton 2.5 breakout board, Raspberry Pi Zero and power bank.
 We used an open source library \cite{flir_github} for FLIR Lepton module which used a simple C program to take a single image with a thermal camera and save it to a Raspberry Pi.
 Image of the setup can be seen on Figure \ref{cow_camera}.
@@ -144,22 +148,21 @@ Image of the setup can be seen on Figure \ref{cow_camera}.
 We wrote a simple Python script which executed C program every time we pressed the trigger push-button.
 Additional shutdown button was added to call the Raspberry Pi shutdown routine, as forcibly removing power from it would corrupt freshly taken thermal images on the Raspberry Pi's SD card.
 
-With this setup we made 365 images of cows in varying conditions, 308 images of nature and 124 images of a human that were made on the go.
+With this setup we made 365 images of cows in varying conditions, 308 images of nature and 124 images of humans that were made on the go.
 We then manually sorted images into appropriate folders and added them to the dataset.
 
 
 \section{ Tools and development environment}
 
-All of the work around image preparation and ML model creation was done in Python 3.6,
-Numpy was used for image preprocessing, Pandas for Excel database manipulation and Matplotlib for plot generation.
-Neural networks were designed in TensorFlow 2.4, using Keras high level API.
+All of the work connected with image preparation and ML model creation was done in Python 3.6, Numpy was used for image preprocessing, Pandas for Excel database manipulation and Matplotlib for plot generation.
+Neural networks were designed in TensorFlow 2.4, using Keras high level API, Keras Tuner model was used for hyperparameter search.
 
 As training neural networks is a computationally demanding process, it would not be feasible to do it on a personal laptop.
-We instead used Amazon's Elastic Compute Cloud web service.
+Amazon's Elastic Compute Cloud web service was instead used.
 Elastic Compute Cloud or EC2 enables users to create an instance of a server in a cloud with specified amount of processing power and memory.
 Some instances come with dedicated software modules and dedicated graphics cards for extra boost in performance.
 We created an instance of Linux server that came with TensorFlow, Numpy and other libraries pre-installed.
-We interacted with the server's command line through SSH protocol.
+Interaction with servers was done one command line through SSH protocol.
 
 Instead of writing Python scripts and executing them through command line, we used Juptyer Notebook. 
 Juptyer Notebook is a web-based application that can run programs that are a mix of code, explanatory text and computer output.
@@ -170,13 +173,13 @@ We could then access web service simply through web browser by writing the IP ad
 
 \section{ Image preprocessing}
 
-Image preparation phase is a pipeline process that differs from project to project.
+Image preprocessing phase is a pipeline process that differs from project to project.
 Our process can be seen on Figure \ref{image_preparation}.
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=1.0\linewidth]{image_preparation.pdf} 
-    \caption{Image preparation pipeline that was used. Icons source: www.icons8.com.}
+    \caption{Image preprocessing pipeline. Icons source:\cite{icons}}
     \label{image_preparation}
 \end{figure}
 
@@ -184,7 +187,7 @@ At the start of the process we compared filenames of each separate folder to the
 We imported only the images found in both sources, as lists were not identical and we wanted to keep track of different metadata information.
 As some images were made with two different FLIR Lepton cameras with different resolutions (60 x 80 and 120 x 160), we downscaled higher resolution images directly in the importing process.
 After this we added images that were taken by us in Slovenia.
-At this point we had four separate Numpy arrays, one for every class, with 3 dimensions: first dimension was a number of different images in that class, second and third dimensions stored image's pixel values (60 and 80 pixels respectively).
+At this point we had four separate Numpy arrays, one for each class, with 3 dimensions: first dimension was a number of different images in that class, second and third dimensions stored image's pixel values (60 and 80 pixels respectively).
 
 Next step was assigning labels to each image.
 As the output of NNs are numbers, we can not just assign labels in strings format to data.
@@ -193,20 +196,20 @@ We shuffled images inside of each class and then split them into training, valid
 
 Training set is used for model training, while validation set helps to choose best model based on accuracy.
 Test set is normally set aside and used only at the end, after the model is chosen, to asses how model performs on never seen data.
-If we did not use validation set and only choose the best model according to test set, we would be overfitting a model and had no accurate measure how would our model perform on unseen data.
+If we did not use validation set and only choose the best model according to test set, we would be overfitting a model and had no accurate measure how would our model perform on an unseen data.
 
 At end of this step we had 4 different Python dictionaries for each class.
 Each dictionary had 3 key-value pairs for every training, validation and test set, which held image data and encoded labels.
 
 We next applied simplest form of normalization to all images, a mean subtraction.
 We calculated a two dimensional matrix that held mean values of pixels averaged over the whole training set, which we subtracted from all images, essentially zero centering the data.
-This is a common preprocessing step in every ML image pipeline, which is usually combined with standardization\footnotemark.
+This is a common preprocessing step in every ML image preprocessing pipeline, which is usually combined with standardization\footnotemark.
 
 \footnotetext{Standardization scales the whole range of input pixel values into -1 and 1 interval.
 This is only needed if different input values have widely different ranges\cite{cs231n}.
 Because images that were created with FLIR camera were all 8-bit encoded, therefore had same range, this was not needed.}
 
-In the end we had to fix imbalance problem.
+In the end we had to fix class imbalance problem.
 We achieved this by resampling the human, cow and nature/random classes.
 Human class was resampled three times, while both cow and nature/random classes were resampled six times.
 Figure \ref{resampled} shows distribution of training images before and after resampling.
@@ -229,29 +232,46 @@ Figure \ref{resampled} shows distribution of training images before and after re
 We only resampled training sets, not validation or test sets.
 If we resampled everything, model would be seeing same image several times during testing, thus reporting incorrect accuracy in validation and test phase.
 
-After resampling we merged and shuffled all data and reshaped it with Numpy from three dimensions to four, so it was ready for model training.
+After resampling we merged and shuffled all data, and saved it to the disk for later use.
 
 
 \section{ Model creation and training}\label{cnn_ref}
 
-For creating CNN models we used Keras Sequential API and Keras Tuner model.
+For creation of CNN models we used Keras Sequential API and Keras Tuner module.
 Sequential API abstracts a lot of low level details of model design.
-When adding layers we are only specifying what type of layer we went, size of it and layer specific features. 
-We do not need to keep track of any connections between or in layers, this is done automatically by Keras.
+While specifying layers, we only had to specify what type of layer we wanted, its size and layer specific features. 
+We do not had to keep track of any connections between or in layers, this was automatically done by Keras.
 
-For a rough model architecture we decided to use a simplified version of a common CNN architecture that was shown in Figure \ref{convnet}.
-The best way to present the model is by looking at the Sequential API code that created it, which is shown in Figure \ref{model_code}.
+For a model architecture we decided to use a simplified version of a common CNN architecture that was shown in Figure \ref{convnet}.
+The best way to present the model is by inspecting the Sequential API code that creates it, code is shown in Figure \ref{model_code}.
 
-Model consists of two pairs of convolutional and max pooling layers, followed by a final convolutional layer.
-Kernels are all the same size, 3 x 3, activations are set to ReLu function and padding is set to same, which means that a spatial dimension of a volume will not change in a convolutional layer.
-The output volume of the last convolutional layer is flattened out into a single vector and fed into dense layer, which is followed by a dropout layer\footnotemark.
+Model consisted of two pairs of convolutional and max pooling layers, followed by a final convolutional layer.
+For activation function ReLu was chosen, as it is currently the most effective and popular option\cite{cs231n}\cite{geron}.
+Padding option was set to same, which meant that a spatial dimension of a volume would not change before and after a convolutional layer.
+Polling layer kernel size was set to 2 x 2, with default stride of 2.
 
-Last dense layer is a final output layer with only 4 neurons, each one representing one class.
-Softmax activation is used to calculate class probabilities.
+The output volume of the last convolutional layer was flattened out into a single vector and fed into a dense layer, which was followed by a dropout layer\footnotemark.
 
 \footnotetext{ Dropout layer decides with probability $p$ in each training step how many activations from previous layer will be passed on to the next layer.
 It is active only during training phase, during testing phase activations are multiplied with $(1-p)$ factor to compensate.
-It is a very popular type of regularization technique which makes models more robust to the input data\cite{geron}.}
+It is a very popular type of regularization technique, which makes models more robust to the input data\cite{geron}.}
+
+Last dense layer was a final output layer with only 4 neurons, each one representing one class.
+Softmax activation was used to calculate class probabilities.
+
+Above hyperparameters are general rules of thumb and serve as a good starting point when building CNNs\cite{cs231n}.
+However hyperparameters such as number of filters, filter size, size of a hidden dense layer, dropout rate and learning rate are specific to each dataset and can not be chosen heuristically.
+
+To find hyperparameters that would yield highest accuracy we used Keras Tuner module.
+Instead of hard-coding hyperparameters when building a model with Keras API, we defined a search space of possible values with \verb|HyperParameter| class and used that as a hyperparameter.
+
+Created model was then passed to a \verb|RandomSearch| class, with few other parameters such as batch size, number of epochs and maximum number of trial.
+Hyperparameter search could then be started, Keras Tuner would randomly pick a set of hyperparameters and train a model with them, this process would be repeated for a trial number of times.
+Accuracy and hyperparameters that were used while training every module were saved to a log file for later analysis.
+
+By providing accuracy metric, Keras tuner automatically sorts trained models in descending accuracy, returning the best model.
+This is in many use cases sufficient, however in our case we are also interested in best performing models which have small size. 
+As size can not be specified as one of the possible metrics, we some manual training was required after hyperparameter search to determine the most efficient model.
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -283,20 +303,20 @@ It is a very popular type of regularization technique which makes models more ro
     \begin{lstlisting}[language=Python]
         model = models.Sequential()
 
-        model.add(Conv2D(filter_num_1, (3, 3), 
+        model.add(Conv2D(filter_num_1, filter_size, 
                          activation='relu', 
                          padding="same", 
                          input_shape=(60,80, 1)))
 
         model.add(MaxPooling2D((2, 2)))
 
-        model.add(Conv2D(filter_num_2, (3, 3), 
+        model.add(Conv2D(filter_num_2, filter_size, 
                          activation='relu', 
                          padding="same")
 
         model.add(MaxPooling2D((2, 2)))
 
-        model.add(Conv2D(filter_num_3, (3, 3), 
+        model.add(Conv2D(filter_num_3, filter_size, 
                          activation='relu', 
                          padding="same")
 
@@ -306,17 +326,17 @@ It is a very popular type of regularization technique which makes models more ro
         model.add(Dropout(dropout_rate))
         model.add(Dense(4), activation='softmax')
     \end{lstlisting}
-    \caption{ Distribution of training images before and after resampling.}
+    \caption{ CNN architecture written in Python using Keras Sequential API.}
     \label{model_code}
 \end{figure}
 
 
-
-
-
 \section{ Model optimization}
 
-For model optimization phase we wrote a Python script that took model in .h5 format and converted it into four differently optimized tflite models:
+Keras supports saving models in h5 format, which model's architecture, values of weights, and information used while compiling the model.
+h5 format can not be used directly for running trained models on mobile devices and microcontrollers, conversion to a .tflite format has to be done with TFLite Converter tool.
+
+TFLite converter can convert model in .h5 format into four differently optimized tflite models:
 \begin{itemize}
     \item \textbf{Non-quantized tflite model,} no quantization, just basic conversion from .h5 to .tflite format is done.
     \item \textbf{float16 model,} weights are quantized from 32-bit to 16-bit floating-point values. Model size is split in half and accuracy decrease is minimal, but there is no boost in execution speed.
@@ -324,13 +344,58 @@ For model optimization phase we wrote a Python script that took model in .h5 for
     \item \textbf{Full integer model,} weights, biases and math operations are quantized, execution speed is increased. It requires representative dataset at conversion time.
 \end{itemize}
 
-Full integer model is an ideal choice for running models on microcontrollers, however it should be noted that not all operations have full integer math implementations in TFLite Micro.
+Full integer model is an ideal choice for running models on microcontrollers, however it should be noted that not all operations have full integer math support in TFLite Micro.
 
-Created .tflite models had to be converted into a format that is understandable to a microcontroller.
-This was done with the \textbf{xxd}, a Linux command line tool which creates a hex dump out of any input file.
-As a input parameter we give xxd our .tflite model and set the -i flag.
-Xxd tool will then create a hex dump of our model and format it as a char array in C programming language. 
-We then created .c file with char array values and a .h file with its declaration, which we can later call from our application code.
+Furthermore, created tflite models need to be converted into a format that is understandable to C++ TFlite API running on a microcontroller.
+This is done with the \textbf{xxd}, a Linux command line tool which creates a hex dump out of any input file.
+By setting -i flags xxd tool creates a hex dump of our model and formats it as a char array in C programming language. 
+
+To automate optimization process we wrote a Python script that took model in raw .h5 format and converted it into every possible version of optimized tflite model.
+Each model was then processed with xxd tool and pairs of .c and .h files were created, ready to be included into our application code.
 
 
 \section{ Neural network model design in Edge Impulse Studio}
+
+Designing a neural network with Edge Impulse is a much less involved process than the one we described above, as many steps of image preprocessing are automated.
+To start with NN design, we first had to upload our image data to Edge Impulse Studio project.
+This can be done either by connecting a S3 bucket\footnotemark with data with Edge Impulse account and transferring them to a specific project or by using Edge Impulse command line tools to upload image data from computer directly to a project.
+We chose S3 bucket approach, once data is uploaded it is trivial to transfer it to different projects.
+
+\footnotetext{Simple Storage Service or S3 is another service provided by Amazon, used for storing large amount of data in the cloud.}
+
+After data has been uploaded, the rest of NN design can be mostly done through Edge Impulse web interface.
+In Figure \ref{edge_impulse_screenshot} we can see so called Impulse Design, where design with block.
+With input block we tell what kind of data are we inputting, either image or time series data and with processing block we decide how are we going to extract features.
+With learning block we can choose to use neural network provided by Keras, an anomaly detection algorithm or a pre-trained model for transfer learning.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\linewidth]{edge_impulse_screenshot.png} 
+    \caption{Creating a neural network in Edge Impulse Studio.}
+    \label{edge_impulse_screenshot}
+\end{figure}
+
+Since we were training with image data, we selected an image input block. As Edge Impulse did not support images of different image ratios at the time, we had to crop our images to 60 x 60 pixels.
+For processing block we selected image processing block as this was the only possible choice and for learning block we selected Keras's neural network block.
+
+Neural network block is configurable, we could either define our network with different blocks representing layers or switch to text editor with Keras Sequential API code, where we could do our adjustments.
+Settings such as learning rate, number of epochs and confidence rating are also available 
+Regardless of the option we chose, we start training by clicking on a single button.
+Training of neural networks inside Edge Impulse Studio is done in a cloud, so as users we do not have to worry about settings up a development environment.
+After training is done, Edge Impulse how well is model performing on validation data, how much flash and ram memory is going to take and approximately how long will on device inference take, based on the frequency and the processor of a microcontroller.
+Example of the output is presented on the Figure \ref{edge_impulse_screenshot2}, inferencing time is estimated for a Cortex-M4 microcontroller, running at 80 \si{\mega\hertz}.
+Edge Impulse also does model optimization for you automatically.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\linewidth]{edge_impulse_screenshot2.png} 
+    \caption{After training training performance report.}
+    \label{edge_impulse_screenshot2}
+\end{figure}
+
+The final step was deploying the trained model to the microcontroller.
+This step is fairly simple, Edge Impulse provides few example projects on their GitHub for different platforms that it supports.
+As we wanted to compare the performance of the models on a STM32f767ZI, we chose Mbed platform.
+We copied example Mbed project from GitHub and in Edge Impulse Studio we selected to generate an inferencing library with our model for Mbed platform.
+We extracted the library, which consisted of C++ files, into example project and compiled it.
+Example project just runs continuously the inference on one image and outputs results over serial port.

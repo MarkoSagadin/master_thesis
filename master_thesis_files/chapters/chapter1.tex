@@ -145,26 +145,26 @@ Instead of designing and writing specific programs that deal with preprocessing 
 After the ML model is created and converted into optimized format for embedded systems, customers get immediate first approximation how much RAM and FLASH memory will model take and how fast it will run.
 We can then run the model on the local machine or deploy to a variety of different platforms such as Arduino, STM32, OpenMV, Zeyphr and others.
 
-
 Their solution will be used as a benchmark for our work with TensorFlow Lite.
 
 
 \section{ Objective}
 
-The objective of this master's thesis is to evaluate feasibility to recognize animals, especially elephants, from thermal images, with machine learning algorithms, running directly on a microcontroller.
+The objective of this master's thesis is to evaluate feasibility of  animals, especially elephants, from thermal images, with machine learning algorithms, running directly on a microcontroller.
+
+The objective of this master's thesis is to design and build a system capable of detecting an elephant with the help of machine learning algorithms in day or night time.
+Detection of an elephant needs to be reported over a wireless network to an application server.
 
 For that we will:
 
 \begin{itemize}
-    \item train a neural network model capable of classifying elephants and humans from thermal images.
-    \item design several early warning system solutions to validate and compare:
-    \begin{itemize}
-        \item STM32 microcontroller with thermal camera using TensorFlow Lite
-        \item STM32 microcontroller with thermal camera using Edge Impulse
-        \item NRF microcontroller with thermal camera using Edge Impulse
-    \end{itemize}
-    \item perform on field test
-    \item establish system requirements for different ML applications
+    \item Train a neural network model capable of classifying elephants, humans and other animals from thermal images.
+    \item Optimize neural network model for on device inference
+    \item Implement on device inference on a STM32 microcontroller using TensorFlow Lite
+    \item Compare performance of our implementation against Edge Impulse implementation.
+    \item Build a system around STM32 microcontroller with thermal camera and wireless network support
+    \item Profile power consumption of the built system
+    \item Establish system requirements for different ML applications
 \end{itemize}
 
 

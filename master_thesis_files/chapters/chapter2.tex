@@ -149,21 +149,23 @@ It has since fallen out of practice and is nowadays replaced by ReLu or some oth
 \end{figure}
 
 
+Another commonly used activation function is a softmax function (seen in \ref{softmax_equ}, which is takes a vector as an input, computes an exponential of every element inside it and divides that with the sum of exponents of all elements\cite{geron}
+The end results is that softmax function transforms vector of values into a vector of probabilities.
+Softmax is usually used as an activation in a last layer of a classifier network. 
+
 \begin{equation}\label{softmax_equ}
-softmax(x)_i = \frac{e(x_i)}{\sum_{j}^{ }e(x_j))}
+    \sigma(y_i) = \frac{e^{y_i}}{\sum_{j=1}^{K}e^{y_j}}\;\;\;\text{for}\;\;i\;=\;1,\cdots,K\;\;\text{and}\;\;y=(y_1,\cdots,y_k)\in\mathbb{R}^K
 \end{equation}
 
 Where:
 
-$V_{i}$ - Input volume size, only width or height
+$y$ - Input vector
 
-$V_{o}$ - Output volume size, only width or height
+$K$ - Number of elements in input vector
 
-$F$ - Filter or receptive field size
+$\sigma(y_i)$ - Computed probability of i-th element in input vector 
 
-$P$ - Amount of zero padding used on the border
 
-$S$ - Stride length
 \subsection{ Backpropagation}
 
 Training of neural networks is done with a training algorithm, known as \textbf{backpropagation}.
@@ -301,7 +303,7 @@ Pooling is done on each depth slice separately of other slices, so depth size is
 \end{figure}
 
 It is common to select pool size 2 x 2 and stride 2.
-Like these inputs are downsampled by two in height and width dimensions, discarding 75 \% activations.
+Like this, inputs are downsampled by two in height and width dimensions, discarding 75 \% activations.
 Pooling layers therefore reduce the number of activations and prepare them to be flattened out and fed into a fully connected layer.
 
 \section{ TensorFlow}
@@ -374,8 +376,8 @@ If needed we can tweak the model parameters, train a new model and repeat the de
 \subsubsection{ Post-training quantization}
 
 By using quantization optimization we approximate floating-point numbers in a different format, usually with 8-bit integers.
-When computing neural networks we can quantize weights, biases and intermediate values outputted by separate neurons. 
-Quantization has a dramatic effect on size of the model and its execution speed.
+When computing neural networks we can quantize weights, biases and intermediate values output by separate neurons. 
+Quantization has a dramatic effect on the size of the model and its execution speed.
 By changing 32-bit floating-point numbers with 8-bit integers size decreases by a factor of 4.
 Floating-point math is by nature slow to compute, many microcontrollers do not even have a floating-point unit.
 In comparison integer math is faster to compute, therefore quantized models are executed faster.

@@ -18,9 +18,9 @@
 \contentsline {chapter}{\numberline {2} Neural network model design}{26}{chapter.2}%
 \contentsline {section}{\numberline {2.1} Model objectives}{27}{section.2.1}%
 \contentsline {section}{\numberline {2.2} Exploring the dataset}{28}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1} Gathering thermal images}{32}{subsection.2.2.1}%
-\contentsline {section}{\numberline {2.3} Tools and development environment}{33}{section.2.3}%
-\contentsline {section}{\numberline {2.4} Image preprocessing}{33}{section.2.4}%
+\contentsline {subsection}{\numberline {2.2.1} Gathering thermal images}{31}{subsection.2.2.1}%
+\contentsline {section}{\numberline {2.3} Tools and development environment}{32}{section.2.3}%
+\contentsline {section}{\numberline {2.4} Image preprocessing}{34}{section.2.4}%
 \contentsline {section}{\numberline {2.5} Model creation and training}{35}{section.2.5}%
-\contentsline {section}{\numberline {2.6} Model optimization}{37}{section.2.6}%
-\contentsline {section}{\numberline {2.7} Neural network model design in Edge Impulse Studio}{38}{section.2.7}%
+\contentsline {section}{\numberline {2.6} Model optimization}{38}{section.2.6}%
+\contentsline {section}{\numberline {2.7} Neural network model design in Edge Impulse Studio}{39}{section.2.7}%
