@@ -1,26 +1,35 @@
-\contentsline {chapter}{\numberline {1} Theoretical description of system building blocks}{3}{chapter.1}%
-\contentsline {section}{\numberline {1.1} Machine learning}{3}{section.1.1}%
-\contentsline {subsection}{\numberline {1.1.1} General machine learning workflow}{4}{subsection.1.1.1}%
-\contentsline {subsection}{\numberline {1.1.2} Machine learning on embedded devices}{5}{subsection.1.1.2}%
-\contentsline {section}{\numberline {1.2} Neural networks}{7}{section.1.2}%
-\contentsline {subsection}{\numberline {1.2.1} Activation functions}{8}{subsection.1.2.1}%
-\contentsline {subsection}{\numberline {1.2.2} Backpropagation}{9}{subsection.1.2.2}%
-\contentsline {subsection}{\numberline {1.2.3} Convolutional neural networks}{10}{subsection.1.2.3}%
-\contentsline {subsubsection}{\numberline {1.2.3.1} Convolutional layers}{11}{subsubsection.1.2.3.1}%
-\contentsline {subsubsection}{\numberline {1.2.3.2} Pooling layers}{13}{subsubsection.1.2.3.2}%
-\contentsline {section}{\numberline {1.3} TensorFlow}{14}{section.1.3}%
-\contentsline {subsection}{\numberline {1.3.1} TensorFlow Lite for Microcontrollers}{15}{subsection.1.3.1}%
-\contentsline {subsubsection}{\numberline {1.3.1.1} Post-training quantization}{17}{subsubsection.1.3.1.1}%
-\contentsline {section}{\numberline {1.4} IoT and wireless technologies}{17}{section.1.4}%
-\contentsline {subsection}{\numberline {1.4.1} LoRa and LoRaWAN}{18}{subsection.1.4.1}%
-\contentsline {section}{\numberline {1.5} Thermal cameras}{20}{section.1.5}%
-\contentsline {subsection}{\numberline {1.5.1} Choosing the thermal camera}{23}{subsection.1.5.1}%
-\contentsline {chapter}{\numberline {2} Neural network model design}{26}{chapter.2}%
-\contentsline {section}{\numberline {2.1} Model objectives}{26}{section.2.1}%
-\contentsline {section}{\numberline {2.2} Exploring the dataset}{28}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1} Gathering thermal images}{32}{subsection.2.2.1}%
-\contentsline {section}{\numberline {2.3} Tools and development environment}{33}{section.2.3}%
-\contentsline {section}{\numberline {2.4} Image preprocessing}{34}{section.2.4}%
-\contentsline {section}{\numberline {2.5} Model creation and training}{35}{section.2.5}%
-\contentsline {section}{\numberline {2.6} Model optimization}{38}{section.2.6}%
-\contentsline {section}{\numberline {2.7} Neural network model design in Edge Impulse Studio}{39}{section.2.7}%
+\contentsline {chapter}{\numberline {1} Introduction}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1} Motivation}{3}{section.1.1}%
+\contentsline {section}{\numberline {1.2} Early detection system}{5}{section.1.2}%
+\contentsline {section}{\numberline {1.3} IRNAS and Arribada Initiative}{6}{section.1.3}%
+\contentsline {section}{\numberline {1.4} Reasoning for machine learning approach}{7}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1} Implementation of machine learning algorithms}{8}{subsection.1.4.1}%
+\contentsline {subsection}{\numberline {1.4.2} Edge Impulse}{9}{subsection.1.4.2}%
+\contentsline {section}{\numberline {1.5} Objective}{9}{section.1.5}%
+\contentsline {section}{\numberline {1.6} Master's thesis outline}{10}{section.1.6}%
+\contentsline {chapter}{\numberline {2} Theoretical description of system building blocks}{11}{chapter.2}%
+\contentsline {section}{\numberline {2.1} Machine learning}{11}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1} General machine learning workflow}{12}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2} Machine learning on embedded devices}{13}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2} Neural networks}{15}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1} Activation functions}{16}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2} Backpropagation}{17}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3} Convolutional neural networks}{18}{subsection.2.2.3}%
+\contentsline {subsubsection}{\numberline {2.2.3.1} Convolutional layers}{19}{subsubsection.2.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.2.3.2} Pooling layers}{21}{subsubsection.2.2.3.2}%
+\contentsline {section}{\numberline {2.3} TensorFlow}{22}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1} TensorFlow Lite for Microcontrollers}{23}{subsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.1.1} Post-training quantization}{25}{subsubsection.2.3.1.1}%
+\contentsline {section}{\numberline {2.4} IoT and wireless technologies}{25}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1} LoRa and LoRaWAN}{26}{subsection.2.4.1}%
+\contentsline {section}{\numberline {2.5} Thermal cameras}{28}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1} Choosing the thermal camera}{31}{subsection.2.5.1}%
+\contentsline {chapter}{\numberline {3} Neural network model design}{34}{chapter.3}%
+\contentsline {section}{\numberline {3.1} Model objectives}{34}{section.3.1}%
+\contentsline {section}{\numberline {3.2} Exploring the dataset}{36}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1} Gathering thermal images}{40}{subsection.3.2.1}%
+\contentsline {section}{\numberline {3.3} Tools and development environment}{41}{section.3.3}%
+\contentsline {section}{\numberline {3.4} Image preprocessing}{42}{section.3.4}%
+\contentsline {section}{\numberline {3.5} Model creation and training}{43}{section.3.5}%
+\contentsline {section}{\numberline {3.6} Model optimization}{46}{section.3.6}%
+\contentsline {section}{\numberline {3.7} Neural network model design in Edge Impulse Studio}{47}{section.3.7}%
