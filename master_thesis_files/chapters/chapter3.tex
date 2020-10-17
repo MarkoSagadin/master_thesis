@@ -102,15 +102,16 @@ we merged all folders with elephant pictures into one folder, as we did not care
     \item We found out that all images were documented in a large Excel database.
 For each image, there was a row in a database that connected the image file name with the information where the image was taken and with what sensor.
 This enabled us to generate a graph seen in Figure \ref{nested_donut1}.
-We used a total of 13667 images from the thermal image dataset, almost 88 \% of them were made in Whipsnade Zoo, the rest of them were made in Assam.
-All images from Assam were made with FLIR Lepton 2.5, while both cameras were used in Whipsnade zoo, however, more photos were made with the 2.5 version of the thermal camera.
 
 \begin{figure}[ht]
     \centering
     \includegraphics{nested_donut1.pdf} 
-    \caption{Distribution of used images depending on image location and type of sensor.}
+    \caption{Distribution of used images from thermal dataset depending on image location and type of sensor.}
     \label{nested_donut1}
 \end{figure}
+
+We used a total of 13667 images from the thermal image dataset, almost 88 \% of them were made in Whipsnade Zoo, the rest of them were made in Assam.
+All images from Assam were made with FLIR Lepton 2.5, while both cameras were used in Whipsnade zoo, however, more photos were made with the 2.5 version of the thermal camera.
 
     \item After manually inspecting the folder with goat images we saw that it mostly contained images of a herd of goats, standing around a single elephant.
 This folder was usable only for object localization ML models, where each goat could be tagged with a bounding box. 
@@ -119,9 +120,6 @@ We therefore dropped goat images out of our training data entirely.
 Livestock class was replaced with cow class.
 
     \item We also realized that there was a large class imbalance, as seen in Figure \ref{nested_donut2} in favor of elephant class.
-The number of elephant images was more than 4 times larger than the number of images of the all other classes combined.
-We solved this issue by acquiring more images of the minority class and oversampling the minority class.
-\end{enumerate}
 
 \begin{figure}[ht]
     \centering
@@ -129,6 +127,10 @@ We solved this issue by acquiring more images of the minority class and oversamp
     \caption{Class distribution of thermal images.}
     \label{nested_donut2}
 \end{figure}
+
+The number of elephant images was more than 4 times larger than the number of images of the all other classes combined.
+We solved this issue by acquiring more images of the minority class and oversampling the minority class.
+\end{enumerate}
 
 \subsection{ Gathering thermal images}
 
@@ -209,7 +211,7 @@ This is only needed if different input values have widely different ranges\cite{
 Because images that were created with FLIR camera were all 8-bit encoded, therefore had the same range, this was not needed.}
 
 We achieved this by resampling the human, cow, and nature/random classes.
-The human class was resampled three times, while both cow and nature/random classes were resampled six times.
+The human class was resampled 5 times, while both cow and nature/random classes were resampled 8 times.
 Figure \ref{resampled} shows the distribution of training images before and after resampling.
 
 \begin{figure}[ht] 
@@ -256,8 +258,12 @@ It is a very popular type of regularization technique, which makes models more r
 
 The last dense layer was a final output layer with only 4 neurons, each one representing one class.
 Softmax activation was used to calculate class probabilities.
+Model was set to use Adam optimizer and sparse categorical crossentropy loss function.
+Adam is an upgraded version of gradient descent method, which automatically adapts learning rate to decaying gradients\cite{geron}.
+It is generally easier to use than gradient descent as it requires less tuning or learning rate hyperparameter.
+Sparse categorical crossentropy loss function is used when building a multi-class classifier.
 
-Above hyperparameters are general rules of thumb and serve as a good starting point when building CNNs\cite{cs231n}.
+Above set hyperparameters follow general rules of thumb and serve as a good starting point when building CNNs\cite{cs231n}.
 However, hyperparameters such as the number of filters, filter size, size of a hidden dense layer, dropout rate, and learning rate are specific to each dataset and can not be chosen heuristically.
 
 To find hyperparameters that would yield the highest accuracy we used the Keras Tuner module.
@@ -268,8 +274,10 @@ Hyperparameter search could then be started, Keras Tuner would randomly pick a s
 Accuracy and hyperparameters that were used while training every module were saved to a log file for later analysis.
 
 By providing accuracy metric, Keras tuner automatically sorts trained models in descending accuracy, returning the best model.
-This is in many use cases sufficient, however in our case, we are also interested in best performing models that have small size. 
+This is in many use cases sufficient, however in our case, we were also interested in best performing models that had small size. 
 As size can not be specified as one of the possible metrics, some manual training was required after the hyperparameter search to determine the most efficient model.
+
+Comparison of trained models is presented and discussed in section TODO ADD REFERENCE.
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -384,7 +392,7 @@ We only had to start it and wait for it to finish.
 After training was done, Edge Impulse showed how well the model was performing on the validation data, how much flash and RAM would it need, and approximately how long will on-device inference take, based on the frequency and the processor of a microcontroller.
 
 An example of the output is presented in Figure \ref{edge_impulse_screenshot2}, inferencing time is estimated for a Cortex-M4 microcontroller, running at 80 \si{\mega\hertz}.
-Edge Impulse also does model optimization automatically.
+Edge Impulse also does conversion to an optimized full-integer model automatically.
 
 \begin{figure}[ht]
     \centering
@@ -398,4 +406,5 @@ This step is fairly simple, Edge Impulse provides few example projects on their 
 As we wanted to compare the performance of the models on ab STM32f767ZI, we chose the Mbed platform.
 We copied the example Mbed project from GitHub and in Edge Impulse Studio we selected to generate an inferencing library with our model for the Mbed platform.
 We extracted the library, which consisted of C++ files, into an example project and compiled it.
-An example project just runs continuously the inference on one image and outputs results over the serial port.
+An example project just continuously runs the inference on one image and outputs results over the serial port.
+A performance comparison between this example project and our implementation is done in section TODO ADD REFERENCE.
