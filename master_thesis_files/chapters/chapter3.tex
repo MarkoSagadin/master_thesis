@@ -2,8 +2,10 @@ In this chapter we describe the design of a convolutional neural network that ca
 The workflow that we followed will largely be a combination of workflows presented in Figures \ref{ml_workflow} and \ref{micro_workflow}.
 
 We first had to set concrete objectives, while keeping in consideration various constraints.
-We then explored the dataset provided by the Arribada Initiative, analyzed different class representations and decided, if the dataset is appropriate for accomplishing objectives that we set earlier.
-The tools and development environment that we used in the process are also described.
+Tools and development environment that were used in the process are then described. 
+Methods of dataset creation are described afterwards, first the dataset that was created by Arribada Initiative, then dataset provided by us. 
+
+We then explored both datasets, analyzed different class representations and decided, if they are appropriate for accomplishing objectives that we set earlier.
 
 In the image preprocessing phase we imported images and connected them with metadata that was parsed from the excel database.
 We analyzed the dataset, split it into different sets and applied image correction procedures.
@@ -42,9 +44,28 @@ To summarize:
 \end{itemize}
 
 
-\section{ Exploring the dataset} \label{exploring_dataset}
+\section{ Tools and development environment}
 
-As mentioned in section \ref{arribada_init} thermal image dataset was provided by Arribada Initiative\cite{wildlabs-winners}\cite{arribada-assam}.
+All of the work connected with image preparation and ML model creation was done in Python 3.6, Numpy was used for image preprocessing, Pandas for Excel database manipulation, and Matplotlib for plot generation.
+Neural networks were designed in TensorFlow 2.4, using Keras high-level API, Keras Tuner model was used for hyperparameter search.
+
+As training neural networks is a computationally demanding process, it would not be feasible to do it on a personal laptop.
+Amazon's Elastic Compute Cloud web service was instead used.
+Elastic Compute Cloud or EC2 enables users to create an instance of a server in a cloud with a specified amount of processing power and memory.
+Some instances come with dedicated software modules and dedicated graphics cards for an extra boost in performance.
+We created an instance of a Linux server that came with TensorFlow, Numpy, and other libraries pre-installed.
+Interaction with servers was done one command line through SSH protocol.
+
+Instead of writing Python scripts and executing them through the command line, we used Juptyer Notebook. 
+Juptyer Notebook is a web-based application that can run programs that are a mix of code, explanatory text, and computer output.
+Users can divide code into segments, which can be executed separately, visual output from modules such as Matplotlib is also supported.
+To use Juptyer Notebook on our cloud instance, we had to install it and run it.
+We could then access web service simply through a web browser by writing the IP address of the server, followed by the default Juptyer Notebook server port, 8888.
+
+
+\section{ Creating the dataset}
+
+As mentioned in section \ref{arribada_init}, major part of thermal image dataset was provided by Arribada Initiative\cite{wildlabs-winners}\cite{arribada-assam}.
 Images in the dataset come from two different locations: Assam, India, and ZSL Whipsnade Zoo, United Kingdom.
 
 Assam served as a testing ground.
@@ -68,9 +89,9 @@ Insides of the camera and an example of a deployed camera can be seen in Figure 
 PIR sensor functioned as a photo trigger, whenever an object passed in front of it, the camera made an image.
 This setup provided Arribada with elephant images in real-life scenarios, however, they could not capture elephants in a variety of different conditions. 
 It is important to create an image dataset, where the object can be seen in different orientations, distances, angles, and temperature conditions.
-Datasets like this are used to train a much more robust model, which performs better on never before seen image data when deployed in real life.
+Models that were trained on diverse datasets end up being much more robust and therefore perform better on never before seen image data, when deployed in real life.
 
-This was accomplished in ZSL Whipsnade Zoo, where they could take many images of elephants in a variety of different conditions\cite{dataset_collection}.
+This was accomplished in ZSL Whipsnade Zoo, where they took many images of elephants in a variety of different conditions\cite{dataset_collection}.
 With elephants in the enclosure, researchers could move cameras around and get images that were needed.
 PIR sensor trigger approach was dropped in favor of a 5 second time-lapse trigger.
 Two cameras were used again, however, one of them now used FLIR Lepton 3.5 camera with better resolution.
@@ -84,7 +105,30 @@ Images of elephants that came from both locations can be seen in Figure \ref{fou
     \label{four_elephants}
 \end{figure}
 
-Thermal image dataset was given to us in form of a Google Drive folder, which we downloaded to our computer.
+
+Small part of thermal image dataset was provided by us. This was done because the number of images of cows was low compared to the number of human and elephant images and because we also did not have any images that could be used for nature/random class.
+We wanted to gather images as quickly and efficiently as possible so we build a prototype camera made out of FLIR Lepton 2.5 breakout board, Raspberry Pi Zero, and power bank.
+We used an open-source library \cite{flir_github} for the FLIR Lepton module which used a simple C program to take a single image with a thermal camera and save it to a Raspberry Pi.
+The image of the setup can be seen in Figure \ref{cow_camera}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\linewidth]{cow_camera.jpg} 
+    \caption{Camera setup used for taking thermal images with FLIR Lepton 2.5.}
+    \label{cow_camera}
+\end{figure}
+
+We wrote a simple Python script that executed the C program every time we pressed the trigger push-button.
+An additional shutdown button was added to call the Raspberry Pi shutdown routine, as forcibly removing power from it would corrupt freshly taken thermal images on the Raspberry Pi's SD card.
+
+With this setup, we made 365 images of cows in varying conditions, 308 images of nature, and 124 images of humans that were made on the go.
+We then manually sorted images into appropriate folders and added them to the dataset.
+
+
+\section{ Exploring the dataset} \label{exploring_dataset}
+
+Thermal image dataset created by Arribada was given to us in form of a Google Drive folder, which we downloaded to our computer. 
+
 After examining the folder, we came to several conclusions.
 
 \begin{enumerate}
@@ -131,45 +175,6 @@ Livestock class was replaced with cow class.
 The number of elephant images was more than 4 times larger than the number of images of the all other classes combined.
 We solved this issue by acquiring more images of the minority class and oversampling the minority class.
 \end{enumerate}
-
-\subsection{ Gathering thermal images}
-
-As the number of images of cows was low compared to the number of human and elephant images and because we also did not have any images that could be used for nature/random class, we decided to gather them ourselves.
-We wanted to do this as quickly and efficiently as possible so we build a prototype camera made out of FLIR Lepton 2.5 breakout board, Raspberry Pi Zero, and power bank.
-We used an open-source library \cite{flir_github} for the FLIR Lepton module which used a simple C program to take a single image with a thermal camera and save it to a Raspberry Pi.
-The image of the setup can be seen in Figure \ref{cow_camera}.
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=1.0\linewidth]{cow_camera.jpg} 
-    \caption{Camera setup used for taking thermal images with FLIR Lepton 2.5.}
-    \label{cow_camera}
-\end{figure}
-
-We wrote a simple Python script that executed the C program every time we pressed the trigger push-button.
-An additional shutdown button was added to call the Raspberry Pi shutdown routine, as forcibly removing power from it would corrupt freshly taken thermal images on the Raspberry Pi's SD card.
-
-With this setup, we made 365 images of cows in varying conditions, 308 images of nature, and 124 images of humans that were made on the go.
-We then manually sorted images into appropriate folders and added them to the dataset.
-
-
-\section{ Tools and development environment}
-
-All of the work connected with image preparation and ML model creation was done in Python 3.6, Numpy was used for image preprocessing, Pandas for Excel database manipulation, and Matplotlib for plot generation.
-Neural networks were designed in TensorFlow 2.4, using Keras high-level API, Keras Tuner model was used for hyperparameter search.
-
-As training neural networks is a computationally demanding process, it would not be feasible to do it on a personal laptop.
-Amazon's Elastic Compute Cloud web service was instead used.
-Elastic Compute Cloud or EC2 enables users to create an instance of a server in a cloud with a specified amount of processing power and memory.
-Some instances come with dedicated software modules and dedicated graphics cards for an extra boost in performance.
-We created an instance of a Linux server that came with TensorFlow, Numpy, and other libraries pre-installed.
-Interaction with servers was done one command line through SSH protocol.
-
-Instead of writing Python scripts and executing them through the command line, we used Juptyer Notebook. 
-Juptyer Notebook is a web-based application that can run programs that are a mix of code, explanatory text, and computer output.
-Users can divide code into segments, which can be executed separately, visual output from modules such as Matplotlib is also supported.
-To use Juptyer Notebook on our cloud instance, we had to install it and run it.
-We could then access web service simply through a web browser by writing the IP address of the server, followed by the default Juptyer Notebook server port, 8888.
 
 
 \section{ Image preprocessing}
@@ -234,7 +239,7 @@ If we resampled everything, the model would be seeing the same image several tim
 
 After resampling we merged and shuffled all data, and saved it to the disk for later use.
 
-
+\newpage
 \section{ Model creation and training}\label{cnn_ref}
 
 For the creation of CNN models, we used Keras Sequential API and Keras Tuner module.
