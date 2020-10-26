@@ -1,4 +1,4 @@
-General structure and tasks of an early detection system were already described in chapter \ref{early_detection_system}.
+eneral structure and tasks of an early detection system were already described in chapter \ref{early_detection_system}.
 As it was mentioned before, an early detection system consists of two different components:
 
 \begin{enumerate} 
@@ -59,7 +59,7 @@ Wisent Edge tracker board is general enough to work with different power sources
 \subsection{ Nucleo-F767ZI}
 
 Nucleo-F767ZI (seen on Figure \ref{nucleo}) is a development board made by STMicroelectronics.
-Board features STM32F767ZI microcontroller which has 2 \si{\mega\byte} of flash, 512 \si{\kilo\byte} of SRAM and can operate at clock speed of 216 \si{\mega\hertz}.
+Board features STM32F767ZI microcontroller with Cortex-M7 core, which has 2 \si{\mega\byte} of flash, 512 \si{\kilo\byte} of SRAM and can operate at clock speed of 216 \si{\mega\hertz}.
 It also features different memory caches and flash accelerator, which provide extra boost in performance.
 It is convenient to program it, as it includes on board ST-LINK programmer circuit.
 
@@ -76,15 +76,26 @@ As we knew that neural networks are computationally expensive to compute and tha
 
 \subsection{ Wisent Edge tracker}
 
-%        WISENT BOARD,IRNASOV PRODUKT PREDSTAVI , SMART PARKS OPEN COLLARJK
+For the part of the system which had to contain low power microcontroller, communication module and power control for Nucleo-F767ZI board we decided to use Wisent Edge tracker board.
+Wisent Edge (seen on Figure TODO ADD IMAGE) is a tracker solution, specifically developed for conserving endangered wildlife animals.
+It is one of many tracker solutions that were a product of open-source\footnotemark collaboration between Irnas and company Smart Parks, which provides modern solutions in anti-poaching and animal conservation areas.
 
-    block diagram
-An advanced sensor solution to conserve endangered wildlife and efficiently manage large park areas. OpenCollar is a conservation collaboration to design, support and deploy open-source tracking collar hardware and software for environmental and wildlife monitoring projects. The design of the tracking system is completely modular and it is possible to combine the modules into several different configurations, depending on the use case.
+\footnotetext{ As a part of OpenCollar project, the design of Wisent Edge is open-source and available on GitHub\cite{opencollar}, alongside other hardware and firmware tracker projects.}
 
-The Wisent Tracker features a medium sized waterproof housing, GPS tracker with LoRaWAN connectivity and years of battery life under normal conditions. The tracker is mounted to an animal using a highly durable BioThane collar with an optional drop-off mechanism also available.
+The main logic on the board is provided by Nordic Semiconductor's NRF52840 microcontroller with Cortex-M4 core, which has 1 \si{\mega\byte} of flash, 256 \si{\kilo\byte} of RAM and Bluetooth 5 support.
+NRF52840 has consumption of 0.5 \si{\micro\ampere} in sleep mode, which makes it ideal for our purpose.
 
+Wisent Edge also features Semtech's LR1110 chip (which acts as a LoRa transceiver, GNSS and WiFi location module) and another GPS module, U-blox's ZOE-M8G\footnotemark.
+There is a ceramic GPS antenna on board and a U.FL connector to which a dual band Wifi, Bluetooth and LoRa antenna can be attached.
 
+\footnotetext{Reason for two GNSS modules is that although LR1110 chip can provide extremely power efficient location information, it's accuracy is smaller when compared to ZOE-M8G and it can only be resolved after sending it to an application server\cite{irnas_lr1110}.}
 
+As geopositioning of system was not primary concern, GNSS functionalities were not used, however they might be usefull in future.
+
+Power control of a Nucleo-F767ZI board and FLIR camera is provided by a dual channel p and n mosfet, circuit can be seen on Figure TODO ADD FIGURE.
+Circuit functions as a high side switch, with microcontroller pin driving enable line.
+When enable line is low, n mosfet is closed, therefore p mosfet is also closed, as it is pulled high by resistore TODO ADD NUMBER.
+When enable line is high, n mosfet is opened, therefore gate of p mosfet is grounded, which opens the mosfet.
 
 
 \subsection{ Flir Lepton 2.5 camera module and Lepton breakout board}
