@@ -1,4 +1,4 @@
-eneral structure and tasks of an early detection system were already described in chapter \ref{early_detection_system}.
+General structure and tasks of an early detection system were already described in chapter \ref{early_detection_system}.
 As it was mentioned before, an early detection system consists of two different components:
 
 \begin{enumerate} 
@@ -92,10 +92,10 @@ There is a ceramic GPS antenna on board and a U.FL connector to which a dual ban
 
 As geopositioning of system was not primary concern, GNSS functionalities were not used, however they might be usefull in future.
 
-Power control of a Nucleo-F767ZI board and FLIR camera is provided by a dual channel p and n mosfet, circuit can be seen on Figure TODO ADD FIGURE.
+Power control of a Nucleo-F767ZI board and FLIR camera is provided by a dual channel p and n MOSFET, circuit can be seen on Figure TODO ADD FIGURE.
 Circuit functions as a high side switch, with microcontroller pin driving enable line.
-When enable line is low, n mosfet is closed, therefore p mosfet is also closed, as it is pulled high by resistore TODO ADD NUMBER.
-When enable line is high, n mosfet is opened, therefore gate of p mosfet is grounded, which opens the mosfet.
+When enable line is low, n MOSFET is closed, therefore p MOSFET is also closed, as it is pulled high by resistore TODO ADD NUMBER.
+When enable line is high, n MOSFET is opened, therefore gate of p MOSFET is grounded, which opens the MOSFET.
 
 
 \subsection{ Flir Lepton 2.5 camera module and Lepton breakout board}
@@ -117,7 +117,7 @@ Breakout board can be powered from 3.3 to 5 \si{\volt} and also conveniently bre
         \centering
         \includegraphics[width=1.0\linewidth]{flir_module_back.jpg} 
     \end{subfigure}
-    \caption{ SOmethgn}
+    \caption{ Front and back side of Flir Lepton breakout board with thermal camera module inserted.}
     \label{lepton_breakout}
 \end{figure}
 
@@ -155,35 +155,120 @@ One VoSPI packet contains an 2 bytes of an ID field, 2 bytes of an CRC field and
 Refresh rate of VoSPI frames is 27 \si{\hertz}, however only every third frame is unique from the last one.
 It is a job of the microcontroller to control the SPI clock speed and process each frame fast enough so that next unique frame is not discarded.
 
-\footnotetext{ Because images pixel values fit into 14-bit range by default, it means that one pixel value needs two bytes of data (two most significant bytes are zero). That means that each image line (80 pixels) is stored into 160 bytes. If AGC coversion is turned on, each pixel is then mapped into 8-bit range, however the size of one line in VoSPI packet still remains 160 bytes, 8 most significant bits are simply zeros.}
+\footnotetext{ Because images pixel values fit into 14-bit range by default, it means that one pixel value needs two bytes of data (two most significant bytes are zero). That means that each image line (80 pixels) is stored into 160 bytes. If AGC conversion is turned on, each pixel is then mapped into 8-bit range, however the size of one line in VoSPI packet still remains 160 bytes, 8 most significant bits are simply zeros.}
 
 
 \subsection{ PIR Sensor}
 
 \section{ Firmware}
-    arhitecture diagram 
+
+\subsection{ Tools and development environment}
+
+For our firmware development we did not chose any of various vendor provided integrated development environments.
+We instead used terminal text editor Vim for writing and editing the code.
+
+As we were programming two different microcontrollers, we were using different tools with each one.
+
+
+\subsubsection{ Development environment for STM32f767ZI}
+
+For building our firmware programs we used GNU Make, build automation that builds software according to user written \textit{Makefiles}.
+For compilation we used Arm embedded version of GNU GCC.
+To program binaries into our microcontroller we used OpenOCD.
+
+As a hardware abstraction library we used libopencm3, which is a open-source low level library that supports many of Arm's Cortex-M processors cores, which can be found in variety of microcontroller families such as ST's STM32, Toshiba's TX03, Atmel's SAM3U, NXP's LPC1000, Silabs's EFM32 and others.
+Libopencm3 provided us with linker files, startup routines, thinly wrapped peripheral drivers and a starting template makefile, which served as a starting point for our project.
+
+As libopencm3 does not provide \verb|printf| functionality out of the box we used excellent library by GitHub user mpaland \cite{printf_lib}
+
+
+\subsubsection{ Development environment for NRF52840}
+
+To develop firmware for NRF52840 we decided to use The Zephyr OS, which is a small kernel, designed for IoT embedded systems.
+Besides usual RTOS functionalities such as tasks, mutexes, semaphores it also provides common driver API for supported microprocessors.
+
+\subsection{ Architecture design}
+
+STM32F767ZI firmware was designed to be very efficient and lean, only truly necessary parts of firmware were implemented.
+
+As seen on Figure \ref{firmware_diagram} we split the firmware into two hardware and application modules.
 
 \begin{figure}[ht]
         \centering
         \includegraphics[width=1.0\linewidth]{firmware_diagram.pdf} 
-        \caption{ Command and control interface of FLIR Lepton camera.} 
+        \caption{ Architecture diagram of the firmware that is running on a STM32F767ZI microcontroller.} 
         \label{firmware_diagram}
 \end{figure}
+
+Both modules are lightly coupled, which enables us reuse of the application module on a different hardware sometime in the future.
+Hardware specific module is mostly using libopencm3 API to set the system clock and initialize peripherals.
+Small function wrappers had to be written to make use of various peripheral drivers more abstract.
+To profile execution of our code we first wrote a timer driver based on a Arm's systick timer, however we later decided to use data watch trigger (DWT).
+DWT does not use interrupts, therefore it does not introduce overhead of calling interrupt routines like systick timer does.
+
+FLIR Lepton driver was written from scratch, as many libraries provided either by camera manufacturer or open source communities were too complex and implemented many features, which we did not require.
+
+Thanks to TFLite Micro API, ML inference module could be written as a simple black box.
+Image data goes in, predictions come out.
+
+TODO describe communication interface between THIS AND WISENT EDGE.
+
+
+The architecture diagram for NRF52840 can be seen on Figure \ref{firmware_diagram_wisent}.
+For NRF52840 microcontroller, we did not had to write any peripheral drivers, as they were provided by Zephyr itself.
+Priority was to achieve low power consumption, for which NRF52840 had to spend most of its time in sleep mode, such behavior was easily configurable in Zephyr.
 
 \begin{figure}[ht]
         \centering
         \includegraphics[width=1.0\linewidth]{firmware_diagram_wisent.pdf} 
-        \caption{ Command and control interface of FLIR Lepton camera.} 
+        \caption{ Architecture diagram of the firmware that is running on a NRF52840 microcontroller.} 
         \label{firmware_diagram_wisent}
 \end{figure}
 
-\subsection{ Tools and development environment}
-    libopencm3, 
-    What tools you used, vim, openocd, Make, arm-none-eabi-gcc
-    printf library
-    wisent runs zephyr
+This functionality is encapsulated in inference requester module, which is also waking up the microcontroller when PIR trigger signal is received and controlling the MOSFET.
 
-\subsection{ Build system for TensorFlow Lite}
+We also wrote communication module, which takes care of controlling the LR1110 chip, joining LoRaWAN network, preparing outgoing messages and sending them over LoRaWAN network.
+
+TODO describe communication interface between THIS AND WISENT EDGE.
+
+
+\subsection{ MicroML and build system}
+
+Large part of this thesis was concerned with porting TFLite Micro to libopencm3, our platform of choice.
+To understand how this could be done, we first had to analyze how the code is build in TFLite Micro.
+
+To compile source files and build binaries TFLite Micro uses GNU Make.
+Main makefile that includes several platform specific makefiles dictates how firmware is built and several scripts which download various dependencies.
+By providing command line arguments users decide which example has to be compiled and for which platform.
+The build system makes some assumptions about locations of the platform specific files, which in case of example projects are scattered over the whole TensorFlow GitHub repository.
+
+We learned a useful principle while observing the build process. 
+Each time we would build an example for a new platform, Make would first compile all TensorFlow files, create a static library out of them, compile specific example source files and then link against library in linking stage.
+If we wanted to build firmware for a different example, Make would only had to compile source files of that example and it could reuse previously made library.
+As compiling of static library took quite some time, this was an efficient option.
+
+After analyzing the TFLite Micro's build system we created a list of requirements that we wanted to fulfil on our platform.
+
+\begin{enumerate}
+    \item We wanted to keep project specific code, libopencm3 code and TFLite Micro code separated.
+    \item We wanted a system, where it would be easy to change a microcontroller specific part of building process.
+    \item We wanted to reuse static library principle that we saw in TFLite Micro build process.
+\end{enumerate}
+
+Covering different platforms and use cases made main TFLite Micro makefile quite complex and hard to understand.
+This meant that it would be hard to reuse it while porting to a new platform and we needed a different approach or reuse something else.
+
+To solve our problem we started building a small framework that we called MicroML\footnotemark.
+MicroML enables users to develop ML applications on libopencm3 supported microcontrollers.
+Frameworks directory structure can be seen on Figure YOU STOPED HERE
+
+\footnotetext{ Project is open-source and hosted on GitHub\cite{microml}.}
+
+
+
+In section TODO ADD REFERENCE we describe our build system that keeps library and application specific code separated in a clear and concise manner.
+
+
     Why you created it, 
     what problems does it solve that using tensorflow introduced, 
     how does it work (makefiles), diagram
@@ -207,23 +292,3 @@ It is a job of the microcontroller to control the SPI clock speed and process ea
 %\subsection{ NODE-RED}
 %\subsection{ InfluxDB}
 %\subsection{ Grafana}
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%Part of this thesis was concerned with porting TFLite Micro to \textbf{libopencm3}, our platform of choice.
-%To compile source files and build binaries TFLite Micro uses build automation tool \textbf{GNU Make}.
-%One large makefile that includes several platform specific makefiles dictates how firmware is built.
-%By providing command line arguments users decide which example has to be compiled and for which platform.
-%The build system makes some assumptions about locations of the platform specific files, which in case of example projects are scattered over GitHub repository.
-%This and several other reasons make library hard to use when porting it to a new platform.
-%In section TODO ADD REFERENCE we describe our build system that keeps library and application specific code separated in a clear and concise manner.
-%

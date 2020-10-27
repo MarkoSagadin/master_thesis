@@ -6,6 +6,9 @@
 \contentsline {subsection}{\numberline {1.1.4} PIR Sensor}{8}{subsection.1.1.4}%
 \contentsline {section}{\numberline {1.2} Firmware}{8}{section.1.2}%
 \contentsline {subsection}{\numberline {1.2.1} Tools and development environment}{8}{subsection.1.2.1}%
-\contentsline {subsection}{\numberline {1.2.2} Build system for TensorFlow Lite}{8}{subsection.1.2.2}%
-\contentsline {subsection}{\numberline {1.2.3} Running inference on a microcontoller}{9}{subsection.1.2.3}%
-\contentsline {subsection}{\numberline {1.2.4} Wisent board control firmware}{9}{subsection.1.2.4}%
+\contentsline {subsubsection}{\numberline {1.2.1.1} Development environment for STM32f767ZI}{8}{subsubsection.1.2.1.1}%
+\contentsline {subsubsection}{\numberline {1.2.1.2} Development environment for NRF52840}{9}{subsubsection.1.2.1.2}%
+\contentsline {subsection}{\numberline {1.2.2} Architecture design}{9}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3} MicroML and build system}{11}{subsection.1.2.3}%
+\contentsline {subsection}{\numberline {1.2.4} Running inference on a microcontoller}{12}{subsection.1.2.4}%
+\contentsline {subsection}{\numberline {1.2.5} Wisent board control firmware}{13}{subsection.1.2.5}%
