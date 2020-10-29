@@ -1,16 +1,16 @@
 \documentclass[fleqn,a4paper,12pt]{report}
 \usepackage{graphicx}
 \graphicspath{ {./images/} }
-\usepackage{anyfontsize}    % For setting exact font size
-\usepackage{geometry}       % For setting margins
+\usepackage{anyfontsize}        % For setting exact font size
+\usepackage{geometry}           % For setting margins
 \geometry{a4paper, left = 35 mm, right = 25mm, top = 30mm, bottom = 30mm}
 \usepackage[utf8]{inputenc}     % For slovenian characters
-\usepackage{sectsty}    % For setting font size of chapters 
-\usepackage{titlesec}   % For setting the shape of chapters
-\usepackage{lipsum}     % Lorem ipsum package for dummy text
+\usepackage{sectsty}            % For setting font size of chapters 
+\usepackage{titlesec}           % For setting the shape of chapters
+\usepackage{lipsum}             % Lorem ipsum package for dummy text
 \usepackage[parfill]{parskip}   % No indent
-\usepackage{setspace}   % For 1 and half spacing between lines
-\linespread{1.5}       % Look above
+\usepackage{setspace}           % For 1 and half spacing between lines
+\linespread{1.5}                % Look above
 \usepackage{hyperref}
 \usepackage{cite}
 \usepackage{url}
@@ -19,11 +19,13 @@
 \usepackage{amssymb} 
 \usepackage{listings}           % For code snippets
 \usepackage{xcolor}             % For color in code snippets
-\usepackage[siunitx, europeanresistors, americaninductors]{circuitikz}
+\usepackage{dirtree}            % For printing directory trees
+\usepackage{bigfoot}            % For code snippets in footnote texts
 
 \setlength{\mathindent}{2cm}    % Indent equations 2cm from text edge
 \setcounter{tocdepth}{4}
 \setcounter{secnumdepth}{4}
+\frenchspacing                  % One space after period dot
 
 \def\poglavje{\fontsize{18}{18}\selectfont}
 \def\podpoglavje{\fontsize{14}{18}\selectfont}
@@ -40,7 +42,32 @@
   {\podpoglavje}{\thesubsection }{0pt}{\podpodpoglavje}
 
 
-\frenchspacing     % One space after period dot
+
+% Definitions for code formating and coloring
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\linespread{0.9}\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
 
 \begin{document}
 
@@ -97,7 +124,7 @@
 %\chapter{ Neural network model design}
 %\input{chapters/chapter3}
 
-\chapter{Planning and design of early warning system}
+\chapter{ Planning and design of early warning system}
 \input{chapters/chapter4}
 
 %

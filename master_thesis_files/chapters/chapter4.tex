@@ -2,8 +2,7 @@ General structure and tasks of an early detection system were already described 
 As it was mentioned before, an early detection system consists of two different components:
 
 \begin{enumerate} 
-    \item Several small embedded devices, deployed in the field. 
-        They capture images with thermal camera, process them and send results over wireless network.
+    \item Several small embedded devices, deployed in the field. They capture images with thermal camera, process them and send results over wireless network.
     \item One gateway, which is receiving results, and relays them to an application server over internet connection.
 \end{enumerate} 
 
@@ -258,23 +257,76 @@ After analyzing the TFLite Micro's build system we created a list of requirement
 Covering different platforms and use cases made main TFLite Micro makefile quite complex and hard to understand.
 This meant that it would be hard to reuse it while porting to a new platform and we needed a different approach or reuse something else.
 
-To solve our problem we started building a small framework that we called MicroML\footnotemark.
+To solve our problem we started developing a small project that we called MicroML\footnotemark.
 MicroML enables users to develop ML applications on libopencm3 supported microcontrollers.
-Frameworks directory structure can be seen on Figure YOU STOPED HERE
+Project's directory structure can be seen on Figure \ref{microml_dir}
 
-\footnotetext{ Project is open-source and hosted on GitHub\cite{microml}.}
+\footnotetext{ Project is open-source and publicly available on GitHub\cite{microml}.}
 
+\begin{figure}[ht] 
+    \centering
+    \begin{minipage}{7cm}
+    \dirtree{%
+    .1 MicroML.
+    .2 tensorflow.
+    .2 libopencm3.
+    .2 projects.
+    .3 hello\_world\_stm32f7.
+    .3 elephant\_stm32f7.
+    .4 test.
+    .4 src.
+    .4 Makefile.
+    .4 project.mk.
+    .4 openocd.cfg.
+    .2 archive\_makefile.
+    .2 rules.mk.
+    }
+    \end{minipage}
+    \caption{ Directory structure of MicroML project.}
+    \label{microml_dir}
+\end{figure}
 
+Folders \verb|tensorflow| and \verb|libopencm| are directly cloned from their respective sources as Git submodules, which means that they are fixed at specific commits, usually at major release points.
+In folder \verb|projects| users place all their specific projects.
+Besides source files each project has to contain three specific files:
 
-In section TODO ADD REFERENCE we describe our build system that keeps library and application specific code separated in a clear and concise manner.
+\begin{itemize}
+    \item \textbf{project.mk} - It contains information which files need to be compiled inside the project folder. It is a place where we also define which microcontroller are we using and what kind of compiler optimization we would like to set.
+    \item \textbf{openocd.cfg} - Configuration file which tells OpenOCD which programmer is used to flash which microcontroller and location of the binary file that has to be flashed.
+    \item \textbf{Makefile} - Project's makefile which is copied from project to project. It makes it possible to call \verb|make| directly from projects directory, which eases development process. It does not include any building rules, those are specified in included \verb|rules.mk| file in root directory of the project.
+\end{itemize}
 
+Some initial commands need to be executed when the project is cloned from the GitHub for the first time. 
+Figure \ref{label_system} represents the complete build process.
 
-    Why you created it, 
-    what problems does it solve that using tensorflow introduced, 
-    how does it work (makefiles), diagram
-    problems that you had. 
-    Generally you should follow your github page. 
-    TEST SETUP FOR RUNNING INFERENCE ON A COMPUTER
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=1.0\linewidth]{build_system.pdf} 
+        \caption{ Build system of MicroML project.} 
+        \label{build_system}
+\end{figure}
+
+In \textit{submodules setup} stage we first compile both of the submodules, this step requires two makefiles that are already provided by each submodule.
+Compiling libopencm3 creates a group of archive files (static libraries), which contain all platform specific code.
+Compiling a TensorFlow Hello World example does not produce any archive files that we would need, however it does execute several scripts which download several different third party files.
+TFLite Micro library depends on this files, so does MicroML.
+\textit{Submodules setup} stage only has to be executed once.
+
+Whenever we start with a new project that will use ML algorithms, we need to go through \textit{project setup} stage.
+From main directory we call make command with \verb|archive_makefile| and define \verb|PROJECT| variable with the name of our project.
+\verb|Archive_makefile| looks into \verb|project.mk| and extracts \verb|DEVICE| variable.
+Libopencm3's \verb|genlink-config.py| script then with the help of \verb|DEVICE| variable determines which compile flags\footnotemark are needed. 
+Afterwards all needed TensorFlow source files and third party files are compiled with this flags and a project specific \verb|microlite.a| archive file is created in our project's folder.
+
+\footnotetext{ For example, flags   \verb|-mcpu=cortex-m7|, \verb|-mthumb|, \verb|-mfloat-abi=hard| and \verb|-mfpu=fpv5-sp-d16| tell gcc compiler that we are compiling for cortex-m7 proccesor, that we want to use thumb instruction set and that we want to use hardware floating point unit with single precision. This flags were generated for STM32F767ZI microcontroller by libopencm3.}
+
+\textit{Compile and flash} stage is then continuously performed during development period.
+By calling \verb|make flash| directly in our project folder we compile all project files, \verb|microlite.a| and libopencm3 archive files that were created early.
+Libopencm3 helper scripts (\verb|genlink-config.mk| and \verb|genlink-rules.mk|) provide us with microcontroller specific flags and linker script.
+After compilation a \verb|firmvare.elf| is created, make then automatically calls OpenOCD, which flashes a microcontroller.
+
+As flashing a big binary to a microcontroller can take a long time, we also created a similar setup for testing inference directly on the host machine.
+That way we could test ML specific routines fast and quickly removed any mistakes found on the way.
 
 \subsection{ Running inference on a microcontoller}
     explain how tensorflow works on a micro, interpreted approach vs boilerplate code. 
@@ -282,10 +334,6 @@ In section TODO ADD REFERENCE we describe our build system that keeps library an
 \subsection{ Wisent board control firmware}
     flow diagram
     cli interface (this should be put somewhere, or not?)
-
-
-
-
 
 %\section{ Server side components/software}
 %\subsection{ TTN}
