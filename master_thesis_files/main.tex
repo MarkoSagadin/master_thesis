@@ -30,6 +30,7 @@
 \def\poglavje{\fontsize{18}{18}\selectfont}
 \def\podpoglavje{\fontsize{14}{18}\selectfont}
 \def\podpodpoglavje{\fontsize{14}{18}\selectfont}
+\def\podpodpodpoglavje{\fontsize{14}{18}\selectfont}
 
 % Use for thesis
 \titleformat{\chapter}[hang]
@@ -41,6 +42,8 @@
 \titleformat{\subsection}[hang]
   {\podpoglavje}{\thesubsection }{0pt}{\podpodpoglavje}
 
+\titleformat{\subsubsection}[hang]
+  {\podpoglavje}{\thesubsubsection }{0pt}{\podpodpodpoglavje}
 
 
 % Definitions for code formating and coloring
@@ -121,8 +124,8 @@
 %\chapter{ Theoretical description of system building blocks}
 %\input{chapters/chapter2}
 
-%\chapter{ Neural network model design}
-%\input{chapters/chapter3}
+\chapter{ Neural network model design}
+\input{chapters/chapter3}
 
 \chapter{ Planning and design of early warning system}
 \input{chapters/chapter4}

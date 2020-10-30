@@ -91,11 +91,17 @@ There is a ceramic GPS antenna on board and a U.FL connector to which a dual ban
 
 As geopositioning of system was not primary concern, GNSS functionalities were not used, however they might be usefull in future.
 
-Power control of a Nucleo-F767ZI board and FLIR camera is provided by a dual channel p and n MOSFET, circuit can be seen on Figure TODO ADD FIGURE.
+Power control of a Nucleo-F767ZI board and FLIR camera is provided by a dual channel p and n MOSFET, circuit can be seen on Figure \ref{mosfet}.
 Circuit functions as a high side switch, with microcontroller pin driving enable line.
-When enable line is low, n MOSFET is closed, therefore p MOSFET is also closed, as it is pulled high by resistore TODO ADD NUMBER.
+When enable line is low, n MOSFET is closed, therefore p MOSFET is also closed, as it is pulled high by resistor R1.
 When enable line is high, n MOSFET is opened, therefore gate of p MOSFET is grounded, which opens the MOSFET.
 
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=1.0\linewidth]{mosfet.png} 
+        \caption{ Dual P and N MOSFET configuration for power switching}
+        \label{mosfet}
+\end{figure}
 
 \subsection{ Flir Lepton 2.5 camera module and Lepton breakout board}
 
@@ -328,15 +334,162 @@ After compilation a \verb|firmvare.elf| is created, make then automatically call
 As flashing a big binary to a microcontroller can take a long time, we also created a similar setup for testing inference directly on the host machine.
 That way we could test ML specific routines fast and quickly removed any mistakes found on the way.
 
-\subsection{ Running inference on a microcontoller}
-    explain how tensorflow works on a micro, interpreted approach vs boilerplate code. 
+
+\subsection{ Running inference on a microcontroller}
+
+TFLite Micro API is fairly simple to use and general enough that it can be copied from project to project without many modifications.
+Figure \ref{inference code} shows a simplified inference code example, copied from our project.
+As a first step, we need to define size of \verb|tensor_arena| array, which holds memory input, output, and intermediate arrays.
+Exact size of \verb|tensor_arena| is determined by trail and error: we set it to some big value and then decrease it in steps, until the code does not work anymore.
+
+In lines 9 and 10 we an instance of \verb|ErrorReporter| object.
+This objects serves as a thin wrapper around platform specific \verb|printf| implementation.
+If some part of TensorFlow code crashes, \verb|ErrorReporter| would notify us what went wrong.
+
+In line 13 we pull in our ML model in hex array format that we created with xxd.
+\verb|full_quant_model| is defined in a different file, not seen in this example.
+
+In lines 16 to 24 we create an operation resolver.
+One way to do it is to specify each needed operation specifically (which is done in the example) or simply pull in all operation implementations.
+Latter approach is however not recommended, as it results in a large binary size.
+To find out exactly which operations are needed we used online tool Netron\cite{netron}.
+
+In lines 27 and 33 we create an \verb|MicroIinterpreter| instance and allocate memory are to it that we specified with \verb|tensor_arena| earlier.
+Lines 37 and 38 assign input and output of the interpreter to new \verb|TfLiteTensor| variables.
+This step eases later steps as we can access to input and output more directly.
+It also enables us to do two things.
+Firstly, variables input and output now actually point to information about specific format of the data: we can found out how many dimensions are needed, what is size of those dimensions and what is expected type of variable (\verb|uint8_t|, \verb|int8_t|, \verb|float|...).
+In our test that we ran directly on our laptop we test exactly for these values to confirm that the model will work as expected.
+Secondly we now have a way to directly feed data into input, this is done in for loop on line 41.
+One of \verb|TfLiteTensor| members is a union variable \verb|data| which contains variables of types.
+This type of structure enables us to load input with any kind of data, in our case \verb|int8|.
+
+In line 47 we finally invoke interpreter and run inference on input data.
+Whole expression is surrounded with timing functions, which are used to keep track of time spend computing inference.
+
+We finally call \verb|print_results|, which we wrote, where we pass \verb|error_reporter| for printing, \verb|output| for extracting computed probabilities and elapsed time.
+
+After initial setup, we can load data and call invoke as many times we want.
+
+\lstset{style=mystyle}
+
+\begin{figure}[ht] 
+    \begin{lstlisting}[language=C++]
+// An area of memory to use for input, output, 
+// and intermediate arrays.
+const int kTensorArenaSize = 200 * 1024;
+static uint8_t tensor_arena[kTensorArenaSize];
+
+int main() 
+{
+    // Debug print setup
+    tflite::MicroErrorReporter micro_error_reporter;
+    tflite::ErrorReporter *error_reporter = &micro_error_reporter;
+
+    // Map the model into a usable data structure
+    model = tflite::GetModel(full_quant_tflite);
+
+    // Pull in needed operations
+    static tflite::MicroMutableOpResolver<8> micro_op_resolver;
+    micro_op_resolver.AddConv2D();
+    micro_op_resolver.AddMaxPool2D();
+    micro_op_resolver.AddReshape();
+    micro_op_resolver.AddFullyConnected();
+    micro_op_resolver.AddSoftmax();
+    micro_op_resolver.AddDequantize();
+    micro_op_resolver.AddMul();
+    micro_op_resolver.AddAdd();
+
+    // Build an interpreter to run the model with.
+    static tflite::MicroInterpreter interpreter(model, 
+                                                micro_op_resolver, 
+                                                tensor_arena,
+                                                kTensorArenaSize, 
+                                                error_reporter);
+    // Allocate memory from the tensor_arena
+    interpreter->AllocateTensors();
+
+    // Get information about the memory area 
+    // to use for the model's input.
+    TfLiteTensor* input  = interpreter->input(0);
+    TfLiteTensor* output = interpreter->output(0);
+
+    // Load data from image array
+    for (int i = 0; i < input->bytes; ++i) {
+        input->data.int8[i] = image_array[i];
+    }
+
+    // Run the model on this input and time it
+    uint32_t start = dwt_read_cycle_counter();
+    interpreter->Invoke();
+    uint32_t end   = dwt_read_cycle_counter();
+    
+    // Print probabilites and time elapsed
+    print_result(error_reporter, output, dwt_to_ms(end-start));
+}
+    \end{lstlisting}
+    \caption{ Example of TensorFlow Lite inference code in C++.}
+    \label{inference_code}
+\end{figure}
+
 
 \subsection{ Wisent board control firmware}
     flow diagram
     cli interface (this should be put somewhere, or not?)
 
-%\section{ Server side components/software}
-%\subsection{ TTN}
-%\subsection{ NODE-RED}
-%\subsection{ InfluxDB}
-%\subsection{ Grafana}
+\section{ Server side components and software}
+
+In this section we describe possible server side construction of various frameworks which enable us to receive LoRaWAN message, parse it, store it in a database and present it.
+For this thesis we did not implement this specific setup as it was not required for testing purposes, however at IRNAS we use this setup all the time for our IoT products and implementing such system would be trivial.
+
+System that we use consists of different components, each one with a distinct task.
+Tools that we use are The Things Network (TTN), Node-RED, InfluxDB and Grafana.
+Flow of information and tasks of each tool are presented on Figure \ref{server_side}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\linewidth]{server_side.pdf} 
+    \caption{ Server side flow of information. Icons source:\cite{icons}}
+    \label{server_side}
+\end{figure}
+
+TTN is responsible for routing packets that are captured by a gateways to the application server.
+Since it is open-source and free, anyone can register their gateway device into the network and thus helps to extend it.
+TNN is web based, so we can see payload messages directly in the browser.
+Since data is usually encoded in binary format, we can provide a decoder script written in JavaScript and TTN will automatically decode each message by it.
+
+Node-RED functions as a glue logic that parses packets and shapes them into format that is required by InfluxDB.
+Node-RED provides a browser-based flow editor, where actual programming can be done graphically.
+Logic is programmed by choosing different blocks called \textit{nodes} and connecting them together.
+This is convenient, as Node-RED provides different nodes for communicating with different technologies, such as MQTT, HTTP requests, emails, Twitter accounts and others.
+In our use case we need to use a combination of nodes seen on Figure \ref{nodered_flow}
+Node \textit{Elephant Gateway} is connected to a specific application on TTN, which is used for collection of packets from our device in field.
+Any packet that will appear in that TTN application will also appear in Node-RED.
+Node \textit{Parse packet} extracts information contained in each packet and stores it in a specific format, which is finally send to node \textit{Elephant Database}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\linewidth]{nodered_flow.png} 
+    \caption{ Node-RED flow.}
+    \label{nodered_flow}
+\end{figure}
+
+\textit{Elephant Database} is connected to InfluxDB, which acts as a time series database.
+Any packet that is saved in it is automatically timestamped.
+
+Finally data is visualized in Grafana. 
+Grafana is a open source analytics and monitoring solution.
+Users define which database is set as source and Grafana provides graphical controls which are at some point converted into SQL like language understandable to InfluxDB.
+Grafana provides different types of visualizations, such as graphs, gauges, heat maps, alert lists and others.
+In our use case we could display information about various devices in the field, such as battery voltage, number of wakeup triggers, results of each inference and others.
+
+Example of Grafana graph can be seen on Figure \ref{grafana}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\linewidth]{grafana.png} 
+    \caption{ Example of Grafana graph.}
+    \label{grafana}
+\end{figure}
+
+One important quality of Node-RED, InfluxDB and Grafana is that they can run directly on a embedded Linux system, such as Raspberry Pi, which greatly lowers the cost of hardware that is needed.
