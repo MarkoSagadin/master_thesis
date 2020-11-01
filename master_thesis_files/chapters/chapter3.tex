@@ -82,7 +82,7 @@ Insides of the camera and an example of a deployed camera can be seen in Figure 
         \centering
         \includegraphics[width=1.0\linewidth, height=5cm]{assam_camera2.jpg}
     \end{subfigure}
-    \caption{Camera trap used in Assam, India. Image source: Arribada Initiative \cite{arribada-assam}}
+    \caption[Camera trap used in Assam, India.]{Camera trap used in Assam, India. Image source: Arribada Initiative\cite{arribada-assam}}
     \label{assam_camera}
 \end{figure}
 
@@ -185,7 +185,7 @@ Our process can be seen on Figure \ref{image_preparation}.
 \begin{figure}[ht]
     \centering
     \includegraphics[width=1.0\linewidth]{image_preparation.pdf} 
-    \caption{Image preprocessing pipeline. Icons source:\cite{icons}}
+    \caption[Image preprocessing pipeline.]{Image preprocessing pipeline. Icons source:\cite{icons}}
     \label{image_preparation}
 \end{figure}
 
@@ -272,20 +272,9 @@ Above set hyperparameters follow general rules of thumb and serve as a good star
 However, hyperparameters such as the number of filters, filter size, size of a hidden dense layer, dropout rate, and learning rate are specific to each dataset and can not be chosen heuristically.
 
 To find hyperparameters that would yield the highest accuracy we used the Keras Tuner module.
-Instead of hard-coding hyperparameters when building a model with Keras API, we defined a search space of possible values with \verb|HyperParameter| class and used that as a hyperparameter.
-
-The created model was then passed to a \verb|RandomSearch| class, with few other parameters such as batch size, number of epochs and maximum number of trials.
-Hyperparameter search could then be started, Keras Tuner would randomly pick a set of hyperparameters and train a model with them, this process would be repeated for a trial number of times.
-Accuracy and hyperparameters that were used while training every module were saved to a log file for later analysis.
-
-By providing accuracy metric, Keras tuner automatically sorts trained models in descending accuracy, returning the best model.
-This is in many use cases sufficient, however in our case, we were also interested in best performing models that had small size. 
-As size can not be specified as one of the possible metrics, some manual training was required after the hyperparameter search to determine the most efficient model.
-
-Comparison of trained models is presented and discussed in section TODO ADD REFERENCE.
+Exact configuration of Keras Tuner module and comparison of trained models is presented and discussed in section \ref{model_comparisons}.
 
 \lstset{style=mystyle}
-
 \begin{figure}[ht] 
     \begin{lstlisting}[language=Python]
         model = models.Sequential()
@@ -335,7 +324,7 @@ A full integer model is an ideal choice for running models on microcontrollers, 
 
 Furthermore, created tflite models need to be converted into a format that is understandable to C++ TFlite API running on a microcontroller.
 This is done with the \textbf{xxd}, a Linux command-line tool that creates a hex dump out of any input file.
-By setting \verb|-i| flag,  xxd tool creates a hex dump of our model and formats it as a char array in C programming language. 
+By setting \verb|-i| flag, xxd tool creates a hex dump of our model and formats it as a char array in C programming language. 
 
 To automate the optimization process we wrote a Python script that took the model in raw .h5 format and converted it into every possible version of the optimized tflite model.
 Each model was then processed with xxd tool and pairs of .c and .h files were created, ready to be included in our application code.

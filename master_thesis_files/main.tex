@@ -1,9 +1,13 @@
 \documentclass[fleqn,a4paper,12pt]{report}
-\usepackage{graphicx}
-\graphicspath{ {./images/} }
+\usepackage{graphicx}           % For adding pictures
+\graphicspath{ {./images/} }    % Image folder to include from
 \usepackage{anyfontsize}        % For setting exact font size
 \usepackage{geometry}           % For setting margins
-\geometry{a4paper, left = 35 mm, right = 25mm, top = 30mm, bottom = 30mm}
+\geometry{a4paper, 
+          left   = 35 mm, 
+          right  = 25mm, 
+          top    = 30mm, 
+          bottom = 30mm}        % Margins according to Feri guidelines
 \usepackage[utf8]{inputenc}     % For slovenian characters
 \usepackage{sectsty}            % For setting font size of chapters 
 \usepackage{titlesec}           % For setting the shape of chapters
@@ -11,28 +15,32 @@
 \usepackage[parfill]{parskip}   % No indent
 \usepackage{setspace}           % For 1 and half spacing between lines
 \linespread{1.5}                % Look above
-\usepackage{hyperref}
-\usepackage{cite}
-\usepackage{url}
+\usepackage{hyperref}           % Links
+\usepackage{cite}               % Citations
+\usepackage{url}                % Different links 
 \usepackage[binary-units=true]{siunitx}
-\usepackage{subcaption} 
-\usepackage{amssymb} 
+\usepackage{subcaption}         % Subcations for figures
+\usepackage{amssymb}            % Additional symbols
 \usepackage{listings}           % For code snippets
 \usepackage{xcolor}             % For color in code snippets
 \usepackage{dirtree}            % For printing directory trees
 \usepackage{bigfoot}            % For code snippets in footnote texts
+\usepackage{booktabs}           % For nicer tables
+\usepackage{adjustbox}          % For rotating
+\usepackage{array}
+\usepackage{xparse}   % http://ctan.org/pkg/xparse
 
 \setlength{\mathindent}{2cm}    % Indent equations 2cm from text edge
-\setcounter{tocdepth}{4}
-\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}        % Table of content goes to 4th level
+\setcounter{secnumdepth}{4}     % Same here
 \frenchspacing                  % One space after period dot
 
+% Custom styling according to Feri guide lines
 \def\poglavje{\fontsize{18}{18}\selectfont}
 \def\podpoglavje{\fontsize{14}{18}\selectfont}
 \def\podpodpoglavje{\fontsize{14}{18}\selectfont}
 \def\podpodpodpoglavje{\fontsize{14}{18}\selectfont}
 
-% Use for thesis
 \titleformat{\chapter}[hang]
   {\poglavje\bfseries}{\thechapter }{0pt}{\poglavje}
 
@@ -47,7 +55,6 @@
 
 
 % Definitions for code formating and coloring
-
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
@@ -71,6 +78,12 @@
     showtabs=false,                  
     tabsize=2
 }
+% Change title of table of contents
+\renewcommand{\contentsname}{Table of Contents}
+
+
+% Add new rot command for rotating
+\NewDocumentCommand{\rot}{O{45} O{1em} m}{\makebox[#2][l]{\rotatebox{#1}{#3}}}%
 
 \begin{document}
 
@@ -108,6 +121,8 @@
 % • priloge k zaključnemu delu,
 % • izjava o avtorstvu in istovetnosti tiskane in elektronske oblike zaključnega dela v
 % trdo vezanem izvodu (v preostalih izvodih naj bo fotokopija),
+
+
 %\pagenumbering{gobble}
 %\input{chapters/titlepage}
 %\input{chapters/second_titlepage}
@@ -115,29 +130,28 @@
 %\pagenumbering{roman}
 %\input{chapters/acknowledgement}
 %\input{chapters/abstract}
+
 \tableofcontents
-%
+%\listoffigures
+
+
 %\chapter{ Introduction}
 %\pagenumbering{arabic}
 %\input{chapters/chapter1}
-
+%
 %\chapter{ Theoretical description of system building blocks}
 %\input{chapters/chapter2}
-
-\chapter{ Neural network model design}
-\input{chapters/chapter3}
-
-\chapter{ Planning and design of early warning system}
-\input{chapters/chapter4}
-
 %
-%\chapter{ Measurements and results}
-%\input{chapters/chapter5}
-%\cite{latexcompanion}
+%\chapter{ Neural network model design}
+%\input{chapters/chapter3}
+%
+%\chapter{ Planning and design of early warning system}
+%\input{chapters/chapter4}
 
+\chapter{ Measurements and results}
+\input{chapters/chapter5}
 
-
-% Include bibliograpfy and justify it right
+% Include bibliograpfy and justify it right. Use myunsrt biblio style.
 \begingroup
 \raggedright
 \bibliographystyle{myunsrt}

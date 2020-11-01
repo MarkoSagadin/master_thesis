@@ -303,7 +303,7 @@ Besides source files each project has to contain three specific files:
 \end{itemize}
 
 Some initial commands need to be executed when the project is cloned from the GitHub for the first time. 
-Figure \ref{label_system} represents the complete build process.
+Figure \ref{build_system} represents the complete build process.
 
 \begin{figure}[ht]
         \centering
@@ -338,7 +338,7 @@ That way we could test ML specific routines fast and quickly removed any mistake
 \subsection{ Running inference on a microcontroller}
 
 TFLite Micro API is fairly simple to use and general enough that it can be copied from project to project without many modifications.
-Figure \ref{inference code} shows a simplified inference code example, copied from our project.
+Figure \ref{inference_code} shows a simplified inference code example, copied from our project.
 As a first step, we need to define size of \verb|tensor_arena| array, which holds memory input, output, and intermediate arrays.
 Exact size of \verb|tensor_arena| is determined by trail and error: we set it to some big value and then decrease it in steps, until the code does not work anymore.
 
@@ -449,7 +449,7 @@ Flow of information and tasks of each tool are presented on Figure \ref{server_s
 \begin{figure}[ht]
     \centering
     \includegraphics[width=1.0\linewidth]{server_side.pdf} 
-    \caption{ Server side flow of information. Icons source:\cite{icons}}
+    \caption[Server side flow of information.]{Server side flow of information. Icons source:\cite{icons}}
     \label{server_side}
 \end{figure}
 

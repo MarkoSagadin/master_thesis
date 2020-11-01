@@ -43,7 +43,7 @@ There are several steps in ML workflow that need to happen to get from an idea t
 \begin{figure}[ht]
         \centering
         \includegraphics[width=1.0\linewidth]{ml_workflow.pdf} 
-        \caption{ Workflow of solving a generic machine learning problem. Icons source:\cite{icons}}
+        \caption[Workflow diagram of solving a generic machine learning problem.] {Workflow diagram of solving a generic machine learning problem. Icons source:\cite{icons}}
         \label{ml_workflow}
 \end{figure}
 
@@ -116,7 +116,7 @@ To learn how NNs work we can refer to Figure \ref{neuron_model}, which shows a g
         \label{neural_net}
     \end{subfigure}
     
-    \caption{ (a) Mathematical model of an artificial neuron, similarities with biological neurons can be seen. (b) Fully connected 3-layer neural network. Image source: \cite{cs231n}}
+    \caption[Mathematical model of artificial neuron and fully connected 3-layer neural network.]{(a) Mathematical model of an artificial neuron, similarities with biological neurons can be seen. (b) Fully connected 3-layer neural network. Image source: \cite{cs231n}}
     \label{neural}
 \end{figure}
 
@@ -195,8 +195,6 @@ We do not have to execute a backpropagation algorithm for each training instance
 
 Convolutional neural networks (CNN) are a kind of neural networks that work especially well with image data.
 Like NNs they have found inspiration in nature, in their case visual cortex of the brain.\footnotemark
-
-
 \footnotetext{Scientists Weisel and Hubel showed that different cells in the primary visual cortex of a cat responded differently to different visual stimuli\cite{cs231n}.
 Some were activated when shown a horizontal line in a specific location, some were activated by vertical lines.
 More complex cells responded to boxes, circles and so on.
@@ -208,7 +206,7 @@ In Figure \ref{convnet} we can see an example of CNN which takes an image of a c
 \begin{figure}[ht]
         \centering
         \includegraphics[width=1.0\linewidth]{convnet.jpeg} 
-        \caption{CNNs usually consist of alternating convolutional layers and pooling layers. Last polling layer is flattened out and feed into fully connected NN. Image source:\cite{cs231n}}
+        \caption[Structure of a convolutional neural network.]{Structure of a convolutional neural network. Image source:\cite{cs231n}}
         \label{convnet}
 \end{figure}
 
@@ -233,7 +231,7 @@ We can see a concrete example in Figure \ref{conv1}.
 \begin{figure}[ht] 
     \centering
     \includegraphics[width=0.75\linewidth]{conv1.png} 
-    \caption{ Dot product operation between filter and zero-padded input matrix. Image sources: \cite{conv_layer_img}}
+\caption[Dot product operation between filter and zero-padded input matrix.] {Dot product operation between filter and zero-padded input matrix. Image sources: \cite{conv_layer_img}}
     \label{conv1}
 \end{figure}
 
@@ -270,7 +268,7 @@ This prevents the information at the edges to be lost too quickly\cite{cs231n}.
 \begin{figure}[ht] 
     \centering
     \includegraphics[width=0.5\linewidth]{conv2.jpeg} 
-    \caption{Convolutional layer with five different filters. Image sources: \cite{conv_layer_img}\cite{cs231n}}
+\caption[Convolutional layer with five different filters.] {Convolutional layer with five different filters. Image sources: \cite{conv_layer_img}\cite{cs231n}}
     \label{conv2}
 \end{figure}
 
@@ -298,7 +296,7 @@ Pooling is done on each depth slice separately of other slices, so depth size is
         \caption{ Effect of polling on input dimensions}
         \label{pool2}
     \end{subfigure}
-    \caption{ Polling layer. Image source: \cite{cs231n}}
+    \caption[Polling layer.] {Pooling layer. Image source: \cite{cs231n}}
     \label{pool_layer}
 \end{figure}
 
@@ -355,7 +353,7 @@ Figure \ref{micro_workflow} shows all steps that are needed to prepare an ML mod
 \begin{figure}[ht] 
     \centering
     \includegraphics[width=1.0\linewidth]{micro_workflow.pdf} 
-    \caption{  Workflow of preparing a ML model for an inference on a microcontroller. Icons source:\cite{icons}}
+    \caption[Workflow of preparing a ML model for an inference on a microcontroller.]{Workflow of preparing a ML model for an inference on a microcontroller. Icons source:\cite{icons}}
     \label{micro_workflow}
 \end{figure}
 
@@ -436,7 +434,7 @@ Although the frequency is always changing with a constant rate, it is not contin
         \caption{ Properties of LoRa signal}
         \label{lora2}
     \end{subfigure}
-    \caption{Lora signal (left) and different properties of LoRa with their effects on range, bit rate, receiver sensitivity, time on air and consumption (right). Image sources:\cite{lora_github}\cite{lora_philly}}
+\caption[Properties of Lora signal.] {Lora signal (left) and different properties of LoRa with their effects on range, bit rate, receiver sensitivity, time on air and consumption (right). Image sources:\cite{lora_github}\cite{lora_philly}}
     \label{lora}
 \end{figure}
 
@@ -485,7 +483,7 @@ Since photon detectors are expensive, large and therefore unsuitable for our use
         \centering
         \includegraphics[width=1.0\linewidth, height=5cm]{thermal_sample_a.png}
     \end{subfigure}
-    \caption{Comparison between an image taken with a normal camera (left) and with a thermal camera FLIR Lepton 2.5 (right). Image source: Arribada Initiative\cite{thermal_comparison}}
+    \caption[Comparison between a normal image and thermal image]{Comparison between a normal image and thermal image. Image source: Arribada Initiative\cite{thermal_comparison}}
     \label{thermal_comparison}
 \end{figure}
 
@@ -517,8 +515,7 @@ Each bolometer consists of an absorber material connected to a readout integrate
         \caption{Bolometer}
         \label{FPA_pixel}
     \end{subfigure}
-
-    \caption{(a) Focal point array under electronic microscope. (b) Bolometer with $\lambda /4$ resonant cavity. Image source: Vollmer, Möllmann\cite{thermal_book}}
+    \caption[Focal point array and bolometer.] {(a) Focal point array under electronic microscope. (b) Bolometer with $\lambda /4$ resonant cavity. Image source: Vollmer, Möllmann\cite{thermal_book}}
     \label{FPA_microbolo}
 \end{figure}
 
@@ -551,8 +548,7 @@ Although tens of \si{\milli\kelvin} does not seem a lot, we can see in Figure \r
         \caption{NETD is 80 \si{\milli\kelvin}}
         \label{NETD_80mk}
     \end{subfigure}
-
-    \caption{Comparison of images of the same object taken with cameras with different NETD values. Low NETD values are more appropriate for object recognition. Image source: MoviTherm \cite{NETD}}
+    \caption[Comparison of images of the same object taken with cameras with different NETD values.]{Comparison of images of the same object taken with cameras with different NETD values. Low NETD values are more appropriate for object recognition. Image source: MoviTherm \cite{NETD}}
     \label{NETD}
 \end{figure}
 
@@ -590,7 +586,7 @@ Although thermopile cameras were cheaper than microbolometer cameras, the qualit
         \includegraphics[width=1.0\linewidth, height=4.5cm]{thermal_comparison_d.png} 
         \label{thermal_comparison_d}
     \end{subfigure}
-\caption[Comparison of image quality made by different thermal cameras]{, MELEXIS MLX90640 (top left), Heimann 80x64 (top right), ULIS Micro80 Gen2 (bottom left) and FLIR Lepton 2.5 (bottom right). Image source: Arribada Initiative \cite{thermal_comparison}}
+\caption[Comparison of image quality made by different thermal cameras.]{Comparison of image quality made by different thermal cameras, MELEXIS MLX90640 (top left), Heimann 80x64 (top right), ULIS Micro80 Gen2 (bottom left) and FLIR Lepton 2.5 (bottom right). Image source: Arribada Initiative \cite{thermal_comparison}}
     \label{thermal_comparison_images}
 \end{figure}
 

@@ -1,0 +1,44 @@
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Various human-elephant conflicts.}}{2}{figure.caption.3}%
+\contentsline {figure}{\numberline {1.2}{\ignorespaces Diagram of early detection system.}}{3}{figure.caption.4}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Workflow diagram of solving a generic machine learning problem.}}{11}{figure.caption.5}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Mathematical model of artificial neuron and fully connected 3-layer neural network.}}{13}{figure.caption.6}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Different activation functions and their equations.\relax }}{14}{figure.caption.7}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Structure of a convolutional neural network.}}{17}{figure.caption.8}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Dot product operation between filter and zero-padded input matrix.}}{18}{figure.caption.9}%
+\contentsline {figure}{\numberline {2.6}{\ignorespaces Convolutional layer with five different filters.}}{19}{figure.caption.10}%
+\contentsline {figure}{\numberline {2.7}{\ignorespaces Polling layer.}}{20}{figure.caption.11}%
+\contentsline {figure}{\numberline {2.8}{\ignorespaces Workflow of preparing a ML model for an inference on a microcontroller.}}{22}{figure.caption.12}%
+\contentsline {figure}{\numberline {2.9}{\ignorespaces Properties of Lora signal.}}{25}{figure.caption.13}%
+\contentsline {figure}{\numberline {2.10}{\ignorespaces Comparison between a normal image and thermal image}}{27}{figure.caption.14}%
+\contentsline {figure}{\numberline {2.11}{\ignorespaces Focal point array and bolometer.}}{28}{figure.caption.15}%
+\contentsline {figure}{\numberline {2.12}{\ignorespaces Comparison of images of the same object taken with cameras with different NETD values.}}{29}{figure.caption.16}%
+\contentsline {figure}{\numberline {2.13}{\ignorespaces Comparison of image quality made by different thermal cameras.}}{30}{figure.caption.17}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Camera trap used in Assam, India.}}{35}{figure.caption.18}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Thermal images of elephants from dataset.\relax }}{36}{figure.caption.19}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Camera setup used for taking thermal images with FLIR Lepton 2.5.\relax }}{37}{figure.caption.20}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Distribution of used images from thermal dataset depending on image location and type of sensor.\relax }}{39}{figure.caption.21}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Class distribution of thermal images.\relax }}{39}{figure.caption.22}%
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Image preprocessing pipeline.}}{40}{figure.caption.23}%
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Distribution of training images before and after resampling.\relax }}{42}{figure.caption.24}%
+\contentsline {figure}{\numberline {3.8}{\ignorespaces CNN architecture written in Python using Keras Sequential API.\relax }}{44}{figure.caption.25}%
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Creating a neural network in Edge Impulse Studio.\relax }}{47}{figure.caption.26}%
+\contentsline {figure}{\numberline {3.10}{\ignorespaces After training training performance report.\relax }}{48}{figure.caption.27}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces General block diagram of an embedded system\relax }}{49}{figure.caption.28}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Diagram describing behavior of embedded early detection system\relax }}{50}{figure.caption.29}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Hardware diagram of embedded early detection system\relax }}{51}{figure.caption.30}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Nucleo-F767ZI development board\relax }}{52}{figure.caption.31}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Dual P and N MOSFET configuration for power switching\relax }}{53}{figure.caption.32}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Front and back side of Flir Lepton breakout board with thermal camera module inserted.\relax }}{54}{figure.caption.33}%
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Command and control interface of FLIR Lepton camera.\relax }}{55}{figure.caption.34}%
+\contentsline {figure}{\numberline {4.8}{\ignorespaces Architecture diagram of the firmware that is running on a STM32F767ZI microcontroller.\relax }}{57}{figure.caption.35}%
+\contentsline {figure}{\numberline {4.9}{\ignorespaces Architecture diagram of the firmware that is running on a NRF52840 microcontroller.\relax }}{58}{figure.caption.36}%
+\contentsline {figure}{\numberline {4.10}{\ignorespaces Directory structure of MicroML project.\relax }}{60}{figure.caption.37}%
+\contentsline {figure}{\numberline {4.11}{\ignorespaces Build system of MicroML project.\relax }}{61}{figure.caption.38}%
+\contentsline {figure}{\numberline {4.12}{\ignorespaces Example of TensorFlow Lite inference code in C++.\relax }}{66}{figure.caption.39}%
+\contentsline {figure}{\numberline {4.13}{\ignorespaces Server side flow of information.}}{67}{figure.caption.40}%
+\contentsline {figure}{\numberline {4.14}{\ignorespaces Node-RED flow.\relax }}{67}{figure.caption.41}%
+\contentsline {figure}{\numberline {4.15}{\ignorespaces Example of Grafana graph.\relax }}{67}{figure.caption.42}%
