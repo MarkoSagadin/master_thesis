@@ -387,7 +387,7 @@ int main()
     tflite::ErrorReporter *error_reporter = &micro_error_reporter;
 
     // Map the model into a usable data structure
-    model = tflite::GetModel(full_quant_tflite);
+    const tflite::Model* model = tflite::GetModel(full_quant_tflite);
 
     // Pull in needed operations
     static tflite::MicroMutableOpResolver<8> micro_op_resolver;
