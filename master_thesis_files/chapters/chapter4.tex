@@ -208,10 +208,8 @@ As seen on Figure \ref{firmware_diagram} we split the firmware into two hardware
 Both modules are lightly coupled, which enables us reuse of the application module on a different hardware sometime in the future.
 Hardware specific module is mostly using libopencm3 API to set the system clock and initialize peripherals.
 Small function wrappers had to be written to make use of various peripheral drivers more abstract.
-To profile execution of our code we first wrote a timer driver based on a Arm's systick timer, however we later decided to use data watch trigger (DWT).
-DWT does not use interrupts, therefore it does not introduce overhead of calling interrupt routines like systick timer does.
 
-FLIR Lepton driver was written from scratch, as many libraries provided either by camera manufacturer or open source communities were too complex and implemented many features, which we did not require.
+FLIR Lepton driver was written from scratch, as many libraries provided either by camera manufacturer or open source communities were too complex and implemented many features which we did not require.
 
 Thanks to TFLite Micro API, ML inference module could be written as a simple black box.
 Image data goes in, predictions come out.

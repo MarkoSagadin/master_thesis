@@ -20,6 +20,7 @@ Possible values of hyperparameters (also known as hyperparameter search space) a
 
 \begin{table}
     \centering
+    \rowcolors{2}{white}{gray!25}
     \begin{tabular}{@{} *5l @{}}    \toprule
         \textbf{Hyperparameter} & \textbf{Set of values}\\\midrule
         \verb|FilterNum1|       & From 16 to 80, with a step of 8\\ 
@@ -58,65 +59,69 @@ After it was done we compiled a list of all 300 trained models and their differe
     \begin{tabular}{llllllllrl}
         \textbf{Hyperparameter} & \rot{FilterNum1} & \rot{FilterNum2} & \rot{FilterNum3} & \rot{DenseSize} & \rot{DropoutRate}  &\rot{FilterSize} & \rot{LearningRate} & \rot{Number of parameters} & \rot{Accuracy[\%]}  \\\toprule
         \textbf{Model ID} &&&&&&&&\\\toprule
-        0 & 72 & 80 & 64 & 72 & 0.4  & 3x4 & 0.0003 & 1.514,400 & 98.35\\
-        1 & 32 & 40 & 72 & 56 & 0.35 & 3x4 & 0.0001 & 1.260,332 & 98.31\\
-        2 & 40 & 48 & 32 & 64 & 0.35 & 3x4 & 0.0001 &   656,797 & 98.31\\
-        3 & 56 & 16 & 48 & 72 & 0.4  & 3x4 & 0.0001 & 1,057,924 & 98.28\\
-        4 & 80 & 64 & 40 & 96 & 0.45 & 3x4 & 0.0003 & 1,245,788 & 98.28\\
-        5 & 64 & 24 & 72 & 88 & 0.45 & 3x3 & 0.0001 & 1,931,356 & 98.28\\
-        6 & 64 & 56 & 40 & 80 & 0.35 & 3x3 & 0.0001 & 1,013,556 & 98.24\\
-        7 & 16 & 40 & 64 & 88 & 0.35 & 3x3 & 0.0003 & 1,719,108 & 98.24\\
-        8 & 48 & 64 & 32 & 64 & 0.35 & 3x4 & 0.0003 &   676,884 & 98.24\\
-        9 & 72 & 48 & 56 & 80 & 0.3  & 3x4 & 0.0001 & 1,419,172 & 98.24\\\midrule
-       91 & 72 & 48 & 56 & 40 & 0.35 & 3x3 & 0.0003 &   728,324 & 98.00\\
-       92 & 48 & 24 & 64 & 64 & 0.35 & 3x4 & 0.0001 & 1,262,092 & 98.00\\
-       93 & 24 & 48 & 32 & 72 & 0.4  & 3x3 & 0.0001 &   716,076 & 98.00\\
-       94 & 32 & 48 & 72 & 32 & 0.25 & 3x3 & 0.0001 &   736,732 & 98.00\\
-       95 & 64 & 24 & 64 & 48 & 0.3  & 3x4 & 0.0001 &   959,628 & 98.00\\
-       96 & 16 & 32 & 72 & 80 & 0.25 & 3x4 & 0.0001 & 1,762,508 & 98.00\\
-       97 & 72 & 56 & 40 & 56 & 0.45 & 3x4 & 0.0003 &   748,580 & 98.00\\
-       98 & 32 & 24 & 24 & 48 & 0.35 & 3x3 & 0.0001 &   358,308 & 98.00\\
-       99 & 48 & 16 & 40 & 40 & 0.45 & 3x3 & 0.0003 &   493,412 & 98.00\\
-      100 & 24 & 72 & 64 & 40 & 0.45 & 3x3 & 0.0003 &   844,684 & 98.00\\\midrule
-      191 & 64 & 56 & 16 & 52 & 0.4  & 3x3 & 0.0001 &   386,996 & 97.76\\
-      192 & 48 & 40 & 24 & 24 & 0.4  & 3x4 & 0.0001 &   208,172 & 97.73\\
-      193 & 56 & 64 & 72 & 24 & 0.25 & 3x4 & 0.0003 &   617,692 & 97.73\\
-      194 & 48 & 72 & 48 & 32 & 0.25 & 3x4 & 0.0003 &   544,652 & 97.73\\
-      195 & 72 & 56 & 24 & 56 & 0.25 & 3x4 & 0.0003 &   469,012 & 97.73\\
-      196 & 72 & 48 & 72 & 40 & 0.3  & 3x3 & 0.0003 &   927,252 & 97.73\\
-      197 & 80 & 16 & 32 & 80 & 0.25 & 3x3 & 0.0001 &   785,380 & 97.73\\
-      198 & 56 & 24 & 16 & 88 & 0.25 & 3x3 & 0.0001 &   438,996 & 97.73\\
-      199 & 56 & 24 & 16 & 88 & 0.25 & 3x3 & 0.0001 &   438,996 & 97.73\\\midrule
-      295 & 48 & 32 & 64 & 16 & 0.5  & 3x4 & 0.0001 &   351,012 & 95.87\\
-      296 & 40 & 24 & 56 & 24 & 0.5  & 3x4 & 0.0001 &   431,572 & 95.77\\
-      297 & 56 & 16 & 80 & 16 & 0.2  & 3x4 & 0.0001 &   411,020 & 95.63\\
-      298 & 24 & 16 & 48 & 24 & 0.5  & 3x4 & 0.0001 &   359,924 & 94.46\\
-      299 & 40 & 48 & 56 & 16 & 0.35 & 3x3 & 0.0003 &   310,860 & 82.86\\\bottomrule
+        0a & 72 & 80 & 64 & 72 & 0.4  & 3x4 & 0.0003 & 1.514,400 & 98.35\\
+        1a & 32 & 40 & 72 & 56 & 0.35 & 3x4 & 0.0001 & 1.260,332 & 98.31\\
+        2a & 40 & 48 & 32 & 64 & 0.35 & 3x4 & 0.0001 &   656,797 & 98.31\\
+        3a & 56 & 16 & 48 & 72 & 0.4  & 3x4 & 0.0001 & 1,057,924 & 98.28\\
+        4a & 80 & 64 & 40 & 96 & 0.45 & 3x4 & 0.0003 & 1,245,788 & 98.28\\
+        5a & 64 & 24 & 72 & 88 & 0.45 & 3x3 & 0.0001 & 1,931,356 & 98.28\\
+        6a & 64 & 56 & 40 & 80 & 0.35 & 3x3 & 0.0001 & 1,013,556 & 98.24\\
+        7a & 16 & 40 & 64 & 88 & 0.35 & 3x3 & 0.0003 & 1,719,108 & 98.24\\
+        8a & 48 & 64 & 32 & 64 & 0.35 & 3x4 & 0.0003 &   676,884 & 98.24\\
+        9a & 72 & 48 & 56 & 80 & 0.3  & 3x4 & 0.0001 & 1,419,172 & 98.24\\\midrule
+       91a & 72 & 48 & 56 & 40 & 0.35 & 3x3 & 0.0003 &   728,324 & 98.00\\
+       92a & 48 & 24 & 64 & 64 & 0.35 & 3x4 & 0.0001 & 1,262,092 & 98.00\\
+       93a & 24 & 48 & 32 & 72 & 0.4  & 3x3 & 0.0001 &   716,076 & 98.00\\
+       94a & 32 & 48 & 72 & 32 & 0.25 & 3x3 & 0.0001 &   736,732 & 98.00\\
+       95a & 64 & 24 & 64 & 48 & 0.3  & 3x4 & 0.0001 &   959,628 & 98.00\\
+       96a & 16 & 32 & 72 & 80 & 0.25 & 3x4 & 0.0001 & 1,762,508 & 98.00\\
+       97a & 72 & 56 & 40 & 56 & 0.45 & 3x4 & 0.0003 &   748,580 & 98.00\\
+       98a & 32 & 24 & 24 & 48 & 0.35 & 3x3 & 0.0001 &   358,308 & 98.00\\
+       99a & 48 & 16 & 40 & 40 & 0.45 & 3x3 & 0.0003 &   493,412 & 98.00\\
+      100a & 24 & 72 & 64 & 40 & 0.45 & 3x3 & 0.0003 &   844,684 & 98.00\\\midrule
+      191a & 64 & 56 & 16 & 52 & 0.4  & 3x3 & 0.0001 &   386,996 & 97.76\\
+      192a & 48 & 40 & 24 & 24 & 0.4  & 3x4 & 0.0001 &   208,172 & 97.73\\
+      193a & 56 & 64 & 72 & 24 & 0.25 & 3x4 & 0.0003 &   617,692 & 97.73\\
+      194a & 48 & 72 & 48 & 32 & 0.25 & 3x4 & 0.0003 &   544,652 & 97.73\\
+      195a & 72 & 56 & 24 & 56 & 0.25 & 3x4 & 0.0003 &   469,012 & 97.73\\
+      196a & 72 & 48 & 72 & 40 & 0.3  & 3x3 & 0.0003 &   927,252 & 97.73\\
+      197a & 80 & 16 & 32 & 80 & 0.25 & 3x3 & 0.0001 &   785,380 & 97.73\\
+      198a & 56 & 24 & 16 & 88 & 0.25 & 3x3 & 0.0001 &   438,996 & 97.73\\
+      199a & 56 & 24 & 16 & 88 & 0.25 & 3x3 & 0.0001 &   438,996 & 97.73\\\midrule
+      295a & 48 & 32 & 64 & 16 & 0.5  & 3x4 & 0.0001 &   351,012 & 95.87\\
+      296a & 40 & 24 & 56 & 24 & 0.5  & 3x4 & 0.0001 &   431,572 & 95.77\\
+      297a & 56 & 16 & 80 & 16 & 0.2  & 3x4 & 0.0001 &   411,020 & 95.63\\
+      298a & 24 & 16 & 48 & 24 & 0.5  & 3x4 & 0.0001 &   359,924 & 94.46\\
+      299a & 40 & 48 & 56 & 16 & 0.35 & 3x3 & 0.0003 &   310,860 & 82.86\\\bottomrule
     \end{tabular}
     \caption{ Partial results of first random search of hyperparameters}
     \label{hyper_results1}
 \end{table}
 
+It is important to keep in mind that we are dealing with imbalanced dataset, where 82.86 \% of our validation data are elephant images.
+Simply classifying all images as elephant class would yield 82.86 \% accuracy, which sounds high, although it is actually not helpful.
+
 After analyzing results we came to several conclusions:
 
 \begin{enumerate}
     \item We saw that almost all trained models, except of the last one, achieved accuracy above 90 \%. This proved that the general architecture of the model was appropriate for the problem.
-    \item We could not see any visible correlation between a specific choice of a certain hyperparameter and accuracy.This shows that selection of hyperparameters is really a non-heuristic task.
+    \item We could not see any visible correlation between a specific choice of a certain hyperparameter and accuracy. This shows that selection of hyperparameters is really a non-heuristic task.
     \item Filter of size 3 x 4 did not perform significantly better compared to one with size 3 x 3. 
     \item There is a weak correlation between number of parameters (model's complexity) and accuracy. Although eight of top ten models have more then 1 million parameters, models with IDs 2 and 8 have almost half of the parameters, but still perform well.
-    \item First 200 models cover a accuracy range of 0.62 \%. However we can there models of very different size, for example model with ID 192 has more than 8 times less of parameters than model than model with ID 96, altough the difference in accuracy (0.27 \%) is neglible.
+    \item First 200 models cover an accuracy range of 0.62 \%. However inside of this range model number of parameters varies hugely, for example, model with ID 192a has more than 8 times less parameters than model than model with ID 96a, although the difference in accuracy (0.27 \%) is negligible.
 \end{enumerate}
 
 As we realized that we do not need complex models to achieve high accuracy on our training data, we decided to run the random search of hyperparameters again.
 We decided to lower the maximum and minimum numbers of filters and size of dense layer.
 We also decreased the step from 8 to 2.
-We decided to lower the bottom boundry of \verb|DropoutRate| from 0.2 to 0.0, which means that some models will not be using dropoout layer at all.
-We expect that training without dropout layer will produce suboptimal results, however we would like to test this.
-Redefined search space for second radnom search can be seen in Table \ref{hyper_table2}
-We increased the number of \verb|MAX_TRIALS| from 300 to 500, as we are expecting that more models will end up underfitting and also because there will be more possible options because of smaller step size.
+We decided to lower the bottom boundary of \verb|DropoutRate| from 0.2 to 0.0, which means that some models will not be using dropout layer at all.
+We expected that training without dropout layer would produce suboptimal results, however we wanted to test it.
+Redefined search space for second random search can be seen in Table \ref{hyper_table2}
+We increased the number of \verb|MAX_TRIALS| from 300 to 500, as we were expecting that more models will end up underfitting and also because there would be more possible options because of smaller step size.
 
 \begin{table}
     \centering
+    \rowcolors{2}{white}{gray!25}
     \begin{tabular}{@{} *5l @{}}    \toprule
         \textbf{Hyperparameter} & \textbf{Set of values}\\\midrule
         \verb|FilterNum1|       & From 4 to 48, with a step of 2\\ 
@@ -136,21 +141,148 @@ We increased the number of \verb|MAX_TRIALS| from 300 to 500, as we are expectin
     \label{hyper_table2}
 \end{table}
 
-By providing accuracy metric, Keras tuner automatically sorts trained models in descending accuracy.
-This is in many use cases sufficient, however in our case, we were also interested in best performing models that had small size. 
+Partial table of results of random hyperparameter search can be seen in Table \ref{hyper_results2}.
 
-- [ ] Do model comparisons, analyze them and present them.
-      This means that you need to describe the setup, 
-      what you want to get from this subchapter, 
-      hyperparameter search space, 
-      list of models, 
+\begin{table}
+    \centering
+    \rowcolors{2}{gray!25}{white}
+    \begin{tabular}{llllllllrl}
+        \textbf{Hyperparameter} & \rot{FilterNum1} & \rot{FilterNum2} & \rot{FilterNum3} & \rot{DenseSize} & \rot{DropoutRate}  &\rot{FilterSize} & \rot{LearningRate} & \rot{Number of parameters} & \rot{Accuracy[\%]}  \\\toprule
+        \textbf{Model ID} &&&&&&&&\\\toprule
+        0b & 40 & 20 & 20 & 48 & 0.25 & 3x4 & 0.0001 & 304,216 & 98.14\\
+        1b & 44 & 10 & 28 & 42 & 0.2  & 3x4 & 0.0003 & 362,264 & 98.14\\
+        2b & 18 & 38 & 26 & 38 & 0.1  & 3x4 & 0.0003 & 316,956 & 98.11\\
+        3b & 46 & 34 & 28 & 40 & 0.35 & 3x4 & 0.0003 & 367,056 & 98.07\\
+        4b & 26 & 36 & 36 & 34 & 0.15 & 3x4 & 0.0003 & 394,568 & 98.04\\\midrule
+       95b & 20 & 16 & 34 & 40 & 0.3  & 3x3 & 0.0003 & 416,230 & 97.62\\
+       96b & 46 & 42 & 28 & 32 & 0.4  & 3x3 & 0.0003 & 297,466 & 97.62\\
+       97b & 30 & 26 & 30 & 34 & 0.2  & 3x3 & 0.0001 & 320,570 & 97.59\\
+       98b & 20 & 10 & 16 & 46 & 0.45 & 3x3 & 0.0003 & 224,500 & 97.59\\
+       99b & 32 & 20 & 32 & 26 & 0.25 & 3x4 & 0.0003 & 265,562 & 97.59\\\midrule
+      195b & 28 & 16 & 40 & 24 & 0.1  & 3x3 & 0.0001 & 298,252 & 97.31\\
+      196b & 44 & 30 & 32 & 20 & 0.3  & 3x4 & 0.0003 & 220,098 & 97.31\\
+      197b & 46 & 40 & 10 & 40 & 0.1  & 3x3 & 0.0001 & 140,874 & 97.31\\
+      198b & 12 & 28 & 40 & 32 & 0.4  & 3x4 & 0.0003 & 401,860 & 97.31\\
+      199b & 36 & 38 &  6 & 40 & 0.4  & 3x3 & 0.0003 &  86,972 & 97.31\\\midrule
+      295b & 20 &  8 & 34 & 26 & 0.3  & 3x3 & 0.0003 & 269,464 & 96.90\\
+      296b & 18 & 16 & 10 & 20 & 0.3  & 3x4 & 0.0003 &  65,740 & 96.87\\
+      297b &  8 & 22 & 28 & 16 & 0.1  & 3x3 & 0.0001 & 141,742 & 96.87\\
+      298b & 18 & 28 & 14 & 32 & 0.25 & 3x4 & 0.0001 & 145,592 & 96.87\\
+      299b & 28 & 40 & 20 & 12 & 0.25 & 3x3 & 0.0001 &  89,684 & 96.87\\\midrule
+      395b & 10 & 20 & 12 & 30 & 0.0  & 3x3 & 0.0001 & 112,246 & 96.87\\
+      396b & 24 & 24 & 46 & 18 & 0.2  & 3x3 & 0.0003 & 263,924 & 96.14\\
+      397b &  6 & 18 & 12 & 24 & 0.4  & 3x4 & 0.0001 &  90,520 & 96.11\\
+      398b & 44 & 22 &  6 & 32 & 0.45 & 3x4 & 0.0001 &  71,564 & 96.11\\
+      399b & 12 & 16 & 10 & 28 & 0.25 & 3x4 & 0.0001 &  88,550 & 96.08\\\midrule
+      495b & 32 & 14 & 40 &  8 & 0.5  & 3x4 & 0.0003 & 109,334 & 82.86\\
+      496b & 36 & 38 & 22 &  6 & 0.2  & 3x3 & 0.0003 &  59,890 & 82.86\\
+      497b & 42 & 30 & 22 &  6 & 0.4  & 3x3 & 0.0003 &  57,386 & 82.86\\
+      498b &  4 &  4 & 20 & 12 & 0.4  & 3x3 & 0.0003 &  72,992 & 82.86\\
+      499b & 32 & 36 & 36 &  4 & 0.15 & 3x3 & 0.0001 &  65,648 & 82.86\\\bottomrule
+    \end{tabular}
+    \caption{ Partial results of second random search of hyperparameters}
+    \label{hyper_results2}
+\end{table}
+
+Some observations:
+\begin{enumerate}
+    \item We can see that the accuracy of the best model 0b compared to the best model 0a from previous search is only 0.21 \% lower, although it has about 5 times less parameters.
+    \item Although that it might seem that \verb|FilterSize| of 3 x 4 yields best results, we did not saw a strong bias towards on or another option after manually analyzing best 30 models.
+    \item We can see that worst five models have the same accuracy of 82.86 \%, same as the worst performing model from first random search. There are 82.86 \% images of elephants in validation class, which means that model probably assigned all validation images to elephant class and was satisfied with achieved accuracy.
+    \item We can see that the model with ID 296b has quite low number of parameters, only 65,740.
+\end{enumerate}
+
+After making a skim analysis of results, we decided to go through the whole list of trained results and mark down those with extremely low number of parameters, they are presented in table \ref{small_models}.
+
+\begin{table}
+    \centering
+    \rowcolors{2}{gray!25}{white}
+    \begin{tabular}{llllllllrl}
+        \textbf{Hyperparameter} & \rot{FilterNum1} & \rot{FilterNum2} & \rot{FilterNum3} & \rot{DenseSize} & \rot{DropoutRate}  &\rot{FilterSize} & \rot{LearningRate} & \rot{Number of parameters} & \rot{Accuracy[\%]}  \\\toprule
+        \textbf{Model ID} &&&&&&&&\\\toprule
+      172b & 42 & 44 &  8 & 14 & 0.1  & 3x4 & 0.0001 &  60,672 & 97.38\\
+      230b & 34 &  6 &  4 & 40 & 0.2  & 3x3 & 0.0003 &  50,606 & 97.18\\
+      265b &  6 & 46 &  6 & 24 & 0.3  & 3x3 & 0.0003 &  48,404 & 97.01\\
+      270b & 36 & 20 & 12 & 10 & 0.15 & 3x3 & 0.0003 &  45,086 & 97.01\\
+      304b & 46 &  6 & 10 & 12 & 0.2  & 3x4 & 0.0003 &  40,710 & 96.87\\
+      338b &  4 & 18 &  6 & 10 & 0.05 & 3x4 & 0.0003 &  20,290 & 96.63\\
+      454b & 10 & 14 &  8 &  6 & 0.05 & 3x4 & 0.0001 &  17,610 & 94.18\\
+      460b &  6 & 28 &  4 &  8 & 0.1  & 3x4 & 0.0003 &  13,114 & 93.60\\\bottomrule
+    \end{tabular}
+    \caption{ Partial results of second random search of hyperparameters}
+    \label{hyper_results2}
+\end{table}
 
 \subsection{ Comparison of selected, re-trained models}
-      how you will select them, 
-      an image of history (accu and loss), 
-    confusion matrix,
-    precision and recall
+    
+Two random searches gave us a large amount of different models to choose from.
+In every other ML application where the execution time would not be a constraint, we could simply take the best performing model and be done with it.
+In our case we need to make a trade off between model accuracy and execution speed.
+In order to do that we need to understand what a difference of few percents of accuracy actually means.
+
+As we are dealing with imbalanced dataset, where 82.86 \% of our validation data are elephant images, confusion matrix, precision and recall metrics\footnotemark will give us better idea how well is the model performing.
+
+\footnotetext{Precision tells us what percentage of data points in a specific predicted class actually fall into that class. Recall tells us what percentage of data points of a class were actually predicted correctly\cite{geron}.
+}
+
+For our initial comparison we chose best performing model from first search (ID 0a, accuracy 98.35 \%) and the model with the least number of parameters from second search (ID 460b, accuracy, 93.60 \%).
+Figure \ref{double_cm} shows two confusion matrices of those two models, Table \ref{double_precision} shows comparisons between precision and recall metrics.
+
+
+\begin{figure}[ht]
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=1\linewidth]{good_cm.pdf} 
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=1\linewidth]{bad_cm.pdf}
+    \end{subfigure}
+    \caption{}
+    \label{double_cm}
+\end{figure}
+
+
+\begin{table}
+    \centering
+    \begin{tabular}{ lrr}    \toprule
+        \textbf{Models}                 & Model 0a & Model 460b\\\toprule
+        \textbf{Metrics}                &&\\\toprule
+        accuracy[\%]                    & 98.18 & 93.4\\
+        number of parameters            &&\\ 
+        Precision of elephant class     & 99.22 & 97.8 \\
+        Precision of human class        & 96.92 & 80.31\\
+        Precision of cow class          & 90.99 & 69.37\\
+        Precision of nature/random class& 77.42 & 40.32\\
+        Recall of elephant class        & 99.29 & 97.39\\
+        Recall of human class           & 93.2  & 85.57\\
+        Recall of cow class             & 94.39 & 81.91\\
+        Recall of nature/random class   & 87.27 & 28.09\\
+    \end{tabular}
+    \caption{ Second hyperparameter search space}
+    \label{hyper_table2}
+\end{table}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \subsection{ Comparison with Edge Impulse model}
+
+Choose one, or few model configurations and make a model in EI.
+
 Describe how did you build Edge Impulse model, maybe mention transfer learning (might be extra work, you did not write about theory)
 
 
@@ -158,7 +290,13 @@ Describe how did you build Edge Impulse model, maybe mention transfer learning (
 
 \section{ On device performance testing}
 Describe setup
+
+To profile execution of our code we first wrote a timer driver based on a Arm's systick timer, however we later decided to use data watch trigger (DWT).
+DWT does not use interrupts, therefore it does not introduce overhead of calling interrupt routines like systick timer does.
+
+
       how are you timing, 
+
 \subsection{ Comparison of different optimization options}
 \subsection{ Comparison of performance of selected models}
     Transfer learning could be interesting here, bigger number of parameters and takes less time.
