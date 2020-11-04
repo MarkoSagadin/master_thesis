@@ -2,9 +2,9 @@
 \contentsline {section}{\numberline {1.1} Model comparisons}{2}{section.1.1}%
 \contentsline {subsection}{\numberline {1.1.1} Hyperparameter search space and results analysis}{2}{subsection.1.1.1}%
 \contentsline {subsection}{\numberline {1.1.2} Comparison of selected, re-trained models}{8}{subsection.1.1.2}%
-\contentsline {subsection}{\numberline {1.1.3} Comparison with Edge Impulse model}{9}{subsection.1.1.3}%
+\contentsline {subsection}{\numberline {1.1.3} Comparison with Edge Impulse model}{10}{subsection.1.1.3}%
 \contentsline {section}{\numberline {1.2} On device performance testing}{10}{section.1.2}%
-\contentsline {subsection}{\numberline {1.2.1} Comparison of different optimization options}{10}{subsection.1.2.1}%
-\contentsline {subsection}{\numberline {1.2.2} Comparison of performance of selected models}{10}{subsection.1.2.2}%
-\contentsline {section}{\numberline {1.3} Power profiling of an embedded early warning system}{10}{section.1.3}%
-\contentsline {subsection}{\numberline {1.3.1} Battery life estimations}{10}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.2.1} Comparison of different optimization options}{11}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2} Comparison of performance of selected models}{11}{subsection.1.2.2}%
+\contentsline {section}{\numberline {1.3} Power profiling of an embedded early warning system}{11}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1} Battery life estimations}{11}{subsection.1.3.1}%

@@ -20,6 +20,7 @@ Possible values of hyperparameters (also known as hyperparameter search space) a
 
 \begin{table}
     \centering
+    \caption{ First hyperparameter search space}
     \rowcolors{2}{white}{gray!25}
     \begin{tabular}{@{} *5l @{}}    \toprule
         \textbf{Hyperparameter} & \textbf{Set of values}\\\midrule
@@ -36,7 +37,6 @@ Possible values of hyperparameters (also known as hyperparameter search space) a
         \verb|BATCH_SIZE|       & 100\\
         \verb|MAX_TRIALS|       & 300\\\bottomrule
     \end{tabular}
-    \caption{ First hyperparameter search space}
     \label{hyper_table1}
 \end{table}
 
@@ -55,6 +55,7 @@ After it was done we compiled a list of all 300 trained models and their differe
 
 \begin{table}
     \centering
+    \caption{ Partial results of first random search of hyperparameters}
     \rowcolors{2}{gray!25}{white}
     \begin{tabular}{llllllllrl}
         \textbf{Hyperparameter} & \rot{FilterNum1} & \rot{FilterNum2} & \rot{FilterNum3} & \rot{DenseSize} & \rot{DropoutRate}  &\rot{FilterSize} & \rot{LearningRate} & \rot{Number of parameters} & \rot{Accuracy[\%]}  \\\toprule
@@ -94,7 +95,6 @@ After it was done we compiled a list of all 300 trained models and their differe
       298a & 24 & 16 & 48 & 24 & 0.5  & 3x4 & 0.0001 &   359,924 & 94.46\\
       299a & 40 & 48 & 56 & 16 & 0.35 & 3x3 & 0.0003 &   310,860 & 82.86\\\bottomrule
     \end{tabular}
-    \caption{ Partial results of first random search of hyperparameters}
     \label{hyper_results1}
 \end{table}
 
@@ -108,7 +108,7 @@ After analyzing results we came to several conclusions:
     \item We could not see any visible correlation between a specific choice of a certain hyperparameter and accuracy. This shows that selection of hyperparameters is really a non-heuristic task.
     \item Filter of size 3 x 4 did not perform significantly better compared to one with size 3 x 3. 
     \item There is a weak correlation between number of parameters (model's complexity) and accuracy. Although eight of top ten models have more then 1 million parameters, models with IDs 2 and 8 have almost half of the parameters, but still perform well.
-    \item First 200 models cover an accuracy range of 0.62 \%. However inside of this range model number of parameters varies hugely, for example, model with ID 192a has more than 8 times less parameters than model than model with ID 96a, although the difference in accuracy (0.27 \%) is negligible.
+    \item First 200 models cover an accuracy range of 0.62 \%. However inside of this range model number of parameters varies hugely, for example, model with ID \textit{192a} has more than 8 times less parameters than model than model with ID \textit{96a}, although the difference in accuracy (0.27 \%) is negligible.
 \end{enumerate}
 
 As we realized that we do not need complex models to achieve high accuracy on our training data, we decided to run the random search of hyperparameters again.
@@ -121,6 +121,7 @@ We increased the number of \verb|MAX_TRIALS| from 300 to 500, as we were expecti
 
 \begin{table}
     \centering
+    \caption{ Second hyperparameter search space}
     \rowcolors{2}{white}{gray!25}
     \begin{tabular}{@{} *5l @{}}    \toprule
         \textbf{Hyperparameter} & \textbf{Set of values}\\\midrule
@@ -137,7 +138,6 @@ We increased the number of \verb|MAX_TRIALS| from 300 to 500, as we were expecti
         \verb|BATCH_SIZE|       & 100\\
         \verb|MAX_TRIALS|       & 500\\\bottomrule
     \end{tabular}
-    \caption{ Second hyperparameter search space}
     \label{hyper_table2}
 \end{table}
 
@@ -145,6 +145,7 @@ Partial table of results of random hyperparameter search can be seen in Table \r
 
 \begin{table}
     \centering
+    \caption{ Partial results of second random search of hyperparameters}
     \rowcolors{2}{gray!25}{white}
     \begin{tabular}{llllllllrl}
         \textbf{Hyperparameter} & \rot{FilterNum1} & \rot{FilterNum2} & \rot{FilterNum3} & \rot{DenseSize} & \rot{DropoutRate}  &\rot{FilterSize} & \rot{LearningRate} & \rot{Number of parameters} & \rot{Accuracy[\%]}  \\\toprule
@@ -180,7 +181,6 @@ Partial table of results of random hyperparameter search can be seen in Table \r
       498b &  4 &  4 & 20 & 12 & 0.4  & 3x3 & 0.0003 &  72,992 & 82.86\\
       499b & 32 & 36 & 36 &  4 & 0.15 & 3x3 & 0.0001 &  65,648 & 82.86\\\bottomrule
     \end{tabular}
-    \caption{ Partial results of second random search of hyperparameters}
     \label{hyper_results2}
 \end{table}
 
@@ -189,13 +189,14 @@ Some observations:
     \item We can see that the accuracy of the best model 0b compared to the best model 0a from previous search is only 0.21 \% lower, although it has about 5 times less parameters.
     \item Although that it might seem that \verb|FilterSize| of 3 x 4 yields best results, we did not saw a strong bias towards on or another option after manually analyzing best 30 models.
     \item We can see that worst five models have the same accuracy of 82.86 \%, same as the worst performing model from first random search. There are 82.86 \% images of elephants in validation class, which means that model probably assigned all validation images to elephant class and was satisfied with achieved accuracy.
-    \item We can see that the model with ID 296b has quite low number of parameters, only 65,740.
+    \item We can see that the model with ID \textit{296b} has quite low number of parameters, only 65,740.
 \end{enumerate}
 
-After making a skim analysis of results, we decided to go through the whole list of trained results and mark down those with extremely low number of parameters, they are presented in table \ref{small_models}.
+After making a skim analysis of results, we decided to go through the whole list of trained results and mark down those with extremely low number of parameters, which can be seen in Table \ref{small_models}.
 
 \begin{table}
     \centering
+    \caption{ Partial results of second random search of hyperparameters}
     \rowcolors{2}{gray!25}{white}
     \begin{tabular}{llllllllrl}
         \textbf{Hyperparameter} & \rot{FilterNum1} & \rot{FilterNum2} & \rot{FilterNum3} & \rot{DenseSize} & \rot{DropoutRate}  &\rot{FilterSize} & \rot{LearningRate} & \rot{Number of parameters} & \rot{Accuracy[\%]}  \\\toprule
@@ -209,7 +210,6 @@ After making a skim analysis of results, we decided to go through the whole list
       454b & 10 & 14 &  8 &  6 & 0.05 & 3x4 & 0.0001 &  17,610 & 94.18\\
       460b &  6 & 28 &  4 &  8 & 0.1  & 3x4 & 0.0003 &  13,114 & 93.60\\\bottomrule
     \end{tabular}
-    \caption{ Partial results of second random search of hyperparameters}
     \label{hyper_results2}
 \end{table}
 
@@ -217,17 +217,51 @@ After making a skim analysis of results, we decided to go through the whole list
     
 Two random searches gave us a large amount of different models to choose from.
 In every other ML application where the execution time would not be a constraint, we could simply take the best performing model and be done with it.
-In our case we need to make a trade off between model accuracy and execution speed.
-In order to do that we need to understand what a difference of few percents of accuracy actually means.
+In our case we need to make a trade off between model's accuracy and execution speed.
 
-As we are dealing with imbalanced dataset, where 82.86 \% of our validation data are elephant images, confusion matrix, precision and recall metrics\footnotemark will give us better idea how well is the model performing.
+For comparison and later on device performance testing we decided to pick and retrain\footnotemark 6 different models: \textit{0a}, \textit{2a}, \textit{0b}, \textit{172b}, \textit{338b} and \textit{460b}.
+We chose the models on purpose to vary greatly in number of parameters, as we expected that this will have important effect on the inference time. 
 
-\footnotetext{Precision tells us what percentage of data points in a specific predicted class actually fall into that class. Recall tells us what percentage of data points of a class were actually predicted correctly\cite{geron}.
-}
+\footnotetext{Retraining was required as Keras Tuner module only saved hyperparameter settings during search and not each trained model.
+As the weights are initially randomized accuracy of retrained models is going to be similar but not exact when compared to the accuracy returned by random search.}
 
-For our initial comparison we chose best performing model from first search (ID 0a, accuracy 98.35 \%) and the model with the least number of parameters from second search (ID 460b, accuracy, 93.60 \%).
-Figure \ref{double_cm} shows two confusion matrices of those two models, Table \ref{double_precision} shows comparisons between precision and recall metrics.
+As we are dealing with imbalanced dataset, where 82.86 \% of our validation data consists of elephant images, accuracy is not the best metric to use when comparing models.
+Precision and recall metrics\footnotemark can give us better idea how well the models are performing, results can bee seen in Table \ref{precision_recall_table}.
 
+\footnotetext{Precision tells us what percentage of data points in a specific predicted class actually fall into that class.
+Recall tells us what percentage of data points inside a certain class were actually predicted correctly\cite{geron}.}
+
+\begin{table}
+    \centering
+    \caption{ Second hyperparameter search space}
+    \rowcolors{2}{gray!25}{white}
+    \begin{tabular}{ lrrrrrrrrr}\toprule
+        \textbf{Models}                 & 0a & 2a & 0b & 172b & 338b & 460b\\\toprule
+        \textbf{Metrics}                &&&&&\\\toprule
+        accuracy[\%]                    & 98.18     & 98.04   & 98.04   & 96.80  & 96.28  & 93.4  \\
+        number of parameters            & 1,515,404 & 656,797 & 304,216 & 60,672 & 20,290 & 13,114\\ 
+        Precision of elephant class     & 99.22     & 99.46   & 99.25   & 99.29  & 98.8   & 97.8 \\
+        Precision of human class        & 96.92     & 95.38   & 95.38   & 92.0   & 91.69  & 80.31\\
+        Precision of cow class          & 90.99     & 93.69   & 90.09   & 84.68  & 75.68  & 69.37\\
+        Precision of nature/random class& 77.42     & 64.52   & 79.03   & 46.77  & 59.68  & 40.32\\
+        Recall of elephant class        & 99.29     & 98.8    & 98.84   & 97.87  & 98.43  & 97.39\\
+        Recall of human class           & 93.2      & 94.51   & 95.09   & 91.44  & 89.22  & 85.57\\
+        Recall of cow class             & 94.39     & 92.04   & 96.15   & 89.52  & 84.0   & 81.91\\
+        Recall of nature/random class   & 87.27     & 97.56   & 84.48   & 93.55  & 67.27  & 28.09\\\bottomrule
+    \end{tabular}
+    \label{precision_recall_table}
+\end{table}
+
+As we can see all six models are generally classifying elephants correctly, both precision and recall of elephant class are high, above 97 \%, which is important.
+Precision and recall values of other classes are generally lower, especially of nature/random.
+We can see that top three models \textit{0a}, \textit{2a} and \textit{0b} are quite similar in terms of precision and recall, which means that we can easily choose \textit{0b}, without penalising accuracy. 
+Models \textit{172b} and \textit{338b} perform a bit worse when compared to top three models however they have low number of parameters which translates to lower inference time.
+Last model, \textit{460b}, performs the worst and it should not generally be used.
+
+Another way to compare models performance is to look at confusion matrix graphs.
+Figure \ref{double_cm} shows comparison between confusion matrices of \textit{0a} model on the left and \textit{460b} model on the right.
+In case of \textit{0a} 19 elephant images were not classified correctly, and 17 images were wrongly classified as elephants.
+This is not ideal, however is much better compared to performance of \textit{460b}, where 53 elephants were wrongly classified and 63 of images classified as elephants, were not actually elephants.
 
 \begin{figure}[ht]
     \begin{subfigure}{0.5\textwidth}
@@ -238,45 +272,9 @@ Figure \ref{double_cm} shows two confusion matrices of those two models, Table \
         \centering
         \includegraphics[width=1\linewidth]{bad_cm.pdf}
     \end{subfigure}
-    \caption{}
+    \caption{Confusion matrices of \textit{0a} model (left) and \textit{460b} model (right)}
     \label{double_cm}
 \end{figure}
-
-
-\begin{table}
-    \centering
-    \begin{tabular}{ lrr}    \toprule
-        \textbf{Models}                 & Model 0a & Model 460b\\\toprule
-        \textbf{Metrics}                &&\\\toprule
-        accuracy[\%]                    & 98.18 & 93.4\\
-        number of parameters            &&\\ 
-        Precision of elephant class     & 99.22 & 97.8 \\
-        Precision of human class        & 96.92 & 80.31\\
-        Precision of cow class          & 90.99 & 69.37\\
-        Precision of nature/random class& 77.42 & 40.32\\
-        Recall of elephant class        & 99.29 & 97.39\\
-        Recall of human class           & 93.2  & 85.57\\
-        Recall of cow class             & 94.39 & 81.91\\
-        Recall of nature/random class   & 87.27 & 28.09\\
-    \end{tabular}
-    \caption{ Second hyperparameter search space}
-    \label{hyper_table2}
-\end{table}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 \subsection{ Comparison with Edge Impulse model}
