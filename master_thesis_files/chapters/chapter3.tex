@@ -279,27 +279,27 @@ Exact configuration of Keras Tuner module and comparison of trained models is pr
     \begin{lstlisting}[language=Python]
         model = models.Sequential()
 
-        model.add(Conv2D(filter_num_1, filter_size, 
+        model.add(Conv2D(FilterNum1, FilterSize, 
                          activation='relu', 
                          padding="same", 
                          input_shape=(60,80, 1)))
 
         model.add(MaxPooling2D((2, 2)))
 
-        model.add(Conv2D(filter_num_2, filter_size, 
+        model.add(Conv2D(FilterNum2, FilterSize, 
                          activation='relu', 
                          padding="same")
 
         model.add(MaxPooling2D((2, 2)))
 
-        model.add(Conv2D(filter_num_3, filter_size, 
+        model.add(Conv2D(FilterNum3, FilterSize, 
                          activation='relu', 
                          padding="same")
 
         model.add(Flatten())
 
-        model.add(Dense(dense_size, activation='relu'))
-        model.add(Dropout(dropout_rate))
+        model.add(Dense(DenseSize, activation='relu'))
+        model.add(Dropout(DropoutRate))
         model.add(Dense(4), activation='softmax')
     \end{lstlisting}
     \caption{ CNN architecture written in Python using Keras Sequential API.}
@@ -367,7 +367,7 @@ Edge Impulse also does conversion to an optimized full-integer model automatical
 \begin{figure}[ht]
     \centering
     \includegraphics[width=1.0\linewidth]{edge_impulse_screenshot2.png} 
-    \caption{After training training performance report.}
+    \caption{ Training performance report.}
     \label{edge_impulse_screenshot2}
 \end{figure}
 

@@ -279,6 +279,18 @@ This is not ideal, however is much better compared to performance of \textit{460
 
 \subsection{ Comparison with Edge Impulse model}
 
+Epoch number was 15 to avoid long training times.
+Edge impulse model data
+0a
+1,168,804
+
+2a
+503,196
+
+0b
+231,204
+
+
 Choose one, or few model configurations and make a model in EI.
 
 Describe how did you build Edge Impulse model, maybe mention transfer learning (might be extra work, you did not write about theory)
@@ -295,6 +307,26 @@ DWT does not use interrupts, therefore it does not introduce overhead of calling
 
       how are you timing, 
 
+
+
+\begin{table}
+    \centering
+    \caption{ Second hyperparameter search space}
+    \rowcolors{2}{gray!25}{white}
+    \begin{tabular}{ lrrrrrrrrr}\toprule
+        \textbf{Models}                 &        0a &      2a &      0b &   172b &   338b &   460b &   fast_model\\\toprule
+        \textbf{Metrics}                &&&&&\\\toprule
+        accuracy[\%]                    &     98.18 &   98.04 &   98.04 &  96.80 &  96.28 &   93.4 &    N/A\\
+        number of parameters            &       N/A & 656,797 & 304,216 & 60,672 & 20,290 & 13,114 &    N/A\\ 
+        used flash (in bytes)           &       N/A &  799640 &  445736 & 202424 & 159720 & 152920 & 499592\\ 
+        used ram   (in bytes)           &       N/A &  257032 &  271656 & 260936 &  31704 &  47440 & 198512\\ 
+        time of inference               &       N/A &   403ms &   228ms &  354ms &   51ms &   69ms &    173\\ 
+    \end{tabular}
+    \label{precision_recall_table}
+\end{table}
+
+
+
 \subsection{ Comparison of different optimization options}
 \subsection{ Comparison of performance of selected models}
     Transfer learning could be interesting here, bigger number of parameters and takes less time.
@@ -305,6 +337,13 @@ DWT does not use interrupts, therefore it does not introduce overhead of calling
 
 
 \section{ Power profiling of an embedded early warning system}
+
+To write this section you need to:
+ - wirte uart communication channel for zephyr and your system, has to be simple dont lose time on this.
+ - Basic parsing of results and packing them into lora payload
+ - Zephyr, put system to sleep and wake it up with pir, turn on fet.
+ - Make an image with flir and do inference on it, (subtract mean image, you could test this on real dataset, without subtracted mean)
+
 - [ ] Power consumption test of whole setup, 
       PIR wakes up wisent, 
       wisent turns on stm32f7 and flir, 

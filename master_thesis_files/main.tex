@@ -30,6 +30,8 @@
 \usepackage{array}
 \usepackage{xparse}   % http://ctan.org/pkg/xparse
 \usepackage[super]{nth}         % For adding th to numbers
+\usepackage{microtype}          % For converting from pdf to word
+\DisableLigatures[Q,q,f,l,t,i]{}
 
 \setlength{\mathindent}{2cm}    % Indent equations 2cm from text edge
 \setcounter{tocdepth}{4}        % Table of content goes to 4th level
@@ -136,21 +138,22 @@
 %\listoffigures
 
 
-%\chapter{ Introduction}
-%\pagenumbering{arabic}
-%\input{chapters/chapter1}
-%
-%\chapter{ Theoretical description of system building blocks}
-%\input{chapters/chapter2}
-%
-%\chapter{ Neural network model design}
-%\input{chapters/chapter3}
+\chapter{ Introduction}
+\pagenumbering{arabic}
+\input{chapters/chapter1}
+
+\chapter{ Theoretical description of system building blocks}
+\input{chapters/chapter2}
+
+\chapter{ Neural network model design}
+\input{chapters/chapter3}
+
 %
 %\chapter{ Planning and design of early warning system}
 %\input{chapters/chapter4}
 
-\chapter{ Measurements and results}
-\input{chapters/chapter5}
+%\chapter{ Measurements and results}
+%\input{chapters/chapter5}
 
 % Include bibliograpfy and justify it right. Use myunsrt biblio style.
 \begingroup

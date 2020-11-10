@@ -100,7 +100,7 @@ To create a final embedded system with on device machine learning, Arribada chos
 
 Today machine learning (ML) is present in many products that we use on daily basis.
 It can be found in email spam detection, recommendation algorithms on Facebook and YouTube, speech recognition on smartphones and medical applications.
-ML can help us solve problems that hard to solve by conventional methods.
+ML can help us solve problems that are hard to solve by conventional methods.
 For example, to develop an email spam detector, programmer would have write a program that would scan the content of an email while checking for the common words, phrases that appear in spam emails and flag the email as spam if they would be found.
 This would take several iterative cycles of writing the rules, evaluating the solution and analyzing the possible mistakes. 
 Even if possible deterministic solution would be made, it would not stand the test of time, as new forms of spam emails would emerge, tricking the system.
@@ -120,26 +120,27 @@ Using a ML approach we can train the algorithm on a image dataset and let it fig
 
 Since ML algorithms are at it's core normal math operations, they can be implemented (although might not efficiently) in any programming language and on any hardware platform from scratch.
 However to avoid reinventing the wheel and wasting the time on algorithm optimization, it is more logical to use one of ML frameworks.
-Frameworks such as scikit-learn, Keras, Caffe and TensorFlow enable programmers to write application code in high level language such as Python, which at run time translates to efficient C/C++ code. 
+Frameworks such as scikit-learn, Keras, Caffe and TensorFlow enable programmers to write application code in a high level language such as Python, which at run time translates to efficient C/C++ code. 
 These frameworks abstract away low-level details of ML algorithms, enabling programmers to deal only with application code and not its underlying implementation.
 
 In several past years there has been a growing desire to expand ML applications to embedded devices.
-Running ML algorithms directly on microcontrollers has benefits and challenges, compared to on computers and servers, this will be further described in section \ref{ml_on_embedded}.
+Running ML algorithms directly on microcontrollers has benefits and challenges compared to running it on computers and servers
+This comaparisions are further described in section \ref{ml_on_embedded}.
 There are several frameworks, proprietary and open-sourced, that can be used to develop ML applications on microcontrollers.
-STMicroelectronics created X-CUBE-AI, tool that converts the pre-trained model created by one of the various Deep Learning frameworks into an optimized library. 
+STMicroelectronics created X-CUBE-AI, a tool that converts the pre-trained model created by one of the various Deep Learning frameworks into an optimized library. 
 X-CUBE-AI works only with STM32 microcontrollers and is proprietary.
 Another framework, TensorFlow Lite for microcontrollers, was created as an extension of TensorFlow Lite, which was used to develop ML models for mobile applications.
 It provides converter tools and C++ implementations of common ML operations.
 In year 2019 another framework, \si{\micro}Tensor, was merged with TensorFlow Lite, providing it with support for efficient CMSIS-NN library developed by ARM.
 
-For this thesis TensorFlow Lite for microcontrollers will be used. 
-It can be used with any family of microcontrollers and is open-source so we can study it's internal code.
+For this thesis we used TensorFlow Lite for microcontrollers.
+It can be used with any family of microcontrollers and is open-source so we can study its internal code.
 
 
 \subsection{ Edge Impulse}
 
 Regardless of many Ml frameworks on the market, companies that specialise in ML on embedded devices are scarce.
-One of them is Edge Impulse, recently founded company, from San Jose, USA.
+One of them is Edge Impulse, which was recently founded company in San Jose, USA.
 They provide users with end to end web solution for developing ML applications for embedded devices.
 Instead of designing and writing specific programs that deal with preprocessing of training data and creation and training of ML models, Edge Impulse does this automatically for their customers.
 After the ML model is created and converted into optimized format for embedded systems, customers get immediate first approximation how much RAM and FLASH memory will model take and how fast it will run.
