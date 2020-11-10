@@ -1,63 +1,50 @@
-<<<<<<< HEAD
 \contentsline {chapter}{\numberline {1} Introduction}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1} Motivation}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2} Early detection system}{3}{section.1.2}%
-\contentsline {section}{\numberline {1.3} IRNAS and Arribada Initiative}{4}{section.1.3}%
-\contentsline {section}{\numberline {1.4} Reasoning for machine learning approach}{5}{section.1.4}%
-\contentsline {subsection}{\numberline {1.4.1} Implementation of machine learning algorithms}{6}{subsection.1.4.1}%
+\contentsline {section}{\numberline {1.3} IRNAS and the Arribada Initiative}{4}{section.1.3}%
+\contentsline {section}{\numberline {1.4} Reasoning for the Machine Learning approach}{5}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1} Implementation of Machine Learning algorithms}{6}{subsection.1.4.1}%
 \contentsline {subsection}{\numberline {1.4.2} Edge Impulse}{6}{subsection.1.4.2}%
 \contentsline {section}{\numberline {1.5} Objective}{7}{section.1.5}%
 \contentsline {section}{\numberline {1.6} Master's thesis outline}{8}{section.1.6}%
 \contentsline {chapter}{\numberline {2} Theoretical description of system building blocks}{9}{chapter.2}%
-\contentsline {section}{\numberline {2.1} Machine learning}{9}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1} General machine learning workflow}{10}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2} Machine learning on embedded devices}{11}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.1} Machine Learning}{9}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1} General Machine Learning workflow}{10}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2} Machine Learning on embedded devices}{11}{subsection.2.1.2}%
 \contentsline {section}{\numberline {2.2} Neural networks}{13}{section.2.2}%
 \contentsline {subsection}{\numberline {2.2.1} Activation functions}{14}{subsection.2.2.1}%
 \contentsline {subsection}{\numberline {2.2.2} Backpropagation}{15}{subsection.2.2.2}%
-\contentsline {subsection}{\numberline {2.2.3} Convolutional neural networks}{16}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.3} Convolutional Neural Networks}{16}{subsection.2.2.3}%
 \contentsline {subsubsection}{\numberline {2.2.3.1} Convolutional layers}{17}{subsubsection.2.2.3.1}%
 \contentsline {subsubsection}{\numberline {2.2.3.2} Pooling layers}{19}{subsubsection.2.2.3.2}%
-\contentsline {section}{\numberline {2.3} TensorFlow}{19}{section.2.3}%
+\contentsline {section}{\numberline {2.3} TensorFlow}{20}{section.2.3}%
 \contentsline {subsection}{\numberline {2.3.1} TensorFlow Lite for Microcontrollers}{21}{subsection.2.3.1}%
-\contentsline {subsubsection}{\numberline {2.3.1.1} Post-training quantization}{22}{subsubsection.2.3.1.1}%
+\contentsline {subsubsection}{\numberline {2.3.1.1} Post-training quantization}{23}{subsubsection.2.3.1.1}%
 \contentsline {section}{\numberline {2.4} IoT and wireless technologies}{23}{section.2.4}%
 \contentsline {subsection}{\numberline {2.4.1} LoRa and LoRaWAN}{24}{subsection.2.4.1}%
 \contentsline {section}{\numberline {2.5} Thermal cameras}{26}{section.2.5}%
-\contentsline {subsection}{\numberline {2.5.1} Choosing the thermal camera}{28}{subsection.2.5.1}%
-\contentsline {chapter}{\numberline {3} Neural network model design}{31}{chapter.3}%
-\contentsline {section}{\numberline {3.1} Model objectives}{31}{section.3.1}%
-\contentsline {section}{\numberline {3.2} Tools and development environment}{33}{section.3.2}%
-\contentsline {section}{\numberline {3.3} Creating the dataset}{34}{section.3.3}%
-\contentsline {section}{\numberline {3.4} Exploring the dataset}{36}{section.3.4}%
-\contentsline {section}{\numberline {3.5} Image preprocessing}{39}{section.3.5}%
-\contentsline {section}{\numberline {3.6} Model creation and training}{41}{section.3.6}%
-\contentsline {section}{\numberline {3.7} Model optimization}{43}{section.3.7}%
-\contentsline {section}{\numberline {3.8} Neural network model design in Edge Impulse Studio}{44}{section.3.8}%
-=======
-\contentsline {chapter}{\numberline {1} Planning and design of early warning system}{3}{chapter.1}%
-\contentsline {section}{\numberline {1.1} Hardware}{4}{section.1.1}%
-\contentsline {subsection}{\numberline {1.1.1} Nucleo-F767ZI}{5}{subsection.1.1.1}%
-\contentsline {subsection}{\numberline {1.1.2} Wisent Edge tracker}{5}{subsection.1.1.2}%
-\contentsline {subsection}{\numberline {1.1.3} Flir Lepton 2.5 camera module and Lepton breakout board}{7}{subsection.1.1.3}%
-\contentsline {subsection}{\numberline {1.1.4} PIR Sensor}{10}{subsection.1.1.4}%
-\contentsline {section}{\numberline {1.2} Firmware}{10}{section.1.2}%
-\contentsline {subsection}{\numberline {1.2.1} Tools and development environment}{10}{subsection.1.2.1}%
-\contentsline {subsubsection}{\numberline {1.2.1.1} Development environment for STM32f767ZI}{10}{subsubsection.1.2.1.1}%
-\contentsline {subsubsection}{\numberline {1.2.1.2} Development environment for NRF52840}{10}{subsubsection.1.2.1.2}%
-\contentsline {subsection}{\numberline {1.2.2} Architecture design}{11}{subsection.1.2.2}%
-\contentsline {subsection}{\numberline {1.2.3} MicroML and build system}{12}{subsection.1.2.3}%
-\contentsline {subsection}{\numberline {1.2.4} Running inference on a microcontroller}{16}{subsection.1.2.4}%
-\contentsline {subsection}{\numberline {1.2.5} Wisent board control firmware}{17}{subsection.1.2.5}%
-\contentsline {section}{\numberline {1.3} Server side components and software}{17}{section.1.3}%
-\contentsline {chapter}{\numberline {2} Measurements and results}{22}{chapter.2}%
-\contentsline {section}{\numberline {2.1} Model comparisons}{22}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1} Hyperparameter search space and results analysis}{22}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2} Comparison of selected, re-trained models}{28}{subsection.2.1.2}%
-\contentsline {subsection}{\numberline {2.1.3} Comparison with Edge Impulse model}{30}{subsection.2.1.3}%
-\contentsline {section}{\numberline {2.2} On device performance testing}{30}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1} Comparison of different optimization options}{31}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2} Comparison of performance of selected models}{31}{subsection.2.2.2}%
-\contentsline {section}{\numberline {2.3} Power profiling of an embedded early warning system}{31}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1} Battery life estimations}{31}{subsection.2.3.1}%
->>>>>>> 94cdcec0023a94be8917cfb73f1fd9dfcafee256
+\contentsline {subsection}{\numberline {2.5.1} Choosing the thermal camera}{29}{subsection.2.5.1}%
+\contentsline {chapter}{\numberline {3} Neural network model design}{32}{chapter.3}%
+\contentsline {section}{\numberline {3.1} Model objectives}{32}{section.3.1}%
+\contentsline {section}{\numberline {3.2} Tools and development environment}{34}{section.3.2}%
+\contentsline {section}{\numberline {3.3} Creating the dataset}{35}{section.3.3}%
+\contentsline {section}{\numberline {3.4} Exploring the dataset}{37}{section.3.4}%
+\contentsline {section}{\numberline {3.5} Image preprocessing}{40}{section.3.5}%
+\contentsline {section}{\numberline {3.6} Model creation and training}{42}{section.3.6}%
+\contentsline {section}{\numberline {3.7} Model optimization}{44}{section.3.7}%
+\contentsline {section}{\numberline {3.8} Neural network model design in Edge Impulse Studio}{45}{section.3.8}%
+\contentsline {chapter}{\numberline {4} Planning and design of early warning system}{48}{chapter.4}%
+\contentsline {section}{\numberline {4.1} Hardware}{49}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1} Nucleo-F767ZI}{50}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2} Wisent Edge tracker}{50}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3} Flir Lepton 2.5 camera module and Lepton breakout board}{52}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4} PIR Sensor}{55}{subsection.4.1.4}%
+\contentsline {section}{\numberline {4.2} Firmware}{55}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1} Tools and development environment}{55}{subsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.1.1} Development environment for STM32f767ZI}{55}{subsubsection.4.2.1.1}%
+\contentsline {subsubsection}{\numberline {4.2.1.2} Development environment for NRF52840}{55}{subsubsection.4.2.1.2}%
+\contentsline {subsection}{\numberline {4.2.2} Architecture design}{56}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3} MicroML and build system}{57}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4} Running inference on a microcontroller}{61}{subsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.2.5} Wisent board control firmware}{62}{subsection.4.2.5}%
+\contentsline {section}{\numberline {4.3} Server side components and software}{62}{section.4.3}%
