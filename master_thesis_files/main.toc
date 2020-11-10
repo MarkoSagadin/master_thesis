@@ -1,10 +1,25 @@
-\contentsline {chapter}{\numberline {1} Measurements and results}{2}{chapter.1}%
-\contentsline {section}{\numberline {1.1} Model comparisons}{2}{section.1.1}%
-\contentsline {subsection}{\numberline {1.1.1} Hyperparameter search space and results analysis}{2}{subsection.1.1.1}%
-\contentsline {subsection}{\numberline {1.1.2} Comparison of selected, re-trained models}{8}{subsection.1.1.2}%
-\contentsline {subsection}{\numberline {1.1.3} Comparison with Edge Impulse model}{10}{subsection.1.1.3}%
-\contentsline {section}{\numberline {1.2} On device performance testing}{10}{section.1.2}%
-\contentsline {subsection}{\numberline {1.2.1} Comparison of different optimization options}{11}{subsection.1.2.1}%
-\contentsline {subsection}{\numberline {1.2.2} Comparison of performance of selected models}{11}{subsection.1.2.2}%
-\contentsline {section}{\numberline {1.3} Power profiling of an embedded early warning system}{11}{section.1.3}%
-\contentsline {subsection}{\numberline {1.3.1} Battery life estimations}{11}{subsection.1.3.1}%
+\contentsline {chapter}{\numberline {1} Planning and design of early warning system}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1} Hardware}{4}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1} Nucleo-F767ZI}{5}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2} Wisent Edge tracker}{5}{subsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.1.3} Flir Lepton 2.5 camera module and Lepton breakout board}{7}{subsection.1.1.3}%
+\contentsline {subsection}{\numberline {1.1.4} PIR Sensor}{10}{subsection.1.1.4}%
+\contentsline {section}{\numberline {1.2} Firmware}{10}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1} Tools and development environment}{10}{subsection.1.2.1}%
+\contentsline {subsubsection}{\numberline {1.2.1.1} Development environment for STM32f767ZI}{10}{subsubsection.1.2.1.1}%
+\contentsline {subsubsection}{\numberline {1.2.1.2} Development environment for NRF52840}{10}{subsubsection.1.2.1.2}%
+\contentsline {subsection}{\numberline {1.2.2} Architecture design}{11}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3} MicroML and build system}{12}{subsection.1.2.3}%
+\contentsline {subsection}{\numberline {1.2.4} Running inference on a microcontroller}{16}{subsection.1.2.4}%
+\contentsline {subsection}{\numberline {1.2.5} Wisent board control firmware}{17}{subsection.1.2.5}%
+\contentsline {section}{\numberline {1.3} Server side components and software}{17}{section.1.3}%
+\contentsline {chapter}{\numberline {2} Measurements and results}{22}{chapter.2}%
+\contentsline {section}{\numberline {2.1} Model comparisons}{22}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1} Hyperparameter search space and results analysis}{22}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2} Comparison of selected, re-trained models}{28}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3} Comparison with Edge Impulse model}{30}{subsection.2.1.3}%
+\contentsline {section}{\numberline {2.2} On device performance testing}{30}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1} Comparison of different optimization options}{31}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2} Comparison of performance of selected models}{31}{subsection.2.2.2}%
+\contentsline {section}{\numberline {2.3} Power profiling of an embedded early warning system}{31}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1} Battery life estimations}{31}{subsection.2.3.1}%
