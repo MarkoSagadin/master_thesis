@@ -37,6 +37,7 @@
 \setcounter{tocdepth}{4}        % Table of content goes to 4th level
 \setcounter{secnumdepth}{4}     % Same here
 \frenchspacing                  % One space after period dot
+\interfootnotelinepenalty=10000 % Prevent automatic split of footnotes 
 
 % Custom styling according to Feri guide lines
 \def\poglavje{\fontsize{18}{18}\selectfont}
@@ -138,17 +139,16 @@
 %\listoffigures
 
 
-\chapter{ Introduction}
-\pagenumbering{arabic}
-\input{chapters/chapter1}
-
-\chapter{ Theoretical description of system building blocks}
-\input{chapters/chapter2}
-
-\chapter{ Neural network model design}
-\input{chapters/chapter3}
-
+%\chapter{ Introduction}
+%\pagenumbering{arabic}
+%\input{chapters/chapter1}
 %
+%\chapter{ Theoretical description of system building blocks}
+%\input{chapters/chapter2}
+%
+%\chapter{ Neural Network model design}
+%\input{chapters/chapter3}
+
 \chapter{ Planning and design of early warning system}
 \input{chapters/chapter4}
 
