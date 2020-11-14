@@ -332,7 +332,7 @@ Each model was then processed with the xxd tool and pairs of .c and .h files wer
 
 \section{ Neural Network model design in Edge Impulse Studio}
 
-Designing a Neural Network with Edge Impulse is a much less involved process than the one we described above, as many of the steps of image preprocessing are automated.
+Designing a Neural Network with Edge Impulse is a much less involved process than the one we described above, because many steps of image preprocessing are automated.
 To start with NN design, we first had to upload our image data to the Edge Impulse Studio project.
 This can be done either by connecting an S3 bucket\footnotemark with data with the Edge Impulse account, and transferring data to a specific project or by using the Edge Impulse command-line tools to upload image data from a computer directly to a project.
 We chose the S3 bucket approach, as once the data was uploaded it was trivial to transfer it to different projects.
@@ -340,9 +340,10 @@ We chose the S3 bucket approach, as once the data was uploaded it was trivial to
 \footnotetext{Simple Storage Service or S3 is another service provided by Amazon, used for storing a large amount of data in the cloud.}
 
 After the data were uploaded, the rest of the NN design was done through the Edge Impulse web interface.
-In Figure \ref{edge_impulse_screenshot} we can see the so-called Impulse Design tab, where we design by selecting different blocks.
+In Figure \ref{edge_impulse_screenshot} we can see the so-called Impulse Design tab, where we design a Neural Network by choosing different blocks.
 With input blocks, we tell what kind of data are we inputting, either image or time-series data, and with processing blocks we decide how are we going to extract features.
-With learning block, we can choose to use a Neural Network provided by Keras, an anomaly detection algorithm, or a pre-trained model for transfer learning.
+Input and preprocessing blocks always return same output given the same input, while learning blocks are trainable and learn from previous experiences.
+For learning block, we can choose to use a Neural Network provided by Keras, an anomaly detection algorithm, or a pre-trained model for transfer learning.
 
 \begin{figure}[ht]
     \centering
@@ -352,13 +353,14 @@ With learning block, we can choose to use a Neural Network provided by Keras, an
 \end{figure}
 
 Since we were training with image data, we selected an image input block. As Edge Impulse did not support images of different image ratios at the time, we had to crop our images to 60 x 60 pixels.
-For the processing block, we selected the image processing block as this was the only possible choice, and for the learning block, we selected Keras's Neural Network block.
+For the processing block, we selected the image processing block as this was the only possible choice.
+For the learning block we were using both Keras's Neural Network block and Transfer Learning block.
 
-Neural Network block is configurable.
+Both of the blocks are configurable.
 We could either define our network with different blocks representing layers, or switch to the text editor with Keras Sequential API code, where we could make our adjustments.
 Settings such as learning rate, number of epochs, and confidence rating are also available, regardless of the option we chose.
 Training of Neural Networks inside Edge Impulse Studio is done in a cloud, so as users we do not have to worry about setting up a development environment.
-We only had to start it and wait for it to finish.
+We only have to start it and wait for it to finish.
 
 After training was done, Edge Impulse showed how well the model was performing on the validation data, how much flash and RAM would it need, and approximately how long on-device inference would take, based on the frequency and the processor of the microcontroller.
 

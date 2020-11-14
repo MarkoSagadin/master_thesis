@@ -192,7 +192,7 @@ Gradient Descent is not only used when training neural networks but also when tr
 We do not have to execute a backpropagation algorithm for each training instance, instead, we can calculate predictions for a small set of training data, calculate the average loss function and then apply backpropagation.
 
 
-\subsection{ Convolutional Neural Networks}
+\subsection{ Convolutional Neural Networks}\label{cnn_para}
 
 Convolutional Neural Networks (CNN) are a kind of Neural Networks that work especially well with image data.
 Like NNs they have found inspiration in nature, in their case the visual cortex of the brain.\footnotemark
@@ -304,6 +304,36 @@ Pooling is done on each depth slice separately from other slices, so depth size 
 It is common to select pool size 2 x 2 and stride 2.
 Like this, inputs are downsampled by two in height and width dimensions, discarding 75 \% of activations.
 Pooling layers therefore reduce the number of activations, and prepare them to be flattened out and fed into a fully connected layer.
+
+\section{ Transfer Learning}\label{transfer_para}
+
+Transfer Learning is a ML technique, which transfers knowledge that was learned on one problem, to another, similar problem.
+
+We mentioned earlier in Section \ref{cnn_para} that CNNs learn in first few layers how to detect simple shapes, like edges and lines, which are in later layers used to detect boxes, circles, faces and so on. 
+This behavior is not limited only to CNNs, but to all DNNs.
+
+The task of detecting simple shapes in first few layers of DNNs can be common between models that are trying to solve a similar problem.
+Example would be a model classifying images depicting different types of objects and a model classifying images with different types of animals.
+First model is trying to solve a more general problem than the seconds one, however, the learned weights in first few layers from first model can be reused in the second model.
+
+And this is exactly what Transfer Learning is all about, it is possible to train a big, complex model on a large dataset and then reuse first few layers in a different model.
+Example Transfer learning is shown in Figure \ref{transfer_learning}.
+It is important to note that the weights of transferred layers are fixed, they are not being trained.
+
+\begin{figure}[ht] 
+    \centering
+    \includegraphics[width=0.75\linewidth]{transfer_learning.png} 
+    \caption[Transfer Learning.] {Transfer Learning. Image source: \cite{geron}}
+    \label{transfer_learning}
+\end{figure}
+
+Benefits of using Transfer learning are listed below:
+
+\begin{itemize}
+    \item \textb{Shorter training time.} Using a pre-trained model with fixed weights and adding few trainable layers on its top greatly lower training time, simply because there are less parameters to train.
+    \item \textbf{No need for large datasets.} Training DNN usually requires large amount of data, which we might not have. Using a pre-trained model, that was trained on a large dataset, and applying it to a specific small dataset yielded better performance than just training a model from scratch\cite{geron}.
+\end{itemize}
+
 
 \section{ TensorFlow}
 

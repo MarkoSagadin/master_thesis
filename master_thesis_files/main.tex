@@ -27,11 +27,12 @@
 \usepackage{bigfoot}            % For code snippets in footnote texts
 \usepackage{booktabs}           % For nicer tables
 \usepackage{adjustbox}          % For rotating
+\usepackage{rotating}           % Same as above
 \usepackage{array}
-\usepackage{xparse}   % http://ctan.org/pkg/xparse
+\usepackage{xparse}             % http://ctan.org/pkg/xparse
 \usepackage[super]{nth}         % For adding th to numbers
 \usepackage{microtype}          % For converting from pdf to word
-\DisableLigatures[Q,q,f,l,t,i]{}
+\DisableLigatures[Q,q,f,l,t,i]{}% Same as above
 
 \setlength{\mathindent}{2cm}    % Indent equations 2cm from text edge
 \setcounter{tocdepth}{4}        % Table of content goes to 4th level
@@ -63,6 +64,13 @@
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{tbgreen}{rgb}30, 222, 27
+\definecolor{tbgreeny}{rgb}121, 222, 27
+\definecolor{tbyellow}{rgb}190, 222, 27
+\definecolor{tborange}{rgb}222, 154, 27
+\definecolor{tbred}{rgb}222, 46, 27
 
 \lstdefinestyle{mystyle}{
     backgroundcolor=\color{backcolour},   
@@ -145,15 +153,15 @@
 %
 %\chapter{ Theoretical description of system building blocks}
 %\input{chapters/chapter2}
-%
+%%
 %\chapter{ Neural Network model design}
 %\input{chapters/chapter3}
+%
+%\chapter{ Planning and design of early warning system}
+%\input{chapters/chapter4}
 
-\chapter{ Planning and design of early warning system}
-\input{chapters/chapter4}
-
-%\chapter{ Measurements and results}
-%\input{chapters/chapter5}
+\chapter{ Measurements and results}
+\input{chapters/chapter5}
 
 % Include bibliograpfy and justify it right. Use myunsrt biblio style.
 \begingroup
