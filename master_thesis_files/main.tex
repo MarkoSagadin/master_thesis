@@ -33,6 +33,7 @@
 \usepackage[super]{nth}         % For adding th to numbers
 \usepackage{microtype}          % For converting from pdf to word
 \DisableLigatures[Q,q,f,l,t,i]{}% Same as above
+\usepackage{tabularx}           % Better tables
 
 \setlength{\mathindent}{2cm}    % Indent equations 2cm from text edge
 \setcounter{tocdepth}{4}        % Table of content goes to 4th level
@@ -66,11 +67,11 @@
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
-\definecolor{tbgreen}{rgb}30, 222, 27
-\definecolor{tbgreeny}{rgb}121, 222, 27
-\definecolor{tbyellow}{rgb}190, 222, 27
-\definecolor{tborange}{rgb}222, 154, 27
-\definecolor{tbred}{rgb}222, 46, 27
+\definecolor{tbgreen}{rgb}{0.50, 1, 0.36}
+\definecolor{tbgreeny}{rgb}{0.8, 1, 0.54}
+\definecolor{tbyellow}{rgb}{1, 0.9, 0.54}
+\definecolor{tborange}{rgb}{0.87, 0.6, 0.11}
+\definecolor{tbred}{rgb}{1, 0.68, 0.54}
 
 \lstdefinestyle{mystyle}{
     backgroundcolor=\color{backcolour},   
@@ -136,15 +137,17 @@
 
 
 %\pagenumbering{gobble}
-%\input{chapters/titlepage}
+%\input{chapters/titlepage}          % We repeat this twice, first for the cover
+%\input{chapters/titlepage}          % page, then for the first inside page
 %\input{chapters/second_titlepage}
-%
+
 %\pagenumbering{roman}
 %\input{chapters/acknowledgement}
-%\input{chapters/abstract}
+\input{chapters/abstract}
 
-\tableofcontents
+%\tableofcontents
 %\listoffigures
+%\listoftables
 
 
 %\chapter{ Introduction}

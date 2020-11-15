@@ -7,8 +7,7 @@
 \bigskip
 \bigskip
 \bigskip
-\textbf{Ključne besede:} termalna kamera, strojno učenje, baterijsko napajan sistem, mikrokrmilnik
-
+\textbf{Ključne besede:} strojno učenje, mikrokrmilnik, sklepanje na napravi, termalna kamera, sistem z majhno porabo, 
 \bigskip
 \textbf{UKD:} XXXXX
 
@@ -22,7 +21,7 @@
 \newpage
 
 \begin{poglavje}
-\noindent\bfseries Energy efficient system for detection of elephants with machine learning
+\noindent\bfseries Energy efficient system for detection of elephants with Machine Learning
 \end{poglavje}
 
 \bigskip
@@ -30,7 +29,7 @@
 \bigskip
 \bigskip
 \bigskip
-\textbf{Key words:} thermal camera, machine learning, battery powered system, microcontroller
+\textbf{Key words:} machine learning, microcontroller, on-device inference, thermal camera, low-power system
 
 \bigskip
 \textbf{UKD:} XXXXX
@@ -39,7 +38,16 @@
 \bigskip
 \bigskip
 \bigskip
-\textbf{Povezetek}
+\textbf{Abstract}
 
-\lipsum[1-5]
+Human-Elephant Conflicts are a major environmental and animal conservative problem, according to WILDLABS, because of it an average of 400 people and 100 elephants are killed every year in India alone. 
+Early warning systems could replace the role of human watchers and warn local communities of nearby, potentially life threatening, elephants, thus minimising the Human-Elephant Conflicts.
+
+In this Master's thesis we present the structure of an early warning system, which consists of several deployed embedded systems equipped with thermal cameras and a single gateway; the main focus of the thesis was the design and implementation of the former.
+To detect presence of elephants, we designed and trained several accurate image classification models, capable of classifying thermal images.
+We optimised said models for on-device performance and compared them in terms of accuracy, execution speed and size.
+While writing firmware we ported a part of TensorFlow library and created our own build system, suitable for the platform of our choice. 
+We also implemented reporting of inference results over LoRaWAN network and described possible server-size setup.
+We finally constructed fully functional embedded system from various development and evaluation boards, and evaluated its performance in terms of inference speed and power consumption.
+We show that embedded systems with Machine Learning capabilities are a viable solution to many real life problems.
 \newpage

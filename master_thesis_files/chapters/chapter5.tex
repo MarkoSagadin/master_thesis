@@ -1,6 +1,6 @@
 \section{ Model comparisons}\label{model_comparisons}
 
-As mentioned in section \ref{cnn_ref} we used Keras Tuner model to find hyperparameters that would yield the highest accuracy.
+As mentioned in section \ref{cnn_ref}, we used Keras Tuner model to find hyperparameters that would yield the highest accuracy.
 Instead of hard-coding hyperparameters when building a model with Keras API, we defined a search space of possible values with \verb|HyperParameter| class and used that as a hyperparameter.
 
 We passed the created model to a \verb|RandomSearch| class, with few other parameters such as batch size, number of epochs and maximum number of trials.
@@ -142,19 +142,19 @@ Partial table of results of random hyperparameter search can be seen in Table \r
     \textbf{Model ID} & \rot{FilterNum1} & \rot{FilterNum2} & \rot{FilterNum3} & \rot{DenseSize} & \rot{DropoutRate}  &\rot{FilterSize} & \rot{LearningRate} & \rotatebox{45}{\parbox{2cm}{Number of parameters}} & \rot{Accuracy[\%]}  \\\toprule
         0b & 40 & 20 & 20 & 48 & 0.25 & 3x4 & 0.0001 & 304,216 & 98.14\\
         1b & 44 & 10 & 28 & 42 & 0.2  & 3x4 & 0.0003 & 362,264 & 98.14\\
-        2b & 18 & 38 & 26 & 38 & 0.1  & 3x4 & 0.0003 & 316,956 & 98.11\\
+        2b & 18 & 38 & 26 & 38 & 0.1  & 3x4 & 0.0003 & 316,956 & 98.11\\\midrule
        95b & 20 & 16 & 34 & 40 & 0.3  & 3x3 & 0.0003 & 416,230 & 97.62\\
        96b & 46 & 42 & 28 & 32 & 0.4  & 3x3 & 0.0003 & 297,466 & 97.62\\
-       97b & 30 & 26 & 30 & 34 & 0.2  & 3x3 & 0.0001 & 320,570 & 97.59\\
+       97b & 30 & 26 & 30 & 34 & 0.2  & 3x3 & 0.0001 & 320,570 & 97.59\\\midrule
       195b & 28 & 16 & 40 & 24 & 0.1  & 3x3 & 0.0001 & 298,252 & 97.31\\
       196b & 44 & 30 & 32 & 20 & 0.3  & 3x4 & 0.0003 & 220,098 & 97.31\\
-      197b & 46 & 40 & 10 & 40 & 0.1  & 3x3 & 0.0001 & 140,874 & 97.31\\
+      197b & 46 & 40 & 10 & 40 & 0.1  & 3x3 & 0.0001 & 140,874 & 97.31\\\midrule
       295b & 20 &  8 & 34 & 26 & 0.3  & 3x3 & 0.0003 & 269,464 & 96.90\\
       296b & 18 & 16 & 10 & 20 & 0.3  & 3x4 & 0.0003 &  65,740 & 96.87\\
-      297b &  8 & 22 & 28 & 16 & 0.1  & 3x3 & 0.0001 & 141,742 & 96.87\\
+      297b &  8 & 22 & 28 & 16 & 0.1  & 3x3 & 0.0001 & 141,742 & 96.87\\\midrule
       395b & 10 & 20 & 12 & 30 & 0.0  & 3x3 & 0.0001 & 112,246 & 96.87\\
       396b & 24 & 24 & 46 & 18 & 0.2  & 3x3 & 0.0003 & 263,924 & 96.14\\
-      397b &  6 & 18 & 12 & 24 & 0.4  & 3x4 & 0.0001 &  90,520 & 96.11\\
+      397b &  6 & 18 & 12 & 24 & 0.4  & 3x4 & 0.0001 &  90,520 & 96.11\\\midrule
       497b & 42 & 30 & 22 &  6 & 0.4  & 3x3 & 0.0003 &  57,386 & 82.86\\
       498b &  4 &  4 & 20 & 12 & 0.4  & 3x3 & 0.0003 &  72,992 & 82.86\\
       499b & 32 & 36 & 36 &  4 & 0.15 & 3x3 & 0.0001 &  65,648 & 82.86\\\bottomrule
@@ -192,7 +192,6 @@ As the weights are initially randomized, accuracy of retrained models is going t
     \rowcolors{2}{gray!25}{white}
     \begin{tabular}{llllllllrl}
     \textbf{Model ID} & \rot{FilterNum1} & \rot{FilterNum2} & \rot{FilterNum3} & \rot{DenseSize} & \rot{DropoutRate}  &\rot{FilterSize} & \rot{LearningRate} & \rotatebox{45}{\parbox{2cm}{Number of parameters}} & \rot{Accuracy[\%]}  \\\toprule
-        \textbf{Model ID} &&&&&&&&\\\toprule
         0a & 72 & 80 & 64 & 72 & 0.4  & 3x4 & 0.0003 & 1,514,400 & 98.35\\
         2a & 40 & 48 & 32 & 64 & 0.35 & 3x4 & 0.0001 &   656,797 & 98.31\\
         0b & 40 & 20 & 20 & 48 & 0.25 & 3x4 & 0.0001 &   304,216 & 98.14\\
@@ -204,17 +203,13 @@ As the weights are initially randomized, accuracy of retrained models is going t
 \end{table}
 
 As we are dealing with imbalanced dataset, where 82.86 \% of our validation data consists of elephant images, accuracy is not the best metric to use when comparing models.
-Simply classifying all images into elephant class would yield 82.86 \% accuracy, which sounds high, although it would not solve our problem.
+Simply classifying all images into elephant class would yield accuracy of 82.86 \%, which sounds high, although it would not actually do any classification.
 
-When analyzing performance of a model on a imbalanced dataset is more appropriate to use precision and recall metrics\footnotemark.
-They can give us a better idea how well the model is performing on specific classes.
-Calculated metrics can bee seen in Table \ref{precision_recall_table}, we abbreviated precision to PR and recall to RE for brevity.
+When analysing performance of a model on an imbalanced dataset it is more appropriate to use precision and recall metrics\footnotemark.
+They can give us a better idea how well the model is performing on data of specific classes.
+Calculated metrics can be seen in Table \ref{precision_recall_table}, we abbreviated precision to PR and recall to RE for clarity.
 \footnotetext{Precision tells us what percentage of data points in a specific predicted class actually fall into that class.
 Recall tells us what percentage of data points inside a certain class were actually predicted correctly\cite{geron}.}
-\newline
-
-30, 222, 27
-
 \begin{table}[ht]
     \caption{ Second hyperparameter search space}
     \rowcolors{2}{gray!25}{white}
@@ -222,16 +217,68 @@ Recall tells us what percentage of data points inside a certain class were actua
     \begin{tabular}{lrrrrrrrrr}\toprule
         \textbf{Model ID}                 & 0a & 2a & 0b & 172b & 338b & 460b\\\toprule
         \textbf{Metrics}                &&&&&\\\toprule
-        accuracy[\%]                    & \cellcolor{tbgreen}98.18     & 98.04   & 98.04   & 96.80  & 96.28  & 93.4  \\
-        number of parameters            & 1,515,404 & 656,797 & 304,216 & 60,672 & 20,290 & 13,114\\ 
-        PR of elephant class[\%]        & 99.22     & 99.46   & 99.25   & 99.29  & 98.80  & 97.80\\
-        PR of human class[\%]           & 96.92     & 95.38   & 95.38   & 92.00  & 91.69  & 80.31\\
-        PR of cow class[\%]             & 90.99     & 93.69   & 90.09   & 84.68  & 75.68  & 69.37\\
-        PR of nature/random class[\%]   & 77.42     & 64.52   & 79.03   & 46.77  & 59.68  & 40.32\\
-        RE of elephant class[\%]        & 99.29     & 98.80   & 98.84   & 97.87  & 98.43  & 97.39\\
-        RE of human class[\%]           & 93.20     & 94.51   & 95.09   & 91.44  & 89.22  & 85.57\\
-        RE of cow class[\%]             & 94.39     & 92.04   & 96.15   & 89.52  & 84.00  & 81.91\\
-        RE of nature/random class[\%]   & 87.27     & 97.56   & 84.48   & 93.55  & 67.27  & 28.09\\\bottomrule
+        accuracy[\%]                    & \cellcolor{tbgreen} 98.18     
+                                        & \cellcolor{tbgreeny}98.04   
+                                        & \cellcolor{tbgreeny}98.04   
+                                        & \cellcolor{tbyellow}96.80  
+                                        & \cellcolor{tbyellow}96.28  
+                                        & \cellcolor{tbred}   93.4 \\
+
+        number of parameters            & \cellcolor{tbred}  1,515K 
+                                        & \cellcolor{tbyellow} 657K 
+                                        & \cellcolor{tbyellow} 304K 
+                                        & \cellcolor{tbyellow}  61K 
+                                        & \cellcolor{tbgreeny}  20K 
+                                        & \cellcolor{tbgreen}   13K\\\midrule
+
+        PR of elephant class[\%]        & \cellcolor{tbyellow}99.22     
+                                        & \cellcolor{tbgreen}99.46   
+                                        & \cellcolor{tbyellow}99.25   
+                                        & \cellcolor{tbgreeny}99.29  
+                                        & \cellcolor{tbyellow}98.80  
+                                        & \cellcolor{tbred}97.80\\
+        PR of human class[\%]           & \cellcolor{tbgreen}96.92     
+                                        & \cellcolor{tbgreeny}95.38   
+                                        & \cellcolor{tbgreeny}95.38   
+                                        & \cellcolor{tbyellow}92.00  
+                                        & \cellcolor{tbyellow}91.69  
+                                        & \cellcolor{tbred}80.31\\
+        PR of cow class[\%]             & \cellcolor{tbgreeny}90.99     
+                                        & \cellcolor{tbgreen}93.69   
+                                        & \cellcolor{tbyellow}90.09   
+                                        & \cellcolor{tbyellow}84.68  
+                                        & \cellcolor{tbyellow}75.68  
+                                        & \cellcolor{tbred}69.37\\
+        PR of nature/random class[\%]   & \cellcolor{tbgreeny}77.42     
+                                        & \cellcolor{tbyellow}64.52   
+                                        & \cellcolor{tbgreen}79.03   
+                                        & \cellcolor{tbyellow}46.77  
+                                        & \cellcolor{tbyellow}59.68 
+                                        & \cellcolor{tbred}40.32\\\midrule
+        RE of elephant class[\%]        & \cellcolor{tbgreen}99.29     
+                                        & \cellcolor{tbyellow}98.80   
+                                        & \cellcolor{tbgreeny}98.84   
+                                        & \cellcolor{tbyellow}97.87  
+                                        & \cellcolor{tbyellow}98.43  
+                                        & \cellcolor{tbred}97.39\\
+        RE of human class[\%]           & \cellcolor{tbyellow}93.20     
+                                        & \cellcolor{tbgreeny}94.51   
+                                        & \cellcolor{tbgreen}95.09   
+                                        & \cellcolor{tbyellow}91.44  
+                                        & \cellcolor{tbyellow}89.22  
+                                        & \cellcolor{tbred}85.57\\
+        RE of cow class[\%]             & \cellcolor{tbgreeny}94.39     
+                                        & \cellcolor{tbyellow}92.04   
+                                        & \cellcolor{tbgreen}96.15   
+                                        & \cellcolor{tbyellow}89.52  
+                                        & \cellcolor{tbyellow}84.00  
+                                        & \cellcolor{tbred}81.91\\
+        RE of nature/random class[\%]   & \cellcolor{tbyellow}87.27     
+                                        & \cellcolor{tbgreen}97.56   
+                                        & \cellcolor{tbyellow}84.48   
+                                        & \cellcolor{tbgreeny}93.55  
+                                        & \cellcolor{tbyellow}67.27  
+                                        & \cellcolor{tbred}28.09\\\bottomrule
     \end{tabular}}
     \label{precision_recall_table}
 \end{table}
@@ -246,7 +293,7 @@ Another way to compare models performance is to look at confusion matrix.
 Figure \ref{double_cm} shows comparison between confusion matrices of \textit{0a} model on the left and \textit{460b} model on the right.
 In case of \textit{0a} 19 elephant images were not classified correctly, and 17 images were wrongly classified as elephants.
 This is not ideal, however is much better compared to performance of \textit{460b}, where 53 elephants were wrongly classified and 63 of images classified as elephants were not actually elephants.
-
+\newline
 \begin{figure}[ht]
     \begin{subfigure}{0.5\textwidth}
         \centering
@@ -275,23 +322,25 @@ We could not also perform random search of hyperparameters in Edge Impulse, as t
 We decided to train a few differently sized models, using the same general CNN architecture as before.
 We also trained a few models with Transfer Learning technique.
 
-Epoch number was 15 to avoid long training times.
 Edge impulse model data
 
 \begin{table}[ht]
     \centering
     \caption{ Selected models}
     \rowcolors{2}{gray!25}{white}
+    \makebox[\textwidth]{%
     \begin{tabular}{llllllllrl}
     \textbf{Model ID} & \rot{FilterNum1} & \rot{FilterNum2} & \rot{FilterNum3} & \rot{DenseSize} & \rot{DropoutRate}  &\rot{FilterSize} & \rot{LearningRate} & \rotatebox{45}{\parbox{2cm}{Number of parameters}} & \rot{Accuracy[\%]}  \\\toprule
-        \textbf{Model ID} &&&&&&&&\\\toprule
-        0e & 72 & 80 & 64 & 72 & 0.4  & 3x4 & 0.0003 & 1,168,804 & 95.8\\
-        1e & 40 & 48 & 32 & 64 & 0.35 & 3x4 & 0.0001 &   503,196 & 94.8\\
-        2e & 64 & 48 & 40 & 48 & 0.35 & 3x4 & 0.0001 &   493,068 & 96.0\\
-        3e & N/A& N/A& N/A& 16 & N/A  & N/A & 0.000045 & 430,676 & 98.5\\\bottomrule
-        4e & 40 & 20 & 20 & 48 & 0.25 & 3x4 & 0.0001 &   231,204 & 95.0\\
-        5e & 42 & 44 &  8 & 14 & 0.1  & 3x4 & 0.0003 &    52,272 & 96.6 \\
-    \end{tabular}
+        0ei & 72 & 80 & 64 & 72 & 0.4  & 3x4 & 0.0003 & 1,168,804 & 97.7\\
+        1ei & 40 & 48 & 32 & 64 & 0.35 & 3x4 & 0.0001 &   503,196 & 97.5\\
+        2ei & 40 & 20 & 20 & 48 & 0.25 & 3x4 & 0.0001 &   231,204 & 97.3\\
+        3ei & 42 & 44 &  8 & 14 & 0.1  & 3x4 & 0.0003 &    52,272 & 96.6 \\\midrule
+
+        0tl & N/A& N/A& N/A& 16        & 0.1  & N/A & 0.0005 & 430,676 & 98.5\\
+        1tl & N/A& N/A& N/A& 16 and 16 & 0.1  & N/A & 0.0005 & 430,948 & 98.4\\
+        2tl & N/A& N/A& N/A& 32 and 32 & 0.1  & N/A & 0.0005 & 113,924 & 95.6\\
+        3tl & N/A& N/A& N/A& 32 and 32 & 0.1  & N/A & 0.0005 & 135,732 & 95.7\\\bottomrule
+    \end{tabular}}
     \label{ei_models}
 \end{table}
 
@@ -303,28 +352,94 @@ Precision and recall table
     \caption{ Second hyperparameter search space}
     \rowcolors{2}{gray!25}{white}
     \makebox[\textwidth]{%
-    \begin{tabular}{lrrrrrrrrr}\toprule
-        \textbf{Model ID}                 & 0a & 2a & 0b & 172b & 338b & 460b\\\toprule
-        \textbf{Metrics}                &&&&&\\\toprule
-        accuracy[\%]                    & 98.18     & 98.04   & 98.04   & 96.80  & 96.28  & 93.4  \\
-        number of parameters            & 1,515,404 & 656,797 & 304,216 & 60,672 & 20,290 & 13,114\\ 
-        PR of elephant class[\%]        & 99.22     & 99.46   & 99.25   & 99.29  & 98.80  & 97.80\\
-        PR of human class[\%]           & 96.92     & 95.38   & 95.38   & 92.00  & 91.69  & 80.31\\
-        PR of cow class[\%]             & 90.99     & 93.69   & 90.09   & 84.68  & 75.68  & 69.37\\
-        PR of nature/random class[\%]   & 77.42     & 64.52   & 79.03   & 46.77  & 59.68  & 40.32\\
-        RE of elephant class[\%]        & 99.29     & 98.80   & 98.84   & 97.87  & 98.43  & 97.39\\
-        RE of human class[\%]           & 93.20     & 94.51   & 95.09   & 91.44  & 89.22  & 85.57\\
-        RE of cow class[\%]             & 94.39     & 92.04   & 96.15   & 89.52  & 84.00  & 81.91\\
-        RE of nature/random class[\%]   & 87.27     & 97.56   & 84.48   & 93.55  & 67.27  & 28.09\\\bottomrule
+    \begin{tabular}{lrrrrrrrr}\toprule
+        \textbf{Model ID}               & 0e    & 1e & 2e & 3e & 0tl & 1tl & 2tl & 3tl\\\toprule
+        \textbf{Metrics}                &&&&&&&&\\\toprule
+        accuracy[\%]                    & \cellcolor{tbyellow} 97.7  
+                                        & \cellcolor{tbyellow} 97.5  
+                                        & \cellcolor{tbyellow} 97.3  
+                                        & \cellcolor{tbyellow} 96.6  
+                                        & \cellcolor{tbgreeny} 98.5  
+                                        & \cellcolor{tbgreeny} 98.4  
+                                        & \cellcolor{tbgreen} 98.7  
+                                        & \cellcolor{tbred} 95.7  \\
+        number of parameters            & \cellcolor{tbred} 1,169K 
+                                        & \cellcolor{tbyellow} 503K 
+                                        & \cellcolor{tbgreeny} 231K 
+                                        & \cellcolor{tbgreen} 52K 
+                                        & \cellcolor{tbyellow} 430K 
+                                        & \cellcolor{tbyellow} 431K 
+                                        & \cellcolor{tbyellow} 452K 
+                                        & \cellcolor{tbgreeny} 136K\\\midrule
+        PR of elephant class[\%]        & \cellcolor{tbgreen}  99.69 
+                                        & \cellcolor{tbgreeny} 99.53 
+                                        & \cellcolor{tbgreeny} 99.42 
+                                        & \cellcolor{tbyellow} 99.27 
+                                        & \cellcolor{tbyellow} 99.27 
+                                        & \cellcolor{tbgreeny} 99.42 
+                                        & \cellcolor{tbgreeny} 99.48
+                                        & \cellcolor{tbred}    98.65 \\
+        PR of human class[\%]           & \cellcolor{tbyellow} 95.05 
+                                        & \cellcolor{tbyellow} 95.05 
+                                        & \cellcolor{tbyellow} 91.87 
+                                        & \cellcolor{tbyellow} 91.52 
+                                        & \cellcolor{tbgreen}  97.17 
+                                        & \cellcolor{tbyellow} 95.41 
+                                        & \cellcolor{tbgreeny} 96.47
+                                        & \cellcolor{tbred}    85.16 \\
+        PR of cow class[\%]             & \cellcolor{tbyellow} 82.22 
+                                        & \cellcolor{tbyellow} 78.89 
+                                        & \cellcolor{tbyellow} 82.22 
+                                        & \cellcolor{tbyellow} 79.57 
+                                        & \cellcolor{tbgreen}  92.22 
+                                        & \cellcolor{tbgreeny} 91.01 
+                                        & \cellcolor{tbgreen}  92.22 
+                                        & \cellcolor{tbred}    75.56 \\
+        PR of nature/random class[\%]   & \cellcolor{tbyellow} 63.04 
+                                        & \cellcolor{tbyellow} 65.22 
+                                        & \cellcolor{tbyellow} 73.91 
+                                        & \cellcolor{tbred}    50.0  
+                                        & \cellcolor{tbgreeny} 86.96 
+                                        & \cellcolor{tbgreeny} 89.13 
+                                        & \cellcolor{tbgreen}  91.3 
+                                        & \cellcolor{tbyellow} 78.85 \\\midrule
+        RE of elephant class[\%]        & \cellcolor{tbgreen}  99.86 
+                                        & \cellcolor{tbyellow} 98.91 
+                                        & \cellcolor{tbyellow} 98.44 
+                                        & \cellcolor{tbyellow} 98.65 
+                                        & \cellcolor{tbgreeny} 99.48 
+                                        & \cellcolor{tbgreeny} 99.27 
+                                        & \cellcolor{tbgreeny} 99.37 
+                                        & \cellcolor{tbred}    98.03 \\
+        RE of human class[\%]           & \cellcolor{tbyellow} 93.4  
+                                        & \cellcolor{tbyellow} 92.44 
+                                        & \cellcolor{tbgreeny} 94.2  
+                                        & \cellcolor{tbred}    88.4  
+                                        & \cellcolor{tbgreeny} 94.5  
+                                        & \cellcolor{tbgreen}  95.74 
+                                        & \cellcolor{tbgreen}  95.79 
+                                        & \cellcolor{tbyellow} 90.26 \\
+        RE of cow class[\%]             & \cellcolor{tbyellow} 90.24 
+                                        & \cellcolor{tbyellow} 86.59 
+                                        & \cellcolor{tbyellow} 84.09 
+                                        & \cellcolor{tbyellow} 79.57 
+                                        & \cellcolor{tbgreeny} 92.22 
+                                        & \cellcolor{tbyellow} 89.01 
+                                        & \cellcolor{tbgreen} 94.32 
+                                        & \cellcolor{tbred} 67.33 \\
+        RE of nature/random class[\%]   & \cellcolor{tbyellow} 87.88 
+                                        & \cellcolor{tbyellow} 88.24 
+                                        & \cellcolor{tbyellow} 94.44 
+                                        & \cellcolor{tbgreeny} 95.83 
+                                        & \cellcolor{tbgreeny} 95.24 
+                                        & \cellcolor{tbgreen} 97.62 
+                                        & \cellcolor{tbgreeny} 95.45 
+                                        & \cellcolor{tbyellow} 91.11 \\
     \end{tabular}}
     \label{precision_recall_table_ei}
 \end{table}
 
-
-Choose one, or few model configurations and make a model in EI.
-
-
-
+https://towardsdatascience.com/bar-chart-race-in-python-with-matplotlib-8e687a5c8a41
 
 
 \section{ On device performance testing}
