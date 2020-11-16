@@ -188,7 +188,7 @@ As the weights are initially randomized, accuracy of retrained models is going t
 
 \begin{table}[ht]
     \centering
-    \caption{ Selected models}
+    \caption{ Properties of selected models}
     \rowcolors{2}{gray!25}{white}
     \begin{tabular}{llllllllrl}
     \textbf{Model ID} & \rot{FilterNum1} & \rot{FilterNum2} & \rot{FilterNum3} & \rot{DenseSize} & \rot{DropoutRate}  &\rot{FilterSize} & \rot{LearningRate} & \rotatebox{45}{\parbox{2cm}{Number of parameters}} & \rot{Accuracy[\%]}  \\\toprule
@@ -211,7 +211,7 @@ Calculated metrics can be seen in Table \ref{precision_recall_table}, we abbrevi
 \footnotetext{Precision tells us what percentage of data points in a specific predicted class actually fall into that class.
 Recall tells us what percentage of data points inside a certain class were actually predicted correctly\cite{geron}.}
 \begin{table}[ht]
-    \caption{ Second hyperparameter search space}
+    \caption{ Precision and recall metrics of trained models}
     \rowcolors{2}{gray!25}{white}
     \makebox[\textwidth]{%
     \begin{tabular}{lrrrrrrrrr}\toprule
@@ -310,23 +310,28 @@ This is not ideal, however is much better compared to performance of \textit{460
 
 \subsection{ Comparison with Edge Impulse models}
 
-We wanted to compare 6 models that we selected from random searches against 6 models created in Edge Impulse Studio, using the same hyperparameters.
-However, at the time of writing this thesis Edge Impulse supported only model training on images of same dimensions.
-Images with different dimensions could either be cropped or scaled to fit 60 x 60 ratio.
-Using the same hyperparameters in Edge Impulse Studio, that we used in our model, would always create a model with smaller number of parameters.
-Smaller image creates a smaller network when compared to a bigger image if architecture does not change.
-That mean that we could not make a direct comparison with our hyperparameters.
+We wanted to take our 6 models and compare them against 6 Edge Impulse models that were created by using the same hyperparameters.
+However, at the time of writing Edge Impulse supported only model training on images of same dimensions.
+Images with different dimensions could either be cropped or scaled to fit 1:1 ratio.
+Using the same hyperparameters in Edge Impulse Studio, that were used in our models, would always create a models with a smaller number of parameters.
+Smaller image creates a smaller network when compared to a bigger image, given that the rest of architecture does not change.
+That meant that we could not make a direct comparison between our models and models trained in Edge Impulse Studio.
+We also could not perform random search of hyperparameters in Edge Impulse Studio, as this feature was not fully supported at the time of writing this thesis.
 
-We could not also perform random search of hyperparameters in Edge Impulse, as this feature was not fully supported at the time of writing this thesis.
-
-We decided to train a few differently sized models, using the same general CNN architecture as before.
+We decided to train a few differently sized models, using the same general CNN architecture as before, but with some minor changes in hyperparameter values.
 We also trained a few models with Transfer Learning technique.
+Edge Impulse offers scaled down versions of pre-trained MobileNetV2\footnotemark NN architecture, which we used.
 
-Edge impulse model data
+Tables \ref{ei_models1} and \ref{ei_models2} show properties of Edge Impulse models using CNN architecture and Transfer Learning technique, respectively. 
+Table \ref{precision_recall_table_ei} shows calculated precision and recall values of Edge Impulse models using both approaches.
+\footnotetext{MobileNetV2 is a efficient, lightweight NN architecture, designed for image recognition tasks, suitable for mobile applications\cite{geron}. MobileNetV2 contains width multiplier hyperparameter, which scales up or down the total number of parameters, thus providing a trade-off between accuracy and computation complexity. Edge Impulse offers three different width multiplier options: 0.35, 0.1 and 0.05.}
 
-\begin{table}[ht]
+We used only two different versions of MobileNetV2, 0.35, and 0.1, as we saw accuracy drop in reduction of width multiplier hyperparameter.
+In all cases the pre-trained model was followed by a one or two dense layers, with dropout layers in between.
+\clearpage
+\begin{table}[!htbp]
     \centering
-    \caption{ Selected models}
+    \caption{ Properties of Edge Impulse models using CNN architecture.}
     \rowcolors{2}{gray!25}{white}
     \makebox[\textwidth]{%
     \begin{tabular}{llllllllrl}
@@ -334,22 +339,32 @@ Edge impulse model data
         0ei & 72 & 80 & 64 & 72 & 0.4  & 3x4 & 0.0003 & 1,168,804 & 97.7\\
         1ei & 40 & 48 & 32 & 64 & 0.35 & 3x4 & 0.0001 &   503,196 & 97.5\\
         2ei & 40 & 20 & 20 & 48 & 0.25 & 3x4 & 0.0001 &   231,204 & 97.3\\
-        3ei & 42 & 44 &  8 & 14 & 0.1  & 3x4 & 0.0003 &    52,272 & 96.6 \\\midrule
-
-        0tl & N/A& N/A& N/A& 16        & 0.1  & N/A & 0.0005 & 430,676 & 98.5\\
-        1tl & N/A& N/A& N/A& 16 and 16 & 0.1  & N/A & 0.0005 & 430,948 & 98.4\\
-        2tl & N/A& N/A& N/A& 32 and 32 & 0.1  & N/A & 0.0005 & 113,924 & 95.6\\
-        3tl & N/A& N/A& N/A& 32 and 32 & 0.1  & N/A & 0.0005 & 135,732 & 95.7\\\bottomrule
+        3ei & 42 & 44 &  8 & 14 & 0.1  & 3x4 & 0.0003 &    52,272 & 96.6\\\bottomrule
     \end{tabular}}
-    \label{ei_models}
+    \label{ei_models1}
 \end{table}
-
-Precision and recall table
-
-
-
-\begin{table}[ht]
-    \caption{ Second hyperparameter search space}
+\bigskip
+\bigskip
+\bigskip
+\begin{table}[!htbp]
+    \centering
+    \caption{ Properties of Edge Impulse models using Transfer Learning technique.}
+    \rowcolors{2}{gray!25}{white}
+    \makebox[\textwidth]{%
+    \begin{tabular}{llllllll}
+        \textbf{Model ID} & \rotatebox{45}{\parbox{1cm}{Width \\Multiplier}} & \rot{DenseSize1} & \rot{DenseSize2} & \rot{DropoutRate} & \rot{LearningRate} & \rotatebox{45}{\parbox{2cm}{Number of\\parameters}} & \rot{Accuracy[\%]}  \\\toprule
+        0tl & 0.35 & 16 & N/A& 0.1 & 0.0005 & 430,676 & 98.5\\
+        1tl & 0.35 & 16 & 16 & 0.1 & 0.0005 & 430,948 & 98.4\\
+        2tl & 0.35 & 32 & 32 & 0.1 & 0.0005 & 452,484 & 98.7\\
+        3tl & 0.1  & 32 & 32 & 0.1 & 0.0005 & 135,732 & 95.7\\\bottomrule
+    \end{tabular}}
+    \label{ei_models2}
+\end{table}
+\bigskip
+\bigskip
+\bigskip
+\begin{table}[!htbp]
+    \caption{ Precision and recall metrics of trained Edge Impulse models}
     \rowcolors{2}{gray!25}{white}
     \makebox[\textwidth]{%
     \begin{tabular}{lrrrrrrrr}\toprule
@@ -434,10 +449,19 @@ Precision and recall table
                                         & \cellcolor{tbgreeny} 95.24 
                                         & \cellcolor{tbgreen} 97.62 
                                         & \cellcolor{tbgreeny} 95.45 
-                                        & \cellcolor{tbyellow} 91.11 \\
+                                        & \cellcolor{tbyellow} 91.11 \\\bottomrule
     \end{tabular}}
     \label{precision_recall_table_ei}
 \end{table}
+\clearpage
+
+Some observations:
+\begin{itemize}
+    \item Models using CNN architecture did not out perform our models in terms of accuracy. Models \textit{2a} and \textit{0b} both had accuracy of 98.04 \%, while none of Edge Impulse models with CNN architecture did not pass 98 \%.
+    \item Most of models trained with Transfer Learning technique out performed our models.
+    \item Model \textit{2tl} performed exceptionally well, reaching accuracy of 98.7 \%, while having a relatively small number of parameters.
+    \item We saw that by decreasing width multiplier we did not benefit much in accuracy as much as we lost in model size. Even increasing the sizes of dense layers did not solve the problem. 
+\end{itemize}
 
 https://towardsdatascience.com/bar-chart-race-in-python-with-matplotlib-8e687a5c8a41
 
@@ -451,6 +475,26 @@ DWT does not use interrupts, therefore it does not introduce overhead of calling
 
       how are you timing, 
 
+
+\subsection{ Comparison of different optimisation options}
+
+0b
+----
+0s 11295 ms
+03 4117  ms
+CMSIS-NN 1023 ms
+I and D Cache, Flash prefetch and ART 228ms
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{opt_comp.pdf}
+    \caption{ Speed comparison of different optimizations.}
+    \label{opt_comp}
+\end{figure}
+
+
+\subsection{ Comparison of performance of selected models}
+    Transfer learning could be interesting here, bigger number of parameters and takes less time.
 
 % Some error below
 %\begin{table}
@@ -470,20 +514,15 @@ DWT does not use interrupts, therefore it does not introduce overhead of calling
 %\end{table}
 
 
-
-\subsection{ Comparison of different optimisation options}
-
-0b
-----
-0s 11295 ms
-03 4117  ms
-CMSIS-NN 1023 ms
-I and D Cache, Flash prefetch and ART 228ms
-
-
-
-\subsection{ Comparison of performance of selected models}
-    Transfer learning could be interesting here, bigger number of parameters and takes less time.
+%mode numparam accu flash ram speed
+%0ei 1,168,804 & 97.7 & 1274376 & 5192 & 797
+%1ei   503,196 & 97.5 & 606920  & 5192 & 293
+%2ei   231,204 & 97.3 & 334120  & 5192 & 150
+%3ei    52,272 & 96.6 & 155352  & 5192 & 255
+%0tl   430,676 & 98.5 & 695928  & 22024& 108
+%1tl   430,948 & 98.4 & 696472  & 22320& 108
+%2tl   452,484 & 98.7 & 718104  & 22320& 110
+%3tl   135,732 & 95.7 & 346680  & 22448& 73
 
 
 
