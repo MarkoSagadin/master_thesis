@@ -463,39 +463,61 @@ Some observations:
     \item We saw that by decreasing width multiplier we did not benefit much in accuracy as much as we lost in model size. Even increasing the sizes of dense layers did not solve the problem. 
 \end{itemize}
 
-https://towardsdatascience.com/bar-chart-race-in-python-with-matplotlib-8e687a5c8a41
-
 
 \section{ On device performance testing}
-Describe setup
 
-To profile execution of our code we first wrote a timer driver based on a Arm's systick timer, however we later decided to use data watch trigger (DWT).
+Performance testing of all models was done on STM32F767ZI microcontroller, running at 216 \si{\mega\hertz}.
+Testing of our models was done by using MicroML framework that we wrote, which directly called TFLite Micro API.
+Testing of Edge Impulse models was done on Mbed OS, as this was one of supported and easily accessible platforms that Edge Impulse offers.
+
+To time the execution of our code we used Data Watchpoint Trigger (DWT) which contains a counter that is directly incremented by system clock.
 DWT does not use interrupts, therefore it does not introduce overhead of calling interrupt routines like systick timer does.
 
-
-      how are you timing, 
-
+Edge Impulse provides examples for testing out of the box, so not much work is needed to get the first order approximation of performance.
+For profiling the code execution Mbed API is used, which uses timer interrupts to track time.
 
 \subsection{ Comparison of different optimisation options}
 
-0b
-----
-0s 11295 ms
-03 4117  ms
-CMSIS-NN 1023 ms
-I and D Cache, Flash prefetch and ART 228ms
+To be able to run the ML inference at maximum possible efficiency under MicroML some extra amount of work and research was required.
+Figure \ref{opt_comp} shows reductions in inference time of \textit{0b} model while using different optimisation methods.
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=1\linewidth]{opt_comp.pdf}
-    \caption{ Speed comparison of different optimizations.}
+    \caption{ Inference time of \textit{0b} model using different optimisations.}
     \label{opt_comp}
 \end{figure}
+
+We started with no optimisations at all, while using only \verb|-Os| compiler flag.
+\verb|-Os| flag generally optimises for minimal size, it enables all \verb|-O2| optimisations, except those that increase size.
+This optimisation level is often used, however we found out that inference time of more than 11 seconds was too long.
+
+Changing optimisation level to \verb|-O3| drastically decreased the time of inference, down to 4117 \si{\milli\second}.
+\verb|-O3| turns on all \verb|-O2| optimisations plus additional ones and completely disregards any code size optimisations.
+
+Changing compiler optimisations flags could not lower time of inference any further, so other approaches were needed.
+While reading through TensorFlow documentation we saw that it supports CMSIS-NN library for ARM microcontrollers.
+CMSIS-NN is a collection of efficient Neural Network kernels, that intend to maximise performance and lower code size of NN models implemented on ARM microcontrollers.
+TensorFlow provides wrappers for a some of these kernels, such as convolutional, fully connected, pooling layers and others.
+To use these highly efficient kernels not much work was needed, we only needed to specify in our Makefile that we want to compile CMSIS-NN kernels and we dropped generic TensorFlow kernels. 
+Time of inference dropped for about 3 seconds, down to 1023 \si{\milli\second}.
+
+As we saw that similarly sized Edge Impulse models were running much faster on Mbed platform compared to our MicroML code, while using the same microcontroller, we knew that there was another step left.
+Final performance increase was reached by using features only fully found in Cortex-M7 microcontrollers and partly in Cortex M3/4 microcontrollers. 
+To achieve it we had to enable I and D caches, flash prefetch and flash ART.
+
+ART stands for Adaptive real-time memory accelerator, which compasses I/D caches and flash prefetch buffer.
+I and D caches are small, efficient portions of memory, which are located in CPU of the microcontroller.
+They hold instructions and data respectively, if those are requested by next microcontroller instruction, they can be read much faster compared to reading them from flash memory. 
+By enabling flash prefetch microcontroller reads additional sequential instructions into prefetch buffer, thus enabling execution without any wait states (if instruction flow is sequential).
+Elimination of wait states greatly improved the time of inference, it was decreased to 228 \si{\milli\second}.
 
 
 \subsection{ Comparison of performance of selected models}
     Transfer learning could be interesting here, bigger number of parameters and takes less time.
 
+
+https://towardsdatascience.com/bar-chart-race-in-python-with-matplotlib-8e687a5c8a41
 % Some error below
 %\begin{table}
 %    \centering

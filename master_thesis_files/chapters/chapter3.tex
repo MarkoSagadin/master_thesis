@@ -17,19 +17,19 @@ We finish this chapter by going through the same design process again, but this 
 \section{ Model objectives}
 
 
-The accuracy of our early detection system should be equal or similar to the one of the human observers, no matter if it is operating in daytime or nighttime.
+The accuracy of our early warning system should be equal or similar to the one of the human observers, no matter if it is operating in daytime or nighttime.
 Although the system will be placed on paths that are traversed regularly by elephants, they are not the only possible objects that can appear on the taken thermal images.
 Humans and various livestock, such as goats and cows, could also be photographed.
 Reporting false positives should be avoided, which means that the system should not label a human or a livestock animal incorrectly as an elephant.
 At the same time, false negatives also need to be avoided, as an elephant could pass the system undetected.
-These kinds of mistakes could undermine the community's confidence in the early detection system and defeat the purpose.
+These kinds of mistakes could undermine the community's confidence in the early warning system and defeat the purpose.
 This means that, besides elephant detection, we should also focus on classifying humans and livestock correctly, while providing a nature/random class for all other unexpected objects or simply images of nature.
 
 It would be beneficial if the thermal camera could take several images of the same object in a short time, thus increasing the confidence of the computed label of the object.
 However, this is constrained by the image processing time and the camera's field of view.
 The thermal camera FLIR Lepton has a horizontal field of view of 57 degrees.
 The closer an object passes by a thermal camera, the quicker it traverses the camera's field of view, thus giving the camera less time for capture.
-This problem can be solved by minimising the execution time of the ML model, or by placing the early detection system in a position that is several metres away from the expected elephant's path.
+This problem can be solved by minimising the execution time of the ML model, or by placing the early warning system in a position that is several metres away from the expected elephant's path.
 As the latter option might not always be possible, we should strive to keep the whole image processing time as short as possible.
 
 Finally, as our Neural Network has to run on a microcontroller and not on a computer or a server, we have to keep it lightweight in terms of memory.
@@ -70,7 +70,7 @@ Images in the dataset came from two different locations: Assam, India, and ZSL W
 
 Assam served as a testing ground.
 The Arribada team positioned two camera traps at two locations that overlook paths commonly used by elephants.
-Cameras were built out of Raspberry Pi, a PIR sensor, an FLIR Lepton 2.5 camera, and batteries, all of which were enclosed in a plastic housing.
+Cameras were built out of Raspberry Pi, a Passive Infrared Sensor (PIR) sensor, an FLIR Lepton 2.5 camera, and batteries, all of which were enclosed in a plastic housing.
 The insides of the camera and an example of a deployed camera can be seen in Figure \ref{assam_camera}.
 
 \begin{figure}[ht]

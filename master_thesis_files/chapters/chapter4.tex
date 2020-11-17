@@ -1,5 +1,5 @@
-General structure and tasks of an early detection system were already described in chapter \ref{early_detection_system}.
-As it was mentioned before, an early detection system consists of two different components:
+General structure and tasks of an early warning system were already described in chapter \ref{early_detection_system}.
+As it was mentioned before, an early warning system consists of two different components:
 
 \begin{enumerate} 
     \item Several small embedded devices, deployed in the field. They capture images with thermal camera, process them and send results over wireless network.
@@ -36,21 +36,21 @@ Diagram of described procedure can also be seen on Figure \ref{system_flow}.
 \begin{figure}[ht]
         \centering
         \includegraphics[width=1.0\linewidth]{system_flow.pdf} 
-        \caption{ Diagram describing behavior of embedded early detection system} 
+        \caption{ Diagram describing behavior of embedded early warning system} 
         \label{system_flow}
 \end{figure}
 
 
 \section{ Hardware}
 
-In this section we present concrete components that we used to implement the embedded part of the early detection system.
+In this section we present concrete components that we used to implement the embedded part of the early warning system.
 Hardware version of embedded system diagram is presented on the Figure \ref{hardware_diagram}.
-System consists of various developments and evaluation boards, which can showcase full functionality of early detection system.
+System consists of various developments and evaluation boards, which can showcase full functionality of early warning system.
 
 \begin{figure}[ht]
         \centering
         \includegraphics[width=1.0\linewidth]{hardware_diagram.pdf} 
-        \caption{ Hardware diagram of embedded early detection system} 
+        \caption{ Hardware diagram of embedded early warning system} 
         \label{hardware_diagram}
 \end{figure}
 
@@ -76,11 +76,17 @@ As we knew that Neural Networks are computationally expensive to compute and tha
 \subsection{ nRF52840 DK}
 
 For the part of the system which had to contain low power microcontroller and will control communication module and power control for Nucleo-F767ZI board we decided to use nRF52840 development kit.
-Development kit, which is made by Nordic Semiconductor, can be seen on Figure TODO ADD IMAGE.
+Development kit, which is made by Nordic Semiconductor, can be seen on Figure \ref{nrf_board}
 
 The main logic on the board is provided by a nRF52840 microcontroller with Cortex-M4 core, which has 1 \si{\mega\byte} of flash, 256 \si{\kilo\byte} of RAM and Bluetooth 5 support.
 nRF52840 has consumption of 0.5 \si{\micro\ampere} in sleep mode, which makes it ideal for our purpose.
 
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=1.0\linewidth]{nrf_board.jpg} 
+        \caption{ nRF52840DK development board}
+        \label{nrf_board}
+\end{figure}
 
 \subsection{ LR1110 development kit}
 
@@ -92,7 +98,7 @@ It comes in convenient Arduino shield form factor, which means that we can direc
 
 \subsection{ Boost converter evaluation kit}
 
-Power control of a Nucleo-F767ZI board and FLIR camera is provided by a dual channel p and n MOSFET, circuit can be seen on Figure \ref{mosfet}.
+Power control of a Nucleo-F767ZI board and FLIR camera is provided by a dual channel P and N MOSFET, circuit can be seen on Figure \ref{mosfet}.
 Circuit functions as a high side switch, with microcontroller pin driving enable line.
 When enable line is low, n MOSFET is closed, therefore p MOSFET is also closed, as it is pulled high by resistor R1.
 When enable line is high, n MOSFET is opened, therefore gate of p MOSFET is grounded, which opens the MOSFET.
@@ -104,7 +110,7 @@ When enable line is high, n MOSFET is opened, therefore gate of p MOSFET is grou
         \label{mosfet}
 \end{figure}
 
-\subsection{ Flir Lepton 2.5 camera module and Lepton breakout board}
+\subsection{ FLIR Lepton 2.5 camera module and Lepton breakout board}
 
 In section \ref{thermal_cameras} it was described what kinds of thermal cameras exist and how do they work, and in section \ref{choosing_thermal} it was described why FLIR Lepton 2.5 was chosen.
 However, not much was said about what sort of support circuitry FLIR camera needs and how do we actually make images with it.
@@ -123,16 +129,16 @@ Breakout board can be powered from 3.3 to 5 \si{\volt} and also conveniently bre
         \centering
         \includegraphics[width=1.0\linewidth]{flir_module_back.jpg} 
     \end{subfigure}
-    \caption{ Front and back side of Flir Lepton breakout board with thermal camera module inserted.}
+    \caption{ Front and back side of FLIR Lepton breakout board with thermal camera module inserted.}
     \label{lepton_breakout}
 \end{figure}
 
-FLIR Lepton module itself conatins five different subsystems that work together and can be configured:
+FLIR Lepton module itself contains five different subsystems that work together and can be configured:
 
 \begin{itemize}
     \item AGC – Automatic Gain Control, affects image contrast and quality
-    \item SYS – System information
-    \item VID – Video processing control
+    \item SYS – System Information
+    \item VID – Video Processing Control
     \item OEM – Camera configuration for OEM customers
     \item RAD – Radiometry
 \end{itemize}
@@ -173,8 +179,6 @@ PIR sensor runs on 3.3 V, which enables us to directly power it from the nRF5284
 
 
 \section{ Firmware}
-
-
 \subsection{ Tools and development environment}
 
 For our firmware development we did not chose any of various vendor provided integrated development environments.
@@ -334,7 +338,7 @@ From main directory we call \verb|make| command with \verb|archive_makefile| and
 Libopencm3's \verb|genlink-config.py| script then with the help of \verb|DEVICE| variable determines which compile flags\footnotemark are needed. 
 Afterwards all needed TensorFlow source files and third party files are compiled and a project specific \verb|microlite.a| archive file is created in our project's folder.
 
-\footnotetext{ For example, flags \verb|-mcpu=cortex-m7|, \verb|-mthumb|, \verb|-mfloat-abi=hard| and \verb|-mfpu=fpv5-sp-d16| tell gcc compiler that we are compiling for cortex-m7 proccesor, that we want to use thumb instruction set and that we want to use hardware floating point unit with single precision. This flags were generated for STM32F767ZI microcontroller by libopencm3.}
+\footnotetext{ For example, flags \verb|-mcpu=cortex-m7|, \verb|-mthumb|, \verb|-mfloat-abi=hard| and \verb|-mfpu=fpv5-sp-d16| tell GCC compiler that we are compiling for cortex-m7 proccesor, that we want to use thumb instruction set and that we want to use hardware floating point unit with single precision. This flags were generated for STM32F767ZI microcontroller by libopencm3.}
 
 \textit{Compile and flash} stage is then continuously performed during development period.
 By calling \verb|make flash| directly in our project folder we compile all project files, \verb|microlite.a| and libopencm3 archive files that were created early.
