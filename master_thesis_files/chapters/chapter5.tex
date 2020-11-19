@@ -514,7 +514,6 @@ Elimination of wait states greatly improved the time of inference, it was decrea
 
 
 \subsection{ Comparison of performance of selected models}
-    Transfer learning could be interesting here, bigger number of parameters and takes less time.
 
 
 https://towardsdatascience.com/bar-chart-race-in-python-with-matplotlib-8e687a5c8a41
@@ -528,8 +527,8 @@ https://towardsdatascience.com/bar-chart-race-in-python-with-matplotlib-8e687a5c
 %        \textbf{Metrics}                &&&&&\\\toprule
 %        accuracy[\%]                    &     98.18 &   98.04 &   98.04 &  96.80 &  96.28 &   93.4 &    N/A\\
 %        number of parameters            &       N/A & 656,797 & 304,216 & 60,672 & 20,290 & 13,114 &    N/A\\ 
-%        used flash (in bytes)           &       N/A &  799640 &  445736 & 202424 & 159720 & 152920 & 499592\\ 
-%        used ram   (in bytes)           &       N/A &  257032 &  271656 & 260936 &  31704 &  47440 & 198512\\ 
+%        used flash (in bytes)           &       N/A &  799640 &  445736 & 202424 & 156312 & 149512 & 499592\\ 
+%        used ram   (in bytes)           &       N/A &  257032 &  271656 & 260936 &  31724 &  47452 & 198512\\ 
 %        time of inference               &       N/A &   403ms &   228ms &  354ms &   51ms &   69ms &    173\\ 
 %    \end{tabular}
 %    \label{precision_recall_table}
@@ -547,6 +546,55 @@ https://towardsdatascience.com/bar-chart-race-in-python-with-matplotlib-8e687a5c
 %3tl   135,732 & 95.7 & 346680  & 22448& 73
 
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{speed_comp.pdf}
+    \caption{ Inference time of \textit{0b} model using different optimisations.}
+    \label{speed_comp}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{size_comp.pdf}
+    \caption{ Inference time of \textit{0b} model using different optimisations.}
+    \label{size_comp}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{score_comp.pdf}
+    \caption{ Inference time of \textit{0b} model using different optimisations.}
+    \label{score_comp}
+\end{figure}
+
+\begin{equation}\label{score_equ}
+    %\sigma(y_i) = \frac{e^{y_i}}{\sum_{j=1}^{K}e^{y_j}}\;\;\;\text{for}\;\;i\;=\;1,\cdots,K\;\;\text{and}\;\;y=(y_1,\cdots,y_k)\in\mathbb{R}^K
+    \begin{bmatrix}
+        W_{PR\_elephant} \\
+        W_{PR\_human}    \\
+        W_{PR\_cow}      \\
+        W_{PR\_ntr/rnd}  \\
+        W_{RE\_elephant} \\
+        W_{RE\_human}    \\
+        W_{RE\_cow}      \\
+        W_{RE\_ntr/rnd}  \\
+        W_{Speed}        \\
+        W_{Flash}        \\
+        W_{RAM}          \\
+    \end{bmatrix}
+    *
+    \begin{bmatrix}
+        PR\_elephant & PR\_human\\
+    \end{bmatrix}
+\end{equation}
+
+Where:
+
+$y$ - Input vector
+
+$K$ - Number of elements in the input vector
+
+$\sigma(y_i)$ - Computed probability of the i-th element in the input vector 
 
 
 
