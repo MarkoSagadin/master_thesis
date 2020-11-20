@@ -6,9 +6,9 @@ Instead of hard-coding hyperparameters when building a model with Keras API, we 
 We passed the created model to a \verb|RandomSearch| class, with few other parameters such as batch size, number of epochs and maximum number of trials.
 As we started the hyperparameter search, Keras Tuner started picking a randomly set of hyperparameters, which were used to train a model.
 This process was repeated for a trial number of times.
-Used hyperparameters and achieved accuracy on validation set for each trained model were logged in a text file for later use.
+Used hyperparameters and achieved accuracy on the validation set for each trained model were logged in a text file for later use.
 
-After training a number of different models we picked a few and compared them.
+After training several different models we picked a few and compared them.
 Comparison of models trained in Edge Impulse Studio was also done.
 
 
@@ -20,7 +20,7 @@ We decided to search for the following hyperparameters:
 \begin{itemize}
     \item Number of filters in all three convolutional layers (can be different for each layer)
     \item Size of filters in all three convolutional layers (same for all layers)
-    \item Size of dense layer
+    \item Size of the dense layer
     \item Dropout rate 
     \item Learning rate
 \end{itemize}
@@ -49,17 +49,17 @@ Possible values of hyperparameters (also known as hyperparameter search space) a
     \label{hyper_table1}
 \end{table}
 
-Search space of \verb|FilterNumX|, \verb|DenseSize| and \verb|DropoutRate| hyperparameters was chosen based on initial training tests conducted on thermal image dataset and other various models that were trained on similar data.
-Value of \verb|FilterSize| is usually 3 x 3, however most of example ML projects that we could find on the Internet were training on image data of the same dimensions.
-We wanted to test how would a filter with same ratio of dimensions as image data (3 x 4 and 60 x 80 respectively) perform.
-Hyperparameter \verb|learning_rate| was chosen heuristically, we saw that 10 times higher values, such as 0.001 or 0.003, would leave model's accuracy stuck at suboptimal optima, from where it could not be improve anymore.
+Search space of \verb|FilterNumX|, \verb|DenseSize| and \verb|DropoutRate| hyperparameters were chosen based on initial training tests conducted on a thermal image dataset and other various models that were trained on similar data.
+Value of \verb|FilterSize| is usually 3 x 3, however, most of example ML projects that we could find on the Internet were training on image data of the same dimensions.
+We wanted to test how would a filter with the same ratio of dimensions as image data (3 x 4 and 60 x 80 respectively) perform.
+Hyperparameter \verb|learning_rate| was chosen heuristically, we saw that 10 times higher values, such as 0.001 or 0.003, would leave model's accuracy stuck at suboptimal optima, from where it could not be improved anymore.
 
 We also had to set 3 variables that directly affected how long will random search last.
 From initial tests we saw that models usually reached maximum possible accuracy around \nth{20} epoch, to give some headroom we set the number of epochs to 25.
 We kept batch size relatively small, at 100, which meant that weights would get updated regularly.
 Hyperparameter \verb|MAX_TRIALS| had the biggest impact on the training time, we set it to 300.
 
-Training lasted for about 12 hours. 
+The training lasted for about 12 hours. 
 After it was done we compiled a list of all 300 trained models and their different hyperparameter values, number of parameters and achieved accuracies
 Part of it can be seen in Table \ref{hyper_results1}.
 \newline
@@ -95,11 +95,11 @@ Part of it can be seen in Table \ref{hyper_results1}.
 After analyzing results we came to several conclusions:
 
 \begin{enumerate}
-    \item We saw that almost all trained models, except of the last one, achieved accuracy above 90 \%. This proved that the general architecture of the model was appropriate for the problem.
-    \item We could not see any visible correlation between a specific choice of a certain hyperparameter and accuracy. This showed that selection of hyperparameters is really a non-heuristic task, at least for our particular problem.
+    \item We saw that almost all trained models, except for the last one, achieved accuracy above 90 \%. This proved that the general architecture of the model was appropriate for the problem.
+    \item We could not see any visible correlation between a specific choice of a certain hyperparameter and accuracy. This showed that selection of hyperparameters is a non-heuristic task, at least for our particular problem.
     \item Filter of size 3 x 4 did not perform significantly better compared to one with size 3 x 3. 
-    \item There is a weak correlation between number of parameters (model's complexity) and accuracy, however, models with small size and great accuracy exist, model \textit{2a} is example of that.
-    \item First 200 models cover an accuracy range of 0.62 \%. However inside of this range model number of parameters varies hugely, for example, model \textit{192a} has more than 8 times less parameters than model than model \textit{96a}, although the difference in accuracy (0.27 \%) is negligible.
+    \item There is a weak correlation between the number of parameters (model's complexity) and accuracy, however, models with small size and great accuracy exist, model \textit{2a} is an example of that.
+    \item First 200 models cover an accuracy range of 0.62 \%. However inside of this range model number of parameters varies hugely, for example, model \textit{192a} has more than 8 times fewer parameters than model \textit{96a}, although the difference in accuracy (0.27 \%) is negligible.
 \end{enumerate}
 
 It is apparent from results that large models are not necessary to achieve high accuracy on our training data, so we decided to run the random search of hyperparameters again.
@@ -107,7 +107,7 @@ It is apparent from results that large models are not necessary to achieve high 
 This time we lowered the maximum and the minimum numbers of filters and size of the dense layer.
 We decreased all steps from 8 to 2, thus increasing the number of possible configurations.
 We decided to lower the bottom boundary of \verb|DropoutRate| from 0.2 to 0.0, which means that some models will not be using dropout layer at all.
-We expected that training without dropout layer would produce suboptimal results, however we wanted to test it.
+We expected that training without dropout layer would produce suboptimal results, however, we wanted to test it.
 Redefined search space for second random search can be seen in Table \ref{hyper_table2}
 We increased the number of \verb|MAX_TRIALS| from 300 to 500, as we were expecting that more models will end up underfitting and also because there would be more possible options because of smaller step size.
 Partial table of results of random hyperparameter search can be seen in Table \ref{hyper_results2}.
@@ -165,25 +165,25 @@ Partial table of results of random hyperparameter search can be seen in Table \r
 \clearpage
 Some observations:
 \begin{enumerate}
-    \item We can see that the accuracy of the best model \textit{0b} compared to the best model \textit{0a} from previous search is only 0.21 \% lower, although it has about 5 times less parameters.
+    \item We can see that the accuracy of the best model \textit{0b} compared to the best model \textit{0a} from the previous search is only 0.21 \% lower, although it has about 5 times fewer parameters.
     \item Although that it might seem that \verb|FilterSize| of 3 x 4 yields best results, we did not saw a strong tendency towards 3 x 3 or 3 x 4 filter size after manually analyzing best 30 models.
-    \item We can see that the worst three models have the same accuracy of 82.86 \%, same as the worst performing model from first random search. There are 82.86 \% images of elephants in validation class, which means that model probably assigned all validation images to elephant class and was satisfied with achieved accuracy.
+    \item We can see that the worst three models have the same accuracy of 82.86 \%, same as the worst-performing model from the first random search. There are 82.86 \% images of elephants in the validation class, which means that the model probably assigned all validation images to elephant class and was satisfied with achieved accuracy.
     \item We can see that the model \textit{296b} has a quite low number of parameters, only 65,740 when compared to its neighbours.
 \end{enumerate}
 
 \subsection{ Comparison of selected, re-trained models}
     
-Two random searches gave us a large amount of different models to choose from.
+Two random searches gave us a large number of different models to choose from.
 In every other ML application where the execution time would not be a constraint, we could simply take the best performing model and be done with it.
-In our case we had to make a trade off between model's accuracy and execution speed.
+In our case, we had to make a trade-off between model's accuracy and execution speed.
 
 For comparison and later on device performance testing we decided to pick and retrain\footnotemark 6 models: \textit{0a}, \textit{2a}, \textit{0b}, \textit{172b}, \textit{338b} and \textit{460b}, their properties are listed in Table \ref{hyper_selection}.
 
-Chosen models vary greatly in number of parameters.
+Chosen models vary greatly in the number of parameters.
 Models \textit{0a}, \textit{2a}, \textit{0b} have high number of parameters but their accuracy is high.
 Models \textit{172b}, \textit{338b} and \textit{460b} were chosen because of their small size and reasonably good accuracy.
 \footnotetext{Retraining was required as Keras Tuner module only saved hyperparameter settings during search and not each trained model.
-As the weights are initially randomized, accuracy of retrained models is going to be similar but not exact when compared to the accuracy returned by random search.}
+As the weights are initially randomized, the accuracy of retrained models is going to be similar but not exact when compared to the accuracy returned by random search.}
 
 \begin{table}[ht]
     \centering
@@ -201,13 +201,13 @@ As the weights are initially randomized, accuracy of retrained models is going t
     \label{hyper_selection}
 \end{table}
 
-As we are dealing with imbalanced dataset, where 82.86 \% of our validation data consists of elephant images, accuracy is not the best metric to use when comparing models.
-Simply classifying all images into elephant class would yield accuracy of 82.86 \%, which sounds high, although it would not actually do any classification.
+As we are dealing with an imbalanced dataset, where 82.86 \% of our validation data consists of elephant images, accuracy is not the best metric to use when comparing models.
+Simply classifying all images into elephant class would yield an accuracy of 82.86 \%, which sounds high, although it would not actually do any classification.
 
-When analysing performance of a model on an imbalanced dataset it is more appropriate to use precision and recall metrics\footnotemark.
-They can give us a better idea how well the model is performing on data of specific classes.
+When analysing the performance of a model on an imbalanced dataset it is more appropriate to use precision and recall metrics\footnotemark.
+They can give us a better idea of how well the model is performing on data of specific classes.
 Calculated metrics can be seen in Table \ref{precision_recall_table}, we abbreviated precision to P and recall to R for clarity.
-\footnotetext{Precision tells us what percentage of data points in a specific predicted class actually fall into that class.
+\footnotetext{Precision tells us what percentage of data points in a specific predicted class fall into that class.
 Recall tells us what percentage of data points inside a certain class were actually predicted correctly\cite{geron}.}
 \begin{table}[ht]
     \caption{ Precision and recall metrics of trained models}
@@ -285,12 +285,12 @@ Recall tells us what percentage of data points inside a certain class were actua
 As we can see all six models are generally classifying elephants correctly, both precision and recall of elephant class are high, above 97 \%, which is important.
 Precision and recall values of other classes are generally lower, especially for nature/random.
 We can see that top three models \textit{0a}, \textit{2a} and \textit{0b} are quite similar in terms of precision and recall, which means that we can easily prefer \textit{0b}, without sacrificing accuracy. 
-Models \textit{172b} and \textit{338b} perform a bit worse when compared to top three models, however they have low number of parameters which should translate to lower inference time.
+Models \textit{172b} and \textit{338b} perform a bit worse when compared to top three models, however, they have a low number of parameters which should translate to lower inference time.
 Last model, \textit{460b}, performs the worst and it should generally not be used.
 
-Another way to compare models performance is to look at confusion matrix.
+Another way to compare models performance is to look at a confusion matrix.
 Figure \ref{double_cm} shows comparison between confusion matrices of \textit{0a} model on the left and \textit{460b} model on the right.
-In case of \textit{0a} 19 elephant images were not classified correctly, and 17 images were wrongly classified as elephants.
+In the case of \textit{0a}, 19 elephant images were not classified correctly, and 17 images were wrongly classified as elephants.
 This is not ideal, however is much better compared to performance of \textit{460b}, where 53 elephants were wrongly classified and 63 of images classified as elephants were not actually elephants.
 \newline
 \begin{figure}[ht]
@@ -310,22 +310,22 @@ This is not ideal, however is much better compared to performance of \textit{460
 \subsection{ Comparison of Edge Impulse models}
 
 We wanted to take our 6 models and compare them against 6 Edge Impulse models that were created by using the same hyperparameters.
-However, at the time of writing Edge Impulse supported only model training on images of same dimensions.
+However, at the time of writing Edge Impulse supported only model training on images of the same dimensions.
 Images with different dimensions could either be cropped or scaled to fit 1:1 ratio.
-Using the same hyperparameters in Edge Impulse Studio, that were used in our models, would always create a models with a smaller number of parameters.
-Smaller image creates a smaller network when compared to a bigger image, given that the rest of architecture does not change.
+Using the same hyperparameters in Edge Impulse Studio, that were used in our models, would always create a model with a smaller number of parameters.
+The smaller image creates a smaller network when compared to a bigger image, given that the rest of architecture does not change.
 That meant that we could not make a direct comparison between our models and models trained in Edge Impulse Studio.
-We also could not perform random search of hyperparameters in Edge Impulse Studio, as this feature was not fully supported at the time of writing this thesis.
+We also could not perform a random search of hyperparameters in Edge Impulse Studio, as this feature was not fully supported at the time of writing this thesis.
 
 We decided to train a few differently sized models, using the same general CNN architecture as before, but with some minor changes in hyperparameter values.
 We also trained a few models with Transfer Learning technique.
-Edge Impulse offers scaled down versions of pre-trained MobileNetV2\footnotemark NN architecture, which we used.
+Edge Impulse offers scaled-down versions of pre-trained MobileNetV2\footnotemark NN architecture, which we used.
 
 Tables \ref{ei_models1} and \ref{ei_models2} show properties of Edge Impulse models using CNN architecture and Transfer Learning technique, respectively. 
 Table \ref{precision_recall_table_ei} shows calculated precision and recall values of Edge Impulse models using both approaches.
 \footnotetext{MobileNetV2 is a efficient, lightweight NN architecture, designed for image recognition tasks, suitable for mobile applications\cite{geron}. MobileNetV2 contains width multiplier hyperparameter, which scales up or down the total number of parameters, thus providing a trade-off between accuracy and computation complexity. Edge Impulse offers three different width multiplier options: 0.35, 0.1 and 0.05.}
 
-We used only two different versions of MobileNetV2, 0.35, and 0.1, as we saw accuracy drop in reduction of width multiplier hyperparameter.
+We used only two different versions of MobileNetV2, 0.35, and 0.1, as we saw an accuracy drop in the reduction of width multiplier hyperparameter.
 In all cases the pre-trained model was followed by a one or two dense layers, with dropout layers in between.
 \clearpage
 \begin{table}[!htbp]
@@ -457,24 +457,25 @@ In all cases the pre-trained model was followed by a one or two dense layers, wi
 Some observations:
 \begin{itemize}
     \item Models using CNN architecture did not out perform our models in terms of accuracy. Models \textit{2a} and \textit{0b} both had accuracy of 98.04 \%, while none of Edge Impulse models with CNN architecture did not pass 98 \%.
-    \item Most of models trained with Transfer Learning technique out performed our models.
-    \item Model \textit{2tl} performed exceptionally well, reaching accuracy of 98.7 \%, while having a relatively small number of parameters.
+    \item Most of the models trained with Transfer Learning technique outperformed our models.
+    \item Model \textit{2tl} performed exceptionally well, reaching an accuracy of 98.7 \% while having a relatively small number of parameters.
     \item We saw that by decreasing width multiplier we did not benefit much in accuracy as much as we lost in model size. Even increasing the sizes of dense layers did not solve the problem. 
 \end{itemize}
 
 
-\section{ On device performance testing}
+\section{ On-device performance testing}
 
-Performance testing of all models was done on a STM32F767ZI microcontroller, running at 216 \si{\mega\hertz}.
+Performance testing of all models was done on an STM32F767ZI microcontroller, running at 216 \si{\mega\hertz}.
 Testing of our models was done by using MicroML framework that we wrote, which directly called TFLite Micro API.
-Testing of Edge Impulse models was done on Mbed OS, as this platform is supported by Edge Impulse and they already provide example for it.
+Testing of Edge Impulse models was done on Mbed OS, as this platform is supported by Edge Impulse and they already provide an example for it.
+We could not test model \textit{0a} on device as TFLite converter failed to produce a compilable model.
 
-To time the execution of our code we used Data Watchpoint Trigger (DWT) which contains a counter that is directly incremented by system clock.
-DWT does not use interrupts, therefore it does not introduce overhead of calling interrupt routines like systick timer does.
+To time the execution of our code we used Data Watchpoint Trigger (DWT) which contains a counter that is directly incremented by the system clock.
+DWT does not use interrupts, therefore it does not introduce the overhead of calling interrupt routines as systick timer does.
 
-Edge Impulse provides examples for testing out of the box, so not much work is needed to get the first order approximation of performance.
-For profiling the code execution Mbed API was used, which uses timer interrupts to track elapsed time.
 
+Edge Impulse provides examples for testing out of the box, so not much work is needed to get the first-order approximation of performance.
+For profiling, the code execution Mbed API was used, which uses timer interrupts to track elapsed time.
 Figure \ref{speed_comp} shows models ranked from the fastest to the slowest.
 
 \begin{figure}[ht]
@@ -488,19 +489,18 @@ We can see that all models perform inference in less than 1 second, which was a 
 Best time wise performing model was \textit{338b} with inference time of 51 \si{\milli\second}, there are also many models that perform inference under 300 \si{\milli\second}.
 
 We also discovered some unexpected trend in results.
-We assumed that inference time is proportional to the number of parameters, if the general structure of model remains the same.
-As can be seen from the Figure \ref{speed_comp} that there are few exceptions to this rule, model \textit{338b} executed inference fast than \textit{460b} although it has more parameters (20K versus 13K).
+We assumed that inference time is proportional to the number of parameters if the general structure of the model remains the same.
+As can be seen from the Figure \ref{speed_comp} there are few exceptions to this rule, model \textit{338b} executed inference faster than \textit{460b} although it has more parameters (20K versus 13K).
 Model \textit{172b} was slower than \textit{0b}, although it has five times less parameters.
-This behaviour is not exclusive only to our models, but it can be seen in Edge Impulse models as well, for example models \textit{2ei} and \textit{1ei}.
+This behaviour is not exclusive only to our models, but it can be seen in Edge Impulse models as well, for example, models \textit{2ei} and \textit{1ei}.
 
 Edge Impulse models trained with Transfer Learning technique \textit{0tl}, \textit{1tl}, \textit{2tl} and \textit{3tl} should not be compared to other models in this sense, as the architecture of MobileNetV2 contains additional different operations.
 
-As for the reason for this behaviour we can only speculate, since it is present both in our models and Edge Impulse models we can assume this to be a TensorFlow bug.
-
+We can only speculate about the reason for this behaviour, since it is present both in our models and Edge Impulse models, we can assume this to be a TFLite bug.
 
 \subsection{ Comparison of code sizes}
 
-We also wanted to inspect Flash and RAM sizes of binaries, that we compiled for on device testing.
+We also wanted to inspect Flash and RAM sizes of binaries, that we compiled for on-device testing.
 For this task we used \verb|arm-none-eabi-size| command line tool which returns sizes of \verb|text|, \verb|data|, \verb|bss| sections in bytes, example of output can be seen in Figure \ref{size_output}.
 To compute used Flash we need simply add bytes from \verb|text| and \verb|data| sections, and to compute used RAM we add together \verb|data| and \verb|bss| sections\footnotemark.
 \lstset{style=mystyle}
@@ -524,9 +524,9 @@ Code sizes for all models are presented in Figure \ref{size_comp}, models are or
 
 We can see that all of our models generally use more RAM then edge Impulse models.
 This is due to how the inference is executed.
-TFLite Micro uses generic interpreter approach, where the model is loaded at runtime.
-Edge Impulse uses compiled approach, which they named The EON\textsuperscript{TM} Compiler\cite{eon}.
-The EON\textsuperscript{TM} Compiler still uses TFLite Micro, however does not used its interpreter, but directly calls operation kernels.
+TFLite Micro uses a generic interpreter approach, where the model is loaded at runtime.
+Edge Impulse uses a compiled approach, which they named The EON\textsuperscript{TM} Compiler\cite{eon}.
+The EON\textsuperscript{TM} Compiler still uses TFLite Micro, however, it does not use its interpreter, but directly calls operation kernels.
 This means that linker knows exactly which operations are used and more data can be moved into Flash, thus eliminating unneeded code space\cite{eon}.
 
 
@@ -545,7 +545,7 @@ Figure \ref{opt_comp} shows reductions in inference time of \textit{0b} model wh
 
 We started with no optimisations at all, while using only \verb|-Os| compiler flag.
 \verb|-Os| flag generally optimises for minimal size, it enables all \verb|-O2| optimisations, except those that increase size.
-This optimisation level is often used, however we found out that inference time of more than 11 seconds was too long.
+This optimisation level is often used, however, we found out that inference time of more than 11 seconds was too long.
 
 Changing optimisation level to \verb|-O3| drastically decreased the time of inference, down to 4117 \si{\milli\second}.
 \verb|-O3| turns on all \verb|-O2| optimisations plus additional ones and completely disregards any code size optimisations.
@@ -554,15 +554,15 @@ Changing compiler optimisations flags could not lower time of inference any furt
 While reading through TensorFlow documentation we saw that it supports CMSIS-NN library for ARM microcontrollers.
 CMSIS-NN is a collection of efficient Neural Network kernels, that intends to maximise performance and lower code size of NN models implemented on ARM microcontrollers.
 TensorFlow provides wrappers for some of these kernels, such as convolutional, fully connected, pooling layers and others.
-Not much work was needed to use these highly efficient kernel, we only needed to specify in our Makefile that we want to compile CMSIS-NN kernels and not compile generic TensorFlow kernels. 
+Not much work was needed to use these highly efficient kernels, we only needed to specify in our Makefile that we want to compile CMSIS-NN kernels and not compile generic TensorFlow kernels. 
 Time of inference dropped for about 3 seconds, down to 1023 \si{\milli\second}.
 
 As we saw that similarly sized Edge Impulse models were running much faster on Mbed platform compared to our MicroML code, while using the same microcontroller, we knew that there was another step left.
-Final performance increase was reached by using features only fully found in Cortex-M7 microcontrollers and partly in Cortex M3/4 microcontrollers. 
+The final performance increase was reached by using features only fully found in Cortex-M7 microcontrollers and partly in Cortex M3/4 microcontrollers. 
 To achieve it we had to enable I and D caches, flash prefetch and flash ART.
 
 ART stands for Adaptive real-time memory accelerator, which encompasses I/D caches and flash prefetch buffer.
-I and D caches are small, efficient portions of memory, which are located in CPU of the microcontroller.
+I and D caches are small, efficient portions of memory, which are located in the CPU of the microcontroller.
 They hold instructions and data respectively, if those are requested by next microcontroller instruction, they can be read much faster compared to reading them from flash memory. 
 By enabling flash prefetch microcontroller reads additional sequential instructions into prefetch buffer, thus enabling execution without any wait states (if instruction flow is sequential).
 Elimination of wait states greatly improved the time of inference, it was decreased to 228 \si{\milli\second}.
@@ -570,15 +570,15 @@ Elimination of wait states greatly improved the time of inference, it was decrea
 
 \subsection{ Scoring trained models}
 
-Choosing the best model for on field deployment is a hard task due to many different metrics: precision and recall values, time of inference, and code size.
+Choosing the best model for on-field deployment is a hard task due to many different metrics: precision and recall values, time of inference, and code size.
 To make this job easier we devised a scoring system: each metric is going to be normalized and multiplied with some weight value.
-All products would then be summed up and the results would be final score.
-Sum of the weights is equal to 100, which means that the possible maximum score is also 100.
-We decided to allocate 50 weight points to all precision and recall values, 30 points to time of inference value, 5 points for Flash size and 15 points for RAM size.
+All products would then be summed up and the result would represent the final score.
+The Sum of the weights is equal to 100, which means that the possible maximum score is also 100.
+We decided to allocate 50 weight points to all precision and recall values, 30 points to the time of inference value, 5 points for Flash size and 15 points for RAM size.
 As we care more about precision and recall values of elephant, human and cow classes we gave them 7 weight points each, while nature/random class received only 4.
-We value Flash size less than RAM, as most of microcontrollers have much less RAM than they do Flash, thus we gave 15 weight points to RAM size and only 5 to Flash size.
+We value Flash size less than RAM, as most of the microcontrollers have much less RAM than they do Flash, thus we gave 15 weight points to RAM size and only 5 to Flash size.
 
-Since time of inference, Flash and RAM sizes are properties, which should give larger score, the smaller they are, we mapped them into range between 0 and 1.
+Since the time of inference, Flash and RAM sizes are properties, which should give a larger score, the smaller they are, we mapped them into a range between 0 and 1.
 The smallest value inside the set would be assigned 1, the biggest 0, the values in between are mapped linearly.
 
 Scoring is described mathematically in \ref{score_equ}, while the final results can be seen in Figure \ref{score_comp}
@@ -593,7 +593,7 @@ Scoring is described mathematically in \ref{score_equ}, while the final results 
         F(X, i) ={}  & \frac{(X[i] - MAX(X))}{MIN(X)- MAX(X)}
     \end{aligned}
 \end{equation}
-
+\clearpage
 Where:\\
 $Score$ - Vector of calculated scores\\
 $i$ - i$^{th}$ model\\
@@ -605,7 +605,7 @@ $RAM$ - Vector of RAM sizes\\
 $K(X,i)$ - Normalizing function with vector X and element index i as arguments\\
 $F(X,i)$ - Normalizing, inverting, function with vector X and element index i as arguments\\
 $MAX(X)$ - Function that finds maximum element in vector X\\
-$MIN(X)$ - Function that finds minimum element in vector X\\
+$MIN(X)$ - Function that finds minimum element in vector X
 
 \begin{figure}[ht]
     \centering
@@ -615,10 +615,10 @@ $MIN(X)$ - Function that finds minimum element in vector X\\
 \end{figure}
 
 Final verdict: model \textit{3tl} received the highest score, models \textit{1tl}, \textit{2tl} follow.
-This should not be a surprise, models trained with Transfer Learning achieve high accuracies and execute inference in about 100 ms or less, and compiled approach for computing Neural Networks keeps used Flash and RAM sizes to minimum.
+This should not be a surprise, models trained with Transfer Learning achieve high accuracies and execute inference in about 100 ms or less while compiled approach for computing Neural Networks keeps used Flash and RAM sizes to a minimum.
 
 
-%\section{ Power profiling of an embedded early warning system}
+\section{ Power profiling of an embedded early warning system}
 %
 %To write this section you need to:
 % - wirte uart communication channel for zephyr and your system, has to be simple dont lose time on this.

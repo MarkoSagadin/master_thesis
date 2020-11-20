@@ -55,7 +55,8 @@
 \contentsline {subsection}{\numberline {5.1.1} Hyperparameter search space and results analysis}{70}{subsection.5.1.1}%
 \contentsline {subsection}{\numberline {5.1.2} Comparison of selected, re-trained models}{75}{subsection.5.1.2}%
 \contentsline {subsection}{\numberline {5.1.3} Comparison of Edge Impulse models}{78}{subsection.5.1.3}%
-\contentsline {section}{\numberline {5.2} On device performance testing}{80}{section.5.2}%
+\contentsline {section}{\numberline {5.2} On-device performance testing}{80}{section.5.2}%
 \contentsline {subsection}{\numberline {5.2.1} Comparison of code sizes}{82}{subsection.5.2.1}%
 \contentsline {subsection}{\numberline {5.2.2} Comparison of different optimisation options}{83}{subsection.5.2.2}%
-\contentsline {subsection}{\numberline {5.2.3} Scoring trained models}{85}{subsection.5.2.3}%
+\contentsline {subsection}{\numberline {5.2.3} Scoring trained models}{84}{subsection.5.2.3}%
+\contentsline {section}{\numberline {5.3} Power profiling of an embedded early warning system}{87}{section.5.3}%
