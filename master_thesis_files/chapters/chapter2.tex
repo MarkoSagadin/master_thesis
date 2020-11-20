@@ -153,19 +153,13 @@ It has since fallen out of practice, and is nowadays replaced by ReLu or some ot
 Another commonly used activation function is a softmax function (seen in \ref{softmax_equ}, which is takes a vector as an input, computes an exponential of every element inside it and divides that with the sum of exponents of all elements\cite{geron}
 The end results is that softmax function transforms the vector of values into a vector of probabilities.
 Softmax is usually used as an activation in the last layer of a classifier network. 
-
 \begin{equation}\label{softmax_equ}
     \sigma(y_i) = \frac{e^{y_i}}{\sum_{j=1}^{K}e^{y_j}}\;\;\;\text{for}\;\;i\;=\;1,\cdots,K\;\;\text{and}\;\;y=(y_1,\cdots,y_k)\in\mathbb{R}^K
 \end{equation}
-
-Where:
-
-$y$ - Input vector
-
-$K$ - Number of elements in the input vector
-
-$\sigma(y_i)$ - Computed probability of the i-th element in the input vector 
-
+Where:\\
+$y$ - Input vector\\
+$K$ - Number of elements in the input vector\\
+$\sigma(y_i)$ - Computed probability of the i-th element in the input vector \\
 
 \subsection{ Backpropagation}
 
@@ -202,8 +196,6 @@ More complex cells responded to boxes, circles and so on.
 CNNs also detect simpler shapes first and use them to detect more complex ones later.}
 
 In Figure \ref{convnet} we can see an example of CNN which takes an image of a car as an input and outputs probability results in five different classes.
-\newline
-
 \begin{figure}[ht]
         \centering
         \includegraphics[width=1.0\linewidth]{convnet.jpeg} 
@@ -242,22 +234,15 @@ If the depth is larger than one, then dot products are done for each 2D matrix i
 To avoid losing information from the image pixels that are on the edges (as they would be included in dot products fewer times compared to central ones) we often pad input images with zeros.
 
 The size of output volume depends on several factors as seen in \ref{size_eq}.
-
 \begin{equation}\label{size_eq}
 V_{o} = (V_{i} - F + 2P) / S + 1
 \end{equation}
-
-Where:
-
-$V_{i}$ - Input volume size, only width or height
-
-$V_{o}$ - Output volume size, only width or height
-
-$F$ - Filter or receptive field size
-
-$P$ - Amount of zero padding used on the border
-
-$S$ - Stride length
+Where:\\
+$V_{i}$ - Input volume size, only width or height\\
+$V_{o}$ - Output volume size, only width or height\\
+$F$ - Filter or receptive field size\\
+$P$ - Amount of zero padding used on the border\\
+$S$ - Stride length\\
 
 If we examine the example in Figure \ref{conv1} we can see that input with a size 3 x 3, stride 1, padding 1 and filter with a size 2 x 2, produces an output with size 4 x 4.
 
@@ -330,7 +315,7 @@ It is important to note that the weights of transferred layers are fixed, they a
 Benefits of using Transfer learning are listed below:
 
 \begin{itemize}
-    \item \textb{Shorter training time.} Using a pre-trained model with fixed weights and adding few trainable layers on its top greatly lower training time, simply because there are less parameters to train.
+    \item \textbf{Shorter training time.} Using a pre-trained model with fixed weights and adding few trainable layers on its top greatly lower training time, simply because there are less parameters to train.
     \item \textbf{No need for large datasets.} Training DNN usually requires large amount of data, which we might not have. Using a pre-trained model, that was trained on a large dataset, and applying it to a specific small dataset yielded better performance than just training a model from scratch\cite{geron}.
 \end{itemize}
 
@@ -595,7 +580,7 @@ Cameras were tested in Whipsnade Zoo and the Yorkshire Wildlife Park where image
 
 They tested two thermopile cameras (Heimann 80x64, MELEXIS MLX90640) and two microbolometer cameras (ULIS Micro80 Gen2, FLIR Lepton 2.5).
 Although thermopile cameras were cheaper than microbolometer cameras, the quality of images they produced was inferior, as can be seen in Figure \ref{thermal_comparison_images}.
-
+\newline
 \begin{figure}[ht]
     \begin{subfigure}{0.5\textwidth}
         \centering
@@ -623,7 +608,7 @@ Although thermopile cameras were cheaper than microbolometer cameras, the qualit
 
 The MELEXIS MLX90640 camera had a resolution of 32 x 24 pixels and NETD of 100 \si{\milli\kelvin}, while the Heimann camera had a resolution of 80 x 64 pixels and NETD of 400 \si{\milli\kelvin}.
 It was concluded that images taken by either one of the thermopile cameras could not be used for object recognition, merely only if the object was present or not\cite{thermal_comparison}.
-
+\clearpage
 Microbolometers produced better results.
 Both the Ulis Micro80 and FLIR Lepton had a similar resolution, 80 x 80 and 80 x 60 respectively, but the Ulis Micro80 had two times bigger NETD compared to the FLIR Lepton camera, 100 \si{\milli\kelvin} and 50 \si{\milli\kelvin}, respectively.
 Images produced by the FLIR Lepton were much cleaner, so it was chosen as an appropriate camera for the task.

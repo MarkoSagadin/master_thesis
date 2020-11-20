@@ -62,15 +62,15 @@ Board features STM32F767ZI microcontroller with Cortex-M7 core, which has 2 \si{
 It also features different memory caches and flash accelerator, which provide extra boost in performance.
 It is convenient to program it, as it includes on board ST-LINK programmer circuit.
 
-We chose this microcontroller simply because it is one of more powerful general purpose microcontrollers on the market.
-As we knew that Neural Networks are computationally expensive to compute and that models can be quite large in terms of memory, we selected it knowing that we can always scale down if we have to.
-
 \begin{figure}[ht]
         \centering
-        \includegraphics[height= 8cm]{nucleo.jpg} 
+        \includegraphics[width=0.75\linewidth]{nucleo.jpg} 
         \caption{ Nucleo-F767ZI development board} 
         \label{nucleo}
 \end{figure}
+
+We chose this microcontroller simply because it is one of more powerful general purpose microcontrollers on the market.
+As we knew that Neural Networks are computationally expensive to compute and that models can be quite large in terms of memory, we selected it knowing that we can always scale down if we have to.
 
 
 \subsection{ nRF52840 DK}
@@ -83,7 +83,7 @@ nRF52840 has consumption of 0.5 \si{\micro\ampere} in sleep mode, which makes it
 
 \begin{figure}[ht]
         \centering
-        \includegraphics[width=1.0\linewidth]{nrf_board.jpg} 
+        \includegraphics[width=0.75\linewidth]{nrf_board.jpg} 
         \caption{ nRF52840DK development board}
         \label{nrf_board}
 \end{figure}
@@ -92,27 +92,33 @@ nRF52840 has consumption of 0.5 \si{\micro\ampere} in sleep mode, which makes it
 
 For the role of LoRa transceiver module we decided to use Semtech's development kit which uses LR1110 chip.
 LR1110 is a multi functional solution as it contains LoRa transceiver, GNSS and WiFi geoposition scanning modules.
-Development kit seen on Figure TODO ADD IMAGE contains a LR1110 chip, three different antennas and its respective tuning networks.
+Development kit seen on Figure \ref{lr1110_board} contains a LR1110 chip, three different antennas and its respective tuning networks.
 It comes in convenient Arduino shield form factor, which means that we can directly attach it to nRF52840 DK without any jumper wires.
-
-
-\subsection{ Boost converter evaluation kit}
-
-Power control of a Nucleo-F767ZI board and FLIR camera is provided by a dual channel P and N MOSFET, circuit can be seen on Figure \ref{mosfet}.
-Circuit functions as a high side switch, with microcontroller pin driving enable line.
-When enable line is low, n MOSFET is closed, therefore p MOSFET is also closed, as it is pulled high by resistor R1.
-When enable line is high, n MOSFET is opened, therefore gate of p MOSFET is grounded, which opens the MOSFET.
 
 \begin{figure}[ht]
         \centering
-        \includegraphics[width=1.0\linewidth]{mosfet.png} 
-        \caption{ Dual P and N MOSFET configuration for power switching}
-        \label{mosfet}
+        \includegraphics[width=0.75\linewidth]{lr1110_board.jpg} 
+        \caption{ MAX17225ENT+T boost converter breakout board}
+        \label{lr1110_board}
+\end{figure}
+
+\subsection{ Boost converter evaluation kit}
+
+Power control of a Nucleo-F767ZI board and FLIR camera is provided by MAX17225ENT+T boost converter chip.
+Breakout board containing the chip be seen on Figure \ref{boost_converter}.
+Operating the boost converter chip is simple, its enable line can be directly connected to a microcontroller pin, driving it high will enable output and driving it low, will disable it.
+Output voltage is controlled with external resistor.
+
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=0.75\linewidth]{boost_converter.jpg} 
+        \caption{ MAX17225ENT+T boost converter breakout board}
+        \label{boost_converter}
 \end{figure}
 
 \subsection{ FLIR Lepton 2.5 camera module and Lepton breakout board}
 
-In section \ref{thermal_cameras} it was described what kinds of thermal cameras exist and how do they work, and in section \ref{choosing_thermal} it was described why FLIR Lepton 2.5 was chosen.
+Section \ref{thermal_cameras} described what kinds of thermal cameras exist and how do they work, and section \ref{choosing_thermal} described why FLIR Lepton 2.5 was chosen.
 However, not much was said about what sort of support circuitry FLIR camera needs and how do we actually make images with it.
 
 FLIR Lepton camera needs to be powered from two different sources, 1.2 \si{\volt} and 2.8 \si{\volt}, as well it needs a reference clock of 25 \si{\mega\hertz}.
@@ -166,17 +172,27 @@ One VoSPI packet contains an 2 bytes of an ID field, 2 bytes of an CRC field and
 
 Refresh rate of VoSPI frames is 27 \si{\hertz}, however only every third frame is unique from the last one.
 It is a job of the microcontroller to control the SPI clock speed and process each frame fast enough so that next unique frame is not discarded.
-
 \footnotetext{ Because images pixel values fit into 14-bit range by default, it means that one pixel value needs two bytes of data (two most significant bytes are zero). That means that each image line (80 pixels) is stored into 160 bytes. If AGC conversion is turned on, each pixel is then mapped into 8-bit range, however the size of one line in VoSPI packet still remains 160 bytes, 8 most significant bits are simply zeros.}
 
 
 \subsection{ PIR Sensor}
 
-We used a cheap, generic PIR sensor, that can be seen on Figure TODO ADD IMAGE.
+We used a cheap, generic PIR sensor, that can be seen on Figure \ref{pir_sensor}.
 It has two potentiometers, which are used to adjust sensitivity and delay before firing a trigger signal.
 PIR sensor runs on 3.3 V, which enables us to directly power it from the nRF52840 DK. 
 
-
+\begin{figure}[ht] 
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{pir_top.jpg} 
+    \end{subfigure}
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{pir_bot.jpg} 
+    \end{subfigure}
+    \caption{ Front and back side of FLIR Lepton breakout board with thermal camera module inserted.}
+    \label{pir_sensor}
+\end{figure}
 
 \section{ Firmware}
 \subsection{ Tools and development environment}
@@ -239,7 +255,7 @@ For nRF52840 microcontroller we did not had to write any peripheral drivers, as 
 
 Utmost importance was achieving low power consumption.
 That meant that nRF52840 had to spend most of its time in sleep mode, only waking up for regular system checks and PIR trigger signals.
-When PIR trigger signal would be received, the interrupt would wake up the nRF52840, which would then enable boost converter TODO, thus enabling power to STM32F67 and FLIR Lepton camera.
+When PIR trigger signal would be received, the interrupt would wake up the nRF52840, which would then enable boost converter, thus enabling power to STM32F67 and FLIR Lepton camera.
 
 For communication interface we decided to implement a simple UART shell module.
 nRF52840 microcontroller would act as a host and send commands to STM32F767ZI.
@@ -254,7 +270,7 @@ We also wrote a communication module, which takes care of controlling the LR1110
 \subsection{ MicroML and build system} \label{build_system_label}
 
 Large part of this thesis was concerned with porting TFLite Micro to libopencm3, our platform of choice.
-To understand how this could be done, we first had to analyze how the code is build in TFLite Micro.
+To understand how this could be done, we first had to analyse how the code is build in TFLite Micro.
 
 To compile source files and build binaries TFLite Micro uses GNU Make.
 Main makefile that includes several platform specific makefiles dictates how firmware is built and several scripts which download various dependencies.
@@ -266,7 +282,7 @@ Each time we would build an example for a new platform, Make would first compile
 If we wanted to build firmware for a different example, Make would only had to compile source files of that example and it could reuse previously made library.
 As compiling of static library took quite some time, this was an efficient option.
 
-After analyzing the TFLite Micro's build system we created a list of requirements that we wanted to fulfil on our platform.
+After analysing the TFLite Micro's build system we created a list of requirements that we wanted to fulfil on our platform.
 
 \begin{enumerate}
     \item We wanted to keep project specific code, libopencm3 code and TFLite Micro code separated.
@@ -337,8 +353,7 @@ From main directory we call \verb|make| command with \verb|archive_makefile| and
 \verb|Archive_makefile| looks into \verb|project.mk| and extracts \verb|DEVICE| variable.
 Libopencm3's \verb|genlink-config.py| script then with the help of \verb|DEVICE| variable determines which compile flags\footnotemark are needed. 
 Afterwards all needed TensorFlow source files and third party files are compiled and a project specific \verb|microlite.a| archive file is created in our project's folder.
-
-\footnotetext{ For example, flags \verb|-mcpu=cortex-m7|, \verb|-mthumb|, \verb|-mfloat-abi=hard| and \verb|-mfpu=fpv5-sp-d16| tell GCC compiler that we are compiling for cortex-m7 proccesor, that we want to use thumb instruction set and that we want to use hardware floating point unit with single precision. This flags were generated for STM32F767ZI microcontroller by libopencm3.}
+\footnotetext{ For example, flags \verb|-mcpu=cortex-m7|, \verb|-mthumb|, \verb|-mfloat-abi=hard| and \verb|-mfpu=fpv5-sp-d16| tell GCC compiler that we are compiling for cortex-m7 processor, that we want to use thumb instruction set and that we want to use hardware floating point unit with single precision. This flags were generated for STM32F767ZI microcontroller by libopencm3.}
 
 \textit{Compile and flash} stage is then continuously performed during development period.
 By calling \verb|make flash| directly in our project folder we compile all project files, \verb|microlite.a| and libopencm3 archive files that were created early.
@@ -354,38 +369,9 @@ That way we could test ML specific routines fast and quickly remove any mistakes
 TFLite Micro API is fairly simple to use and general enough that it can be copied from project to project without many modifications.
 Figure \ref{inference_code} shows a simplified inference code example, copied from our project.
 As a first step, we need to define size of \verb|tensor_arena| array, which holds memory input, output, and intermediate arrays.
-Exact size of \verb|tensor_arena| is determined by trail and error: we set it to some big value and then decrease it in steps, until the code does not work anymore.
-
-In lines 9 and 10 we create an instance of \verb|ErrorReporter| object.
-This objects serves as a thin wrapper around platform specific \verb|printf| implementation.
-If some part of TensorFlow code crashes, \verb|ErrorReporter| notifies us what went wrong.
-
-In line 13 we pull in our ML model in hex array format that we created with xxd.
-\verb|full_quant_model| is defined in a different file, not seen in this example.
-
-In lines 16 to 24 we create an operation resolver.
-One way to do it is to specify each needed operation specifically (which is done in the example) or simply pull in all operation implementations.
-Latter approach is not recommended, as it results in a large binary size.
-To find out exactly which operations are needed we used online tool Netron\cite{netron}, which deconstructed view of trained Neural Network.
-
-In lines 27 and 33 we create an \verb|MicroIinterpreter| instance and allocate memory to it that we specified with \verb|tensor_arena| earlier.
-Lines 37 and 38 assign input and output of the interpreter to new \verb|TfLiteTensor| variables.
-This step enables us to do two things.
-Firstly, variables \verb|input| and \verb|output| now actually point to information about specific format of the data: We can found out how many dimensions are needed, what is size of those dimensions and what is expected type of variable (\verb|uint8_t|, \verb|int8_t|, \verb|float|...).
-In tests that we were running on the laptop we tested exactly for these values to confirm that the model works as expected.
-Secondly, we now have a way to directly feed data into input, this is done in for loop on line 41.
-One of \verb|TfLiteTensor| members is a union variable \verb|data| which contains variables of all possible types.
-This type of structure enables us to load input with any kind of data, in our case \verb|int8|.
-
-In line 47 we finally invoke interpreter and run inference on input data.
-Whole expression is surrounded with timing functions, which are used to keep track of time spent computing inference.
-
-We finally call \verb|print_results|, wrote by us, where we pass \verb|error_reporter| for printing, \verb|output| for extracting computed probabilities and elapsed time.
-
-After initial setup, we can load data, call invoke, and print results as many times we want.
-
+Exact size of \verb|tensor_arena| is determined by trail and error: we set it to some big value and then decrease it in steps, until the code does not work any more.
+\clearpage
 \lstset{style=mystyle}
-
 \begin{figure}[ht] 
     \begin{lstlisting}[language=C++]
 // An area of memory to use for input, output, 
@@ -444,6 +430,36 @@ int main()
     \caption{ Example of TensorFlow Lite inference code in C++.}
     \label{inference_code}
 \end{figure}
+\clearpage
+
+In lines 9 and 10 we create an instance of \verb|ErrorReporter| object.
+This objects serves as a thin wrapper around platform specific \verb|printf| implementation.
+If some part of TensorFlow code crashes, \verb|ErrorReporter| notifies us what went wrong.
+
+In line 13 we pull in our ML model in hex array format that we created with xxd.
+\verb|full_quant_model| is defined in a different file, not seen in this example.
+
+In lines 16 to 24 we create an operation resolver.
+One way to do it is to specify each needed operation specifically (which is done in the example) or simply pull in all operation implementations.
+Latter approach is not recommended, as it results in a large binary size.
+To find out exactly which operations are needed we used online tool Netron\cite{netron}, which deconstructed view of trained Neural Network.
+
+In lines 27 and 33 we create an \verb|MicroIinterpreter| instance and allocate memory to it that we specified with \verb|tensor_arena| earlier.
+Lines 37 and 38 assign input and output of the interpreter to new \verb|TfLiteTensor| variables.
+This step enables us to do two things.
+Firstly, variables \verb|input| and \verb|output| now actually point to information about specific format of the data: We can found out how many dimensions are needed, what is size of those dimensions and what is expected type of variable (\verb|uint8_t|, \verb|int8_t|, \verb|float|...).
+In tests that we were running on the laptop we tested exactly for these values to confirm that the model works as expected.
+Secondly, we now have a way to directly feed data into input, this is done in for loop on line 41.
+One of \verb|TfLiteTensor| members is a union variable \verb|data| which contains variables of all possible types.
+This type of structure enables us to load input with any kind of data, in our case \verb|int8|.
+
+In line 47 we finally invoke interpreter and run inference on input data.
+Whole expression is surrounded with timing functions, which are used to keep track of time spent computing inference.
+
+We finally call \verb|print_results|, wrote by us, where we pass \verb|error_reporter| for printing, \verb|output| for extracting computed probabilities and elapsed time.
+
+After initial setup, we can load data, call invoke, and print results as many times we want.
+
 
 \section{ Server-side components and software}
 
@@ -470,7 +486,7 @@ Node-RED functions as a glue logic that parses packets and shapes them into form
 Node-RED provides a browser-based flow editor, where actual programming can be done graphically.
 Logic is programmed by choosing different blocks called \textit{nodes} and connecting them together.
 This is convenient, as Node-RED provides different nodes for communicating with different technologies, such as MQTT, HTTP requests, emails, Twitter accounts and others.
-In our use case we need to use a combination of nodes seen on Figure \ref{nodered_flow}
+In our use case we need to use a combination of nodes seen on Figure \ref{nodered_flow}.
 Node \textit{Elephant Gateway} is connected to a specific application on TTN, which is used for collection of packets from our device in field.
 Any packet that will appear in that TTN application will also appear in Node-RED.
 Node \textit{Parse packet} extracts information contained in each packet and stores it in a specific format, which is finally send to the node \textit{Elephant Database}.

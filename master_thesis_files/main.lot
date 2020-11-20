@@ -1,10 +1,14 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {2.1}{\ignorespaces First hyperparameter search space\relax }}{10}{table.caption.6}%
-\contentsline {table}{\numberline {2.2}{\ignorespaces Partial results of first random search of hyperparameters\relax }}{11}{table.caption.7}%
-\contentsline {table}{\numberline {2.3}{\ignorespaces Second hyperparameter search space\relax }}{13}{table.caption.8}%
-\contentsline {table}{\numberline {2.4}{\ignorespaces Partial results of second random search of hyperparameters\relax }}{13}{table.caption.9}%
-\contentsline {table}{\numberline {2.5}{\ignorespaces Selected models\relax }}{15}{table.caption.10}%
-\contentsline {table}{\numberline {2.6}{\ignorespaces Second hyperparameter search space\relax }}{15}{table.caption.11}%
-\contentsline {table}{\numberline {2.7}{\ignorespaces Selected models\relax }}{17}{table.caption.13}%
-\contentsline {table}{\numberline {2.8}{\ignorespaces Second hyperparameter search space\relax }}{18}{table.caption.14}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {5.1}{\ignorespaces First hyperparameter search space\relax }}{71}{table.caption.48}%
+\contentsline {table}{\numberline {5.2}{\ignorespaces Partial results of first random search of hyperparameters\relax }}{72}{table.caption.49}%
+\contentsline {table}{\numberline {5.3}{\ignorespaces Second hyperparameter search space\relax }}{74}{table.caption.50}%
+\contentsline {table}{\numberline {5.4}{\ignorespaces Partial results of second random search of hyperparameters\relax }}{74}{table.caption.51}%
+\contentsline {table}{\numberline {5.5}{\ignorespaces Properties of selected models\relax }}{76}{table.caption.52}%
+\contentsline {table}{\numberline {5.6}{\ignorespaces Precision and recall metrics of trained models\relax }}{76}{table.caption.53}%
+\contentsline {table}{\numberline {5.7}{\ignorespaces Properties of Edge Impulse models using CNN architecture.\relax }}{79}{table.caption.55}%
+\contentsline {table}{\numberline {5.8}{\ignorespaces Properties of Edge Impulse models using Transfer Learning technique.\relax }}{79}{table.caption.56}%
+\contentsline {table}{\numberline {5.9}{\ignorespaces Precision and recall metrics of trained Edge Impulse models\relax }}{79}{table.caption.57}%
