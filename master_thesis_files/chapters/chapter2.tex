@@ -15,6 +15,8 @@ The output of the system would be a predicted type of movement.
 Although we would mark each example of measurement data with what type of movement it represents, we would not define the relationship between the two directly.
 Instead, we would let the model figure out the connection by itself, through the process of training.
 The trained model should be general enough so that it can predict the type of movement on unseen accelerometer data correctly.
+Performance of the model is measured in \textbf{accuracy}.
+It tells us what percentage of input data has been predicted correctly.
 
 There exists a large variety of different learning algorithms. 
 We can categorise them  broadly in several ways, and one of them depends on how much supervision the learning algorithm needs in the training process. 
@@ -22,7 +24,7 @@ Algorithms like K-nearest neighbours, linear and logistic regression, Support Ve
 Training data that is fed into them includes solutions, also known as \textbf{labels}\cite{geron}.
 The above described example is an example of a supervised learning problem.
 
-Algorithms like k-Means, Expectation Maximization, Principal Component Analysis, fall into the category of unsupervised learning algorithms.
+Algorithms like k-Means and Expectation Maximization, fall into the category of unsupervised learning algorithms.
 Here, training data is unlabelled, algorithms are trying to find similarities in data by themselves\cite{geron}.
 Other categories exist, such as semi-supervised learning which is a combination of the previous two and reinforcement learning, where the model acts inside the environment according to learned policies\cite{geron}.
 
@@ -31,7 +33,7 @@ They are appropriate for solving complex problems like image classification, spe
 They fall into the field of Deep Learning, which is a sub-field of Machine Learning.
 
 Training of ML models is computationally demanding, and is usually done on powerful servers or computers with dedicated Graphic Processing Units to speed up training time.
-After a model has been trained, data can be fed in and prediction is computed. 
+After a model has been trained, data can be fed in and a prediction is computed. 
 This process is also known as \textbf{inference}.
 The inference is computationally less intensive compared to the training process, so, with properly optimised models, we can run inference on personal computers, smartphones, tablets, and even directly in internet browsers.
 
@@ -56,7 +58,7 @@ Sometimes data are not collected by us, in that case we should examine them and 
 Third, we train the ML model.
 We might create something from scratch or use an existing model. 
 We can train several different types of models and choose the one that performs the best.
-To achieve the desired accuracy steps two and three can be repeated many times.
+To achieve the desired accuracy, steps two and three can be repeated many times.
 In step four we deploy our model and monitor its accuracy. 
 If accuracy drops we can always collect new data and retrain the model.
 
@@ -93,9 +95,9 @@ When we are satisfied with the accuracy of the model we quantize it, and convert
 This is  described further in Section \ref{tflite_quant}.
 
 
-\section{ Neural networks}\label{neural_networks_section}
+\section{ Neural Networks}\label{neural_networks_section}
 
-Although the first models of Neural Networks (NN) were presented in 1943 (by McCulloch and Pitts)\cite{geron} and hailed as the starting markers of the Artificial Intelligence era, it had to pass several decades of research and technological progress before they could be applied to practical, everyday problems.
+Although the first models of Neural Networks (NN) were presented in 1943 (by McCulloch and Pitts)\cite{geron} and hailed as the starting markers of the Artificial Intelligence era, several decades of research and technological progress had to pass before they could be applied to practical, everyday problems.
 Early models of NNs, such as the one proposed by McCulloch and Pitts, were inspired by how real biological neural systems work. 
 They proved that a very simple model of an artificial neuron, with one or more binary inputs and one binary output, is capable of computing any logical proposition when used as a part of a larger network\cite{geron}.
 
@@ -122,7 +124,7 @@ To learn how NNs work we can refer to Figure \ref{neuron_model}, which shows a g
 \end{figure}
 
 A Neuron takes several inputs, multiplies each input with its \textbf{weight} and sums them up.
-It adds to the sum the \textbf{bias} term, and then applies an activation function.
+A \textbf{bias} parameter is added to the sum, which is then passed to an activation function.
 
 NNs consist of many neurons, which are organised into \textbf{layers}.
 Neurons inside the same layer do not share any connections, but they connect to the layers before and after them.
@@ -150,8 +152,8 @@ It has since fallen out of practice, and is nowadays replaced by ReLu or some ot
 \end{figure}
 
 
-Another commonly used activation function is a softmax function (seen in \ref{softmax_equ}, which is takes a vector as an input, computes an exponential of every element inside it and divides that with the sum of exponents of all elements\cite{geron}
-The end results is that softmax function transforms the vector of values into a vector of probabilities.
+Another commonly used activation function is a softmax function (seen in \ref{softmax_equ}, which takes a vector as an input, computes the exponential of every element and divides that with the sum of exponentials of all elements\cite{geron}
+The input vector of values becomes a vector of probabilities.
 Softmax is usually used as an activation in the last layer of a classifier network. 
 \begin{equation}\label{softmax_equ}
     \sigma(y_i) = \frac{e^{y_i}}{\sum_{j=1}^{K}e^{y_j}}\;\;\;\text{for}\;\;i\;=\;1,\cdots,K\;\;\text{and}\;\;y=(y_1,\cdots,y_k)\in\mathbb{R}^K
@@ -312,7 +314,7 @@ It is important to note that the weights of transferred layers are fixed, they a
     \label{transfer_learning}
 \end{figure}
 
-Benefits of using Transfer learning are listed below:
+Benefits of using Transfer learning are:
 
 \begin{itemize}
     \item \textbf{Shorter training time.} Using a pre-trained model with fixed weights and adding few trainable layers on its top greatly lower training time, simply because there are less parameters to train.
@@ -338,7 +340,7 @@ When building ML models developers can use Keras Sequential API, where each laye
 Users do not need to care about connections between the layers, they only need to choose the type of layer (convolutional, max pool, fully connected), its size and a few other specific parameters.
 Sequential API is used most of the time, but if a finer level of control is needed TensorFlow provides low level math operations as well.
 
-Finally, TensorFlow's trained output model is portable\cite{geron}.
+Finally, TensorFlow's trained model is portable\cite{geron}.
 Models can be trained in one environment and executed in another.
 This means that we can train our model by writing Python code on a Linux machine and execute it with Java on an Android device.
 This last functionality is important for running ML models on microcontrollers.
@@ -352,9 +354,9 @@ TFLite itself provides API in different languages, such as Java, Swift, Python a
 TFLite Micro uses C++ API, specifically C++11, which reuses a large part of the general TensorFlow codebase.
 
 TFLite Micro library does not require any specific hardware peripherals, which means that the same C++ code can be compiled to run on a microcontroller or a personal computer with minimal changes.
-Users are only expected to implement their version of \verb|printf()| function.
-As microcontroller binaries are usually quite big, flashing firmware to a microcontroller is a time consuming procedure.
-It makes sense first to test and debug a program that includes only ML inference specific code on a personal computer, before moving on to a microcontroller, to save time.
+Users are only expected to implement their version of the \verb|printf()| function.
+As microcontroller binaries are usually quite big, flashing firmware to a microcontroller is a time consuming process.
+It makes sense to first test and debug a program that includes only ML inference specific code on a personal computer, before moving on to a microcontroller, to save time.
 Implementation of the test setup is described in \ref{build_system_label}.
 
 The TFLite Micro library is available publicly as a part of a much larger TensorFlow project on GitHub\cite{tensorflow_github}.

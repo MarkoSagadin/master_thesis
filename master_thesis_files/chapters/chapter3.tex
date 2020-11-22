@@ -1,5 +1,5 @@
 In this chapter we describe the design of a Convolutional Neural Network that can process thermal images and predict what object they contain.
-The workflow that we followed will largely be a combination of the workflows presented in Figures \ref{ml_workflow} and \ref{micro_workflow}.
+The workflow that we followed is largely a combination of the workflows shown in Figures \ref{ml_workflow} and \ref{micro_workflow}.
 
 We first had to set concrete objectives, while keeping in consideration various constraints.
 The tools and development environment that were used in the process are then described. 
@@ -202,19 +202,18 @@ We shuffled images inside of each class and then split them into training, valid
 
 The training set was used for model training, while the validation set helped to choose the best model based on accuracy.
 The test set is normally set aside and used only at the end, after the model is chosen, to assess how the model, performs on never seen data.
-If we did not use the validation set and only chose the best model according to the test set, we would be overfitting a model and we would have no accurate measure of how well our model would perform on unseen data.
+If we did not use the validation set and only chose the best model according to the test set, we could be overfitting\footnotemark a model and we would have no accurate measure of how well our model would perform on unseen data.
+\footnotetext{ Overfitting means that the model performs well on the training data, but it does not generalise well to real-world examples\cite{geron}.}
 
 At end of this step we had 4 different Python dictionaries for each class.
 Each dictionary had 3 key-value pairs for every training, validation, and test set, which held image data and encoded labels.
 
 We next applied the simplest form of normalisation to all images, a mean subtraction.
-We calculated a two-dimensional matrix that held mean values of pixels averaged over the whole training set, which we subtracted from all images, essentially zero centering the data.
+We calculated a two-dimensional matrix that held mean values of pixels averaged over the whole training set, which we subtracted from all images, essentially zero centring the data.
 This is a common preprocessing step in every ML image preprocessing pipeline, which is usually combined with standardisation\footnotemark.
-
 \footnotetext{Standardisation scales the whole range of input pixel values into -1 and 1 interval.
 This is only needed if different input values have widely different ranges\cite{cs231n}.
 Because images that were created with the FLIR camera were all 8-bit encoded and therefore had the same range, this was not needed.}
-
 We achieved this by resampling the human, cow, and nature/random classes.
 The human class was resampled 5 times, while both cow and nature/random classes were resampled 8 times.
 Figure \ref{resampled} shows the distribution of training images before and after resampling.
@@ -277,31 +276,28 @@ The exact configuration of a Keras Tuner module and comparison of trained models
 \lstset{style=mystyle}
 \begin{figure}[ht] 
     \begin{lstlisting}[language=Python]
-        model = models.Sequential()
+model = models.Sequential()
 
-        model.add(Conv2D(FilterNum1, FilterSize, 
-                         activation='relu', 
-                         padding="same", 
-                         input_shape=(60,80, 1)))
+model.add(Conv2D(FilterNum1, FilterSize, 
+                 activation='relu', 
+                 padding="same", 
+                 input_shape=(60,80, 1)))
+model.add(MaxPooling2D((2, 2)))
 
-        model.add(MaxPooling2D((2, 2)))
+model.add(Conv2D(FilterNum2, FilterSize, 
+                 activation='relu', 
+                 padding="same")
+model.add(MaxPooling2D((2, 2)))
 
-        model.add(Conv2D(FilterNum2, FilterSize, 
-                         activation='relu', 
-                         padding="same")
+model.add(Conv2D(FilterNum3, FilterSize, 
+                 activation='relu', 
+                 padding="same")
+model.add(Flatten())
 
-        model.add(MaxPooling2D((2, 2)))
-
-        model.add(Conv2D(FilterNum3, FilterSize, 
-                         activation='relu', 
-                         padding="same")
-
-        model.add(Flatten())
-
-        model.add(Dense(DenseSize, activation='relu'))
-        model.add(Dropout(DropoutRate))
-        model.add(Dense(4), activation='softmax')
-    \end{lstlisting}
+model.add(Dense(DenseSize, activation='relu'))
+model.add(Dropout(DropoutRate))
+model.add(Dense(4), activation='softmax')
+\end{lstlisting}
     \caption{ CNN architecture written in Python using Keras Sequential API.}
     \label{model_code}
 \end{figure}
@@ -343,7 +339,7 @@ After the data were uploaded, the rest of the NN design was done through the Edg
 In Figure \ref{edge_impulse_screenshot} we can see the so-called Impulse Design tab, where we design a Neural Network by choosing different blocks.
 With input blocks, we tell what kind of data are we inputting, either image or time-series data, and with processing blocks we decide how are we going to extract features.
 Input and preprocessing blocks always return same output given the same input, while learning blocks are trainable and learn from previous experiences.
-For learning block, we can choose to use a Neural Network provided by Keras, an anomaly detection algorithm, or a pre-trained model for transfer learning.
+For the learning block, we can choose to use a Neural Network provided by Keras, an anomaly detection algorithm, or a pre-trained model for transfer learning.
 
 \begin{figure}[ht]
     \centering
@@ -358,14 +354,14 @@ For the learning block we were using both Keras's Neural Network block and Trans
 
 Both of the blocks are configurable.
 We could either define our network with different blocks representing layers, or switch to the text editor with Keras Sequential API code, where we could make our adjustments.
-Settings such as learning rate, number of epochs, and confidence rating are also available, regardless of the option we chose.
+Settings such as learning rate, number of epochs\footnotemark, and confidence rating are also available, regardless of the option we chose.
 Training of Neural Networks inside Edge Impulse Studio is done in a cloud, so as users we do not have to worry about setting up a development environment.
 We only have to start it and wait for it to finish.
-
+\footnotetext{ Number of epochs tells us how many times the whole training set passed through model, during training process.}
 After training was done, Edge Impulse showed how well the model was performing on the validation data, how much flash and RAM would it need, and approximately how long on-device inference would take, based on the frequency and the processor of the microcontroller.
 
 An example of the output is presented in Figure \ref{edge_impulse_screenshot2}, where inferencing time is estimated for a Cortex-M4 microcontroller, running at 80 \si{\mega\hertz}.
-Edge Impulse also does the conversion to an optimised full-integer model automatically.
+Edge Impulse also automatically converts trained model to an optimised full-integer model.
 
 \begin{figure}[ht]
     \centering
@@ -380,4 +376,4 @@ As we wanted to compare the performance of the models on STM32f767ZI, we chose t
 We copied the example Mbed project from GitHub, and in the Edge Impulse Studio we selected to generate an inferencing library with our model for the Mbed platform.
 We extracted the library, which consisted of C++ files, into an example project and compiled it.
 An example project just runs the inference continuously on one image and outputs results over the serial port.
-A performance comparison between this example project and our implementation is done in Section TODO ADD REFERENCE.
+A performance comparison between this example project and our implementation is done in Section \ref{scoring_models}.

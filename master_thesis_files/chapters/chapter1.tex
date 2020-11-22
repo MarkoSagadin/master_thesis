@@ -92,7 +92,7 @@ They spent some time in Assam, India, where they tested a proof-of-concept desig
 They decided on devices with thermal cameras, as Human-Elephant conflicts often happen during the night.
 The sensor of choice was an FLIR Lepton 2.5 and/or 3.5.
 They also created a large dataset of elephant images while filming elephants in Whipsnade Zoo in the United Kingdom. 
-This dataset will be important for training the Neural Network, and it will be discussed in Section\ref{exploring_dataset}.
+This dataset will be used for training the Neural Networks and will be discussed in Section\ref{exploring_dataset}.
 To create a final embedded system with on device Machine Learning, Arribada chose to work with IRNAS.
 
 
@@ -101,35 +101,35 @@ To create a final embedded system with on device Machine Learning, Arribada chos
 Today Machine Learning (ML) is present in many products that we use on a daily basis.
 It can be found in email spam detection, recommendation algorithms on Facebook and YouTube, speech recognition on smartphones and medical applications.
 ML can help us solve problems that are hard to solve by conventional methods.
-For example, to develop an email spam detector, a programmer would have write a program that would scan the content of an email while checking for the common words and phrases that appear in spam emails and flag the email as spam if they would be found.
+For example, to develop an email spam detector, a programmer would have to write a program that would scan the content of an email while checking for the common words and phrases that appear in spam emails and flag the email as spam if they would be found.
 This would take several iterative cycles of writing the rules, evaluating the solution and analysing the possible mistakes. 
 Even if a possible deterministic solution would be made, it would not stand the test of time, as new forms of spam emails would emerge, tricking the system.
 
 Compare that to a Machine Learning approach. 
 Given enough examples of spam and normal emails, we can train an ML algorithm and let it to discover by itself the rules that mandate what is a spam and what is a normal email.
 The program would be much smaller compared to the one made by the conventional approach. 
-After the program is launched into the real world, we can use it to store new data and relearn, thus always adapting to new changes.
+After the program is deployed into the real world, we can use it to store new data and relearn, thus always adapting to new changes.
 This process can be automated.
 
 Same parallels can be drawn to recognising elephants from thermal images.
-It is an impossible task to write a deterministic algorithm that could identify an elephant successfully from an image and not confuse it for a human or livestock. 
+It is an difficult task to write a deterministic algorithm that could identify an elephant successfully from an image and not confuse it for a human or livestock. 
 Using an ML approach we can train the algorithm on a image dataset and let it figure out the connections between the images and correct labels. 
 
 
 \subsection{ Implementation of Machine Learning algorithms}
 
-Since ML algorithms are at their core normal math operations, they can be implemented (although maybe not efficiently) in any programming language and on any hardware platform from scratch.
-However, to avoid reinventing the wheel and wasting the time on algorithm optimisation, it is more logical to use one of ML frameworks.
+Since ML algorithms are at their core basic math operations, they can be implemented (although maybe not efficiently) in any programming language and on any hardware platform from scratch.
+However, to avoid reinventing the wheel and wasting the time on algorithm optimisation, it is more logical to use one of the available ML frameworks.
 Frameworks such as scikit-learn, Keras, Caffe and TensorFlow enable programmers to write application code in a high level language such as Python, which, at run time, translates to efficient C/C++ code. 
 These frameworks take away low-level details of ML algorithms, enabling programmers to deal only with application code and not its underlying implementation.
 
-In several past years there has been a growing desire to expand ML applications to embedded devices.
-Running ML algorithms directly on microcontrollers has benefits and challenges compared to running it on computers and servers.
+Over the past several years there has been a growing desire to expand ML applications to embedded devices.
+Executing ML algorithms directly on microcontrollers has it's benefits and presents new challenges compared to executing those algorithms on PC's or servers.
 These comparisons are described further in Section \ref{ml_on_embedded}.
 There are several frameworks, proprietary and open-sourced, that can be used to develop ML applications on microcontrollers.
 STMicroelectronics created X-CUBE-AI, a tool that converts the pre-trained model created by one of the various Deep Learning frameworks into an optimised library. 
 X-CUBE-AI works only with STM32 microcontrollers, and is proprietary.
-Another framework, TensorFlow Lite for microcontrollers, was created as an extension of TensorFlow Lite, which was used to develop ML models for mobile applications.
+Another framework, TensorFlow Lite for microcontrollers, was created as an extension of TensorFlow Lite, which is used to develop ML models for mobile applications.
 It provides converter tools and C++ implementations of common ML operations.
 In 2019 another framework, \si{\micro}Tensor, was merged with TensorFlow Lite, providing it with support for an efficient CMSIS-NN library developed by ARM.
 
@@ -140,7 +140,7 @@ It can be used with any family of microcontrollers, and is open-source, so we ca
 \subsection{ Edge Impulse}
 
 Regardless of the many Ml frameworks on the market, companies that specialise in ML on embedded devices are scarce.
-One of them is Edge Impulse, which is a recently founded company in San Jose, USA.
+One of them is Edge Impulse, which is a recently founded company from San Jose, USA.
 They provide users with an end to end web solution for developing ML applications for embedded devices.
 Instead of designing and writing specific programs that deal with preprocessing of training data and creation and training of ML models, Edge Impulse does this automatically for their customers.
 After the ML model is created and converted into an optimised format for embedded systems, customers get the immediate first approximation of how much RAM and FLASH memory the model will take and how fast it will run.
@@ -151,9 +151,9 @@ Their solution will be used as a benchmark for our work with TensorFlow Lite.
 
 \section{ Objective}\label{objective}
 
-The objective of this Master's thesis is to evaluate the feasibility of  animals, especially elephants, from thermal images, with Machine Learning algorithms, running directly on a microcontroller.
+The objective of this Master's thesis is to evaluate the feasibility to recognize animals, especially elephants, from thermal images, with Machine Learning algorithms, running directly on a microcontroller.
 
-The objective of this Master's thesis is to design and build a system capable of detecting an elephant with the help of Machine Learning algorithms in the day or at night.
+Additionally we will design and build a system capable of detecting an elephant with the help of Machine Learning algorithms in the day or at night.
 Detection of an elephant needs to be reported over a wireless network to an application server.
 
 For that we will:

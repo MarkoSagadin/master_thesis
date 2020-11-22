@@ -1,6 +1,6 @@
 \section{ Comparison of models}\label{model_comparisons}
 
-As mentioned in section \ref{cnn_ref}, we used Keras Tuner model to find hyperparameters that would yield the highest accuracy.
+As mentioned in Section \ref{cnn_ref}, we used Keras Tuner model to find hyperparameters that would yield the highest accuracy.
 Instead of hard-coding hyperparameters when building a model with Keras API, we defined a search space of possible values with \verb|HyperParameter| class and used that as a hyperparameter.
 
 We passed the created model to a \verb|RandomSearch| class, with few other parameters such as batch size, number of epochs and maximum number of trials.
@@ -14,7 +14,7 @@ Comparison of models trained in Edge Impulse Studio was also done.
 
 \subsection{ Hyperparameter search space and results analysis}
 
-General structure of CNN model was already described in section \ref{cnn_ref} and in Figure \ref{model_code}.
+General structure of CNN model was already described in Section \ref{cnn_ref} and in Figure \ref{model_code}.
 We decided to search for the following hyperparameters: 
 
 \begin{itemize}
@@ -347,7 +347,7 @@ In all cases the pre-trained model was followed by a one or two dense layers, wi
 \bigskip
 \begin{table}[!htbp]
     \centering
-    \caption{ Properties of Edge Impulse models using Transfer Learning technique.}
+    \caption{ Properties of Edge Impulse models using Transfer Learning technique}
     \rowcolors{2}{gray!25}{white}
     \makebox[\textwidth]{%
     \begin{tabular}{llllllll}
@@ -485,7 +485,7 @@ Figure \ref{speed_comp} shows models ranked from the fastest to the slowest.
     \label{speed_comp}
 \end{figure}
 
-We can see that all models perform inference in less than 1 second, which was a constraint that we set earlier in section \ref{model_obj}.
+We can see that all models perform inference in less than 1 second, which was a constraint that we set earlier in Section \ref{model_obj}.
 Best time wise performing model was \textit{338b} with inference time of 51 \si{\milli\second}, there are also many models that perform inference under 300 \si{\milli\second}.
 
 We also discovered some unexpected trend in results.
@@ -568,7 +568,7 @@ By enabling flash prefetch microcontroller reads additional sequential instructi
 Elimination of wait states greatly improved the time of inference, it was decreased to 228 \si{\milli\second}.
 
 
-\subsection{ Scoring trained models}
+\subsection{ Scoring trained models}\label{scoring_models}
 
 Choosing the best model for on-field deployment is a hard task due to many different metrics: precision and recall values, time of inference, and code size.
 To make this job easier we devised a scoring system: each metric is going to be normalized and multiplied with some weight value.
