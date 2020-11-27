@@ -60,7 +60,7 @@ Instead of writing Python scripts and executing them through the command line, w
 Juptyer Notebook is a web-based application that can run programs that are a mix of code, explanatory text, and computer output.
 Users can divide code into segments, which can be executed separately, and visual output from modules such as Matplotlib is also supported.
 To use Juptyer Notebook on our cloud instance, we had to install and run it.
-We could then access the web service simply through a web browser by writing the IP address of the server, followed by the default Juptyer Notebook server port, 8888.
+We could then access the web service simply through a we browser by writing the IP address of the server, followed by the default Juptyer Notebook server port, 8888.
 
 
 \section{ Creating the dataset}
@@ -348,9 +348,36 @@ For the learning block, we can choose to use a Neural Network provided by Keras,
     \label{edge_impulse_screenshot}
 \end{figure}
 
-Since we were training with image data, we selected an image input block. As Edge Impulse did not support images of different image ratios at the time, we had to crop our images to 60 x 60 pixels.
+Since we were training with image data, we selected an image input block. 
+As Edge Impulse did not support images of different image ratios at the time, we had to resize our images to 60 x 60 pixels.
+Image input block offers different resize options, which are also shown in Figure \ref{crop_options}.
+We chose crop option, where the excess pixel were simply dropped.
 For the processing block, we selected the image processing block as this was the only possible choice.
 For the learning block we were using both Keras's Neural Network block and Transfer Learning block.
+\begin{figure}[ht]
+    \begin{subfigure}{0.5\textwidth}
+        \raggedleft
+        \includegraphics[width=0.75\linewidth]{crop1.png} 
+        \label{thermal_comparison_a}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \raggedright 
+        \includegraphics[width=0.75\linewidth]{crop2.png} 
+        \label{thermal_comparison_b}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \raggedleft
+        \includegraphics[width=0.75\linewidth]{crop3.png} 
+        \label{thermal_comparison_c}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \raggedright 
+        \includegraphics[width=0.75\linewidth]{crop4.png} 
+        \label{thermal_comparison_d}
+    \end{subfigure}
+\caption{ Different resizing methods}
+    \label{crop_options}
+\end{figure}
 
 Both of the blocks are configurable.
 We could either define our network with different blocks representing layers, or switch to the text editor with Keras Sequential API code, where we could make our adjustments.

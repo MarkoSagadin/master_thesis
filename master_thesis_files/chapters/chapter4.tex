@@ -1,12 +1,12 @@
 General structure and tasks of an early warning system were already described in chapter \ref{early_detection_system}.
-As it was mentioned before, an early warning system consists of two different components:
+As mentioned before, an early warning system consists of two different components:
 
 \begin{enumerate} 
-    \item Several small embedded devices, which are deployed in the field. They capture images with a thermal camera, process them and send results over a wireless network.
-    \item One gateway, which is receiving results and relaying them to an application server over the Internet connection.
+    \item Several small embedded devices, which are deployed in the field. They capture images with a thermal camera and process them. They sent messages over a wireless network.
+    \item One gateway, which is receiving messages and relaying them to an application server over the Internet connection.
 \end{enumerate} 
 
-In this chapter, we focus on the structure and design of the deployed embedded system, both from hardware and firmware point of perspective.
+In this chapter, we focus on the structure and design of the deployed embedded system, both from hardware and firmware perspective.
 We also describe the construction of an application server, how received data is processed, stored and presented.
 
 The general block diagram of an embedded system with a thermal camera is presented in Figure \ref{system_diagram} 
@@ -24,12 +24,12 @@ Powerful, high-performance microcontroller and thermal camera are usually turned
 A less capable, but low-power microcontroller spends most of the time in low-power mode, waiting for a wakeup trigger from the PIR sensor.
 The PIR sensor points in the same direction as the thermal camera and detects any IR radiation of a passing object.
 
-If an object passes PIR's field of vision, PIR sensor produces trigger signal, which consequently wakes up a low power microcontroller.
+If an object passes PIR's field of vision, PIR sensor produces trigger signal, which consequently wakes up a low-power microcontroller.
 The microcontroller then enables the power supply to the high-performance microcontroller and thermal camera, and sends a command request for image capture and processing.
 
 The thermal camera only communicates with a high-performance microcontroller, which configures it and requests image data.
-That data is then input into a Neural Network algorithm and probability results are then returned to a low power microcontroller.
-Low power microcontroller then packs the data and sends it over the radio through a wireless communication module.
+That data is then input into a Neural Network algorithm, which computes probability results that are sent back to a low-power microcontroller.
+Low-power microcontroller then packs the data and sends it over the radio through a wireless communication module.
 The power source to a high-performance microcontroller and thermal camera is then turned off to conserve power.
 Diagram of the described procedure can also be seen in Figure \ref{system_flow}.
 
@@ -58,7 +58,7 @@ The system consists of various development and evaluation boards.
 \subsection{ Nucleo-F767ZI}
 
 Nucleo-F767ZI (seen on Figure \ref{nucleo}) is a development board made by STMicroelectronics.
-Board features STM32F767ZI microcontroller with Cortex-M7 core, which has 2 \si{\mega\byte} of flash, 512 \si{\kilo\byte} of SRAM and can operate at clock speed of 216 \si{\mega\hertz}.
+Board features STM32F767ZI (STM32) microcontroller with Cortex-M7 core, which has 2 \si{\mega\byte} of flash, 512 \si{\kilo\byte} of SRAM and can operate at clock speed of 216 \si{\mega\hertz}.
 It also features memory caches and a flash accelerator, which provide an extra boost in performance.
 It is convenient to program it, as it includes onboard ST-LINK programmer circuit.
 
@@ -75,11 +75,11 @@ As we knew that Neural Networks are computationally expensive to compute and tha
 
 \subsection{ nRF52840 DK}
 
-For the part of the system, which had to contain a low-power microcontroller and would control the communication module and power control for the Nucleo-F767ZI board, we decided to use the nRF52840 development kit.
+For the part of the system, which had to contain a low-power microcontroller and would control the communication module and power control for the Nucleo-F767ZI board, we decided to use the nRF52840 DK development kit.
 The development kit, made by Nordic Semiconductor, can be seen in Figure \ref{nrf_board}
 
-The main logic on the board is provided by an nRF52840 microcontroller with Cortex-M4 core, which has 1 \si{\mega\byte} of flash, 256 \si{\kilo\byte} of RAM and a Bluetooth 5 support.
-nRF52840 has a consumption of 0.5 \si{\micro\ampere} in sleep mode, which makes it ideal for our purpose.
+The main logic on the board is provided by an nRF52840 (nRF52) microcontroller with Cortex-M4 core, which has 1 \si{\mega\byte} of flash, 256 \si{\kilo\byte} of RAM and a Bluetooth 5 support.
+nRF52 has a consumption of 0.5 \si{\micro\ampere} in sleep mode, which makes it ideal for our purpose.
 
 \begin{figure}[ht]
         \centering
@@ -92,19 +92,19 @@ nRF52840 has a consumption of 0.5 \si{\micro\ampere} in sleep mode, which makes 
 
 For the role of the LoRa transceiver module, we decided to use Semtech's development kit which uses the LR1110 chip.
 LR1110 is a multi-functional solution as it contains LoRa transceiver, GNSS and WiFi geoposition scanning modules.
-Development kit seen in Figure \ref{lr1110_board} contains an LR1110 chip, three different antennas and its respective tuning networks.
-It comes in a convenient Arduino shield form factor, which means that we can directly attach it to nRF52840 DK without any jumper wires.
+Development kit seen in Figure \ref{lr1110_board} contains an LR1110 chip, three different antennas and their respective tuning networks.
+It comes in a convenient Arduino shield form factor, which means that we can directly attach it to nRF52 without any jumper wires.
 
 \begin{figure}[ht]
         \centering
         \includegraphics[width=0.75\linewidth]{lr1110_board.jpg} 
-        \caption{ MAX17225ENT+T boost converter breakout board}
+        \caption{ LR1110 development kit}
         \label{lr1110_board}
 \end{figure}
 
 \subsection{ Boost converter evaluation kit}
 
-Power control of the Nucleo-F767ZI board and the FLIR camera is provided by the MAX17225ENT+T boost converter chip.
+Power of the Nucleo-F767ZI board and the FLIR camera is provided by the MAX17225ENT+T boost converter chip.
 Breakout board containing the chip is shown in Figure \ref{boost_converter}.
 Operating the boost converter chip is simple, its enable line can be directly connected to a microcontroller pin, driving it high will enables output and driving it low disables it.
 The output voltage is controlled by an external resistor.
@@ -139,7 +139,7 @@ Breakout board can be powered from 3.3 to 5 \si{\volt} and also conveniently bre
     \label{lepton_breakout}
 \end{figure}
 
-FLIR Lepton module itself contains five different subsystems that work together and can be configured:
+FLIR Lepton module itself contains five different subsystems that can be configured:
 
 \begin{itemize}
     \item AGC – Automatic Gain Control, affects image contrast and quality
@@ -155,29 +155,11 @@ For our purposes, the AGC subsystem was turned on, as the input to our image cla
 
 The microcontroller communicates with FLIR camera over two interfaces: two-wire interface (TWI) is used for control of the FLIR camera and Lepton's VoSPI protocol is used for image transfer.
 
-TWI is a variation of an I2C protocol, instead of 8 bits all transfers are 16 bits.
-The internal structure of the Lepton's control block can be seen in Figure \ref{flir_lepton_cci}.
-Whenever we are communicating with the FLIR camera we have to specify which subsystem are we addressing, what type of action we want to do (get, set or run), length of data and data itself.
-
-\begin{figure}[ht]
-        \centering
-        \includegraphics[height=12cm]{flir_lepton_cci.png} 
-        \caption{ Command and control interface of FLIR Lepton camera.} 
-        \label{flir_lepton_cci}
-\end{figure}
-
-Lepton's VoSPI protocol is used only to stream image data from the camera module to the microcontroller, which means that the MOSI line is not used.
-Each image fits into one VoSPI frame and each frame consists of 60 VoSPI packets.
-One VoSPI packet contains 2 bytes of an ID field, 2 bytes of a CRC field and 160 bytes of data\footnotemark, which represents one image line.
-
-The refresh rate of VoSPI frames is 27 \si{\hertz}, however, only every third frame is unique from the last one.
-It is the job of the microcontroller to control the SPI clock speed and process each frame fast enough so that the each unique frame is not discarded.
-\footnotetext{ Because images pixel values fit into the 14-bit range by default, it means that one-pixel value needs two bytes of data (two most significant bytes are zero). That means that each image line (80 pixels) is stored in 160 bytes. If AGC conversion is turned on, each pixel is then mapped into an 8-bit range, however, the size of one line in the VoSPI packet remains 160 bytes, 8 most significant bits are simply zeros.}
 \subsection{ PIR Sensor}
 
 We used a cheap, generic PIR sensor, that can be seen in Figure \ref{pir_sensor}.
 It has two potentiometers, which are used to adjust sensor's sensitivity and detection delay.
-PIR sensor runs on 3.3 V, which enables us to directly power it from the nRF52840 DK. 
+PIR sensor runs on 3.3 V, which enables us to directly power it from the nRF52. 
 
 \begin{figure}[ht] 
     \begin{subfigure}[b]{0.5\textwidth}
@@ -188,7 +170,7 @@ PIR sensor runs on 3.3 V, which enables us to directly power it from the nRF5284
         \centering
         \includegraphics[width=1.0\linewidth]{pir_bot.jpg} 
     \end{subfigure}
-    \caption{ Front and back side of FLIR Lepton breakout board with thermal camera module inserted.}
+    \caption{ Front and back side of a PIR sensor.}
     \label{pir_sensor}
 \end{figure}
 
@@ -215,33 +197,34 @@ As libopencm3 does not provide \verb|printf| functionality out of the box we use
 
 \subsubsection{ Development environment for nRF52840}
 
-To develop firmware for nRF52840 we decided to use The Zephyr OS, which is a small kernel, designed for IoT embedded systems.
+To develop firmware for nRF52 we decided to use The Zephyr OS, which is a small kernel, designed for IoT embedded systems.
 Besides usual RTOS functionalities such as tasks, mutexes, semaphores it also provides a common driver API for supported microcontrollers.
 
 
 \subsection{ Architecture design}
 
-STM32F767ZI firmware was designed to be very efficient and lean, only truly necessary parts of firmware were implemented.
+STM32 firmware was designed to be very efficient and lean, only truly necessary parts of firmware were implemented.
 
 As seen in Figure \ref{firmware_diagram} we split the firmware into two hardware and application modules.
 
 \begin{figure}[ht]
         \centering
         \includegraphics[width=1.0\linewidth]{firmware_diagram.pdf} 
-        \caption{ Architecture diagram of the firmware that is running on a STM32F767ZI microcontroller.} 
+        \caption{ Architecture diagram of the firmware that is running on a STM32 microcontroller.} 
         \label{firmware_diagram}
 \end{figure}
 
 Hardware specific module is mostly using libopencm3 API to set the system clock and initialize peripherals.
 Small function wrappers had to be written to make use of various peripheral drivers easier.
 
-FLIR Lepton driver was written from scratch, as many libraries provided either by the camera manufacturer or open source communities were too complex and implemented many features that we did not require.
+FLIR Lepton libraries provided by the camera manufacturer or open-source communities were too complex and implemented way too many features that we did not need.
+We wrote FLIR Lepton driver from scratch, while reusing some concepts from official manufacturer's library.
 
 Thanks to TFLite Micro API, the ML inference module could be written as a simple black box.
 Image data goes in, predictions come out.
 
-The architecture diagram for nRF52840 can be seen on Figure \ref{firmware_diagram_wisent}.
-For the nRF52840 microcontroller we did not had to write any peripheral drivers, as they were provided by Zephyr itself.
+The architecture diagram for nRF52 can be seen on Figure \ref{firmware_diagram_wisent}.
+For the nRF52 microcontroller we did not had to write any peripheral drivers, as they were provided by Zephyr itself.
 
 \begin{figure}[ht]
         \centering
@@ -251,18 +234,151 @@ For the nRF52840 microcontroller we did not had to write any peripheral drivers,
 \end{figure}
 
 Utmost importance was achieving low power consumption.
-That meant that nRF52840 had to spend most of its time in low-power mode, only waking up for regular system checks and PIR trigger signals.
-When PIR trigger signal would be received, the interrupt would wake up the nRF52840, which would then enable a boost converter, thus enabling power to STM32F67 and FLIR Lepton camera.
+That meant that nRF52 had to spend most of its time in low-power mode, only waking up for regular system checks and PIR trigger signals.
+When PIR trigger signal would be received, the interrupt would wake up the nRF52, which would then enable a boost converter, thus enabling power to STM32 and FLIR Lepton camera.
 
 For the communication interface, we decided to implement a simple UART shell module.
-nRF52840 microcontroller would act as a host and send commands to STM32F767ZI.
-STM32F767ZI would execute commands and send back results.
-Such setup enabled us to test each microcontroller separately.
+nRF52 microcontroller would act as a host and send commands to STM32.
+STM32 would execute commands and send back results.
+Once we knew that UART communication worked correctly, we could issue commands directly from the computer's serial port, which enabled us to develop and test firmware for STM32 separately from nRF52 firmware.
 
-Once we knew that UART communication worked correctly, we could issue commands directly from the computer's serial port, which enabled us to develop and test firmware for STM32F767ZI separately from nRF52840 firmware.
+We also wrote a communication module, which took care of controlling the LR1110 chip, joining the LoRaWAN network, preparing outgoing messages and sending them over the LoRaWAN network.
 
-We also wrote a communication module, which takes care of controlling the LR1110 chip, joining the LoRaWAN network, preparing outgoing messages and sending them over the LoRaWAN network.
 
+\subsection{ FLIR Lepton driver}
+
+As mentioned before, FLIR Lepton driver had to implement two different protocols to control FLIR Lepton camera: TWI for general camera control and VoSPI for receiving images.
+
+TWI is a variation of an I2C protocol, instead of 8 bits all transfers are 16 bits.
+The internal structure of the Lepton's control block can be seen in Figure \ref{flir_lepton_cci}.
+Whenever we are communicating with the FLIR camera we have to specify which subsystem are we addressing, what type of action we want to do (get, set or run), length of data and data itself.
+
+\begin{figure}[ht]
+        \centering
+        \includegraphics[height=15cm]{flir_lepton_cci.png} 
+        \caption{ Command and control interface of FLIR Lepton camera.} 
+        \label{flir_lepton_cci}
+\end{figure}
+
+We wrote the driver in such a way that API hid low-level details of exact data transfers. 
+Two examples of such API can be seen in Figure \ref{flir_api}.
+
+\lstset{style=mystyle}
+\begin{figure}[ht] 
+\begin{lstlisting}[language=C]
+/*!
+ * @brief               Function sets position of shutter
+ *
+ * @param[in] position  
+ */
+void set_flir_shutter_position(SHUTTER_POSITION position)
+{ 
+    if(!set_flir_command32(command_code(SHUTTER_POSITION, 
+                           LEP_I2C_COMMAND_TYPE_SET), 
+                           (uint32_t) position))
+    {
+        flir_print("Set shutter position : function failed!\n");
+    }
+}
+
+/*!
+ * @brief               Enable or disable AGC processing
+ *
+ * @param[in] position  If true AGC will be enabled
+ */
+void set_flir_agc(bool enable)
+{
+    if(!set_flir_command32(command_code(AGC_ENABLE_STATE, 
+                           LEP_I2C_COMMAND_TYPE_SET), 
+                           (uint32_t) enable))
+    {
+        flir_print("AGC mode: function failed!\n");
+    }
+}
+\end{lstlisting}
+    \caption{ Examples of FLIR Lepton driver API.}
+    \label{flir_api}
+\end{figure}
+
+Lepton's VoSPI protocol (which is variation of SPI protocol) is used only to stream image data from the camera module to the microcontroller, which means that the MOSI line is not used.
+Each image fits into one VoSPI frame and each frame consists of 60 VoSPI packets.
+One VoSPI packet contains 2 bytes of an ID field, 2 bytes of a CRC field and 160 bytes of data\footnotemark, which represents one image line.
+ID field of a valid VoSPI packet contains the number of equivalent frame row.
+The refresh rate of VoSPI frames is 27 \si{\hertz}, however, only every third frame is unique from the last one.
+It is the job of the microcontroller to control the SPI clock speed and process each frame fast enough so that the each unique frame is not discarded.
+
+Figure \ref{vospi_code} shows our implementation of a \verb|get_picture| function that was reading images from VoSPI protocol.
+To capture images from VoSPI stream we implemented finite state machine with three states: \verb|INIT|, \verb|OUT_OF_SYNC| and \verb|READING_FRAME|.
+State \verb|INIT| executes chip select sequence expected by the FLIR camera.
+After it, we start clocking out a stream of VoSPI frames over MISO line.
+Whenever we start communication, we did not know where exactly in stream are we, plus FLIR is also transmitting discard packets between valid frames.
+To solve this problem we have to check ID field of every VoSPI packet and look for a ID byte with a value \verb|0x00|, while discarding packets with values \verb|0xFF|.
+When first frame row is detected we simply start storing all incoming frame rows into \verb|frame| variable, while checking that ID byte is correct.
+We continue doing until all VoSPI packets of a single frame are received.
+If we somehow miss the VoSPI packet, we returned early from the function.
+
+\lstset{style=mystyle}
+\begin{figure}[ht] 
+\begin{lstlisting}[language=C]
+bool get_picture(uint16_t frame[60][82])
+{
+    state_e state = INIT;
+    uint8_t frame_row = 0;
+    while(1) 
+    {
+        switch(state) 
+        {
+            case INIT:
+                enable_flir_cs();
+                disable_flir_cs();
+                delay(185);
+                enable_flir_cs();
+                state = OUT_OF_SYNC;
+            break;
+
+            case OUT_OF_SYNC:
+                spi_read16(frame[frame_row], 82);
+                // Look for the start of the frame
+                if ((frame[frame_row][0] & 0x00FF) == 0x0) 
+                {
+                    // Start of frame detected
+                    frame_row++;
+                    state = READING_FRAME;
+                }
+            break;
+
+            case READING_FRAME:
+                spi_read16(frame[frame_row], 82);
+                // Check each frame row
+                if((frame[frame_row][0] & 0x00FF) == frame_row) 
+                {
+                    // Frame row matches
+                    frame_row++;
+                    if (frame_row == 60) 
+                    {
+                        // Full frame received, return to caller
+                        disable_flir_cs();
+                        return true
+                    }
+                }
+                else 
+                {
+                    // Error, end image reading
+                    disable_flir_cs();
+                    return false;
+                }
+            break;
+        }
+    }
+}
+\end{lstlisting}
+    \caption{ Finite state machine implementation for reading FLIR images over SPI.}
+    \label{vospi_code}
+\end{figure}
+
+\footnotetext{ Because images pixel values fit into the 14-bit range by default, it means that one-pixel value needs two bytes of data (two most significant bytes are zero). That means that each image line (80 pixels) is stored in 160 bytes. If AGC conversion is turned on, each pixel is then mapped into an 8-bit range, however, the size of one line in the VoSPI packet remains 160 bytes, 8 most significant bits are simply zeros.}
+
+\subsection{ Simple shell}
 
 \subsection{ MicroML and build system} \label{build_system_label}
 
@@ -350,7 +466,7 @@ From main directory, we call \verb|make| command with \verb|archive_makefile| an
 \verb|Archive_makefile| looks into \verb|project.mk| and extracts \verb|DEVICE| variable.
 Libopencm3's \verb|genlink-config.py| script then determines which microcontroller specific compilation flags\footnotemark are needed. 
 All needed TensorFlow source files and third party files are then compiled and a project specific \verb|microlite.a| archive file is created in our project's folder.
-\footnotetext{ For example, to compile firmware for STM32F767ZI we need flags \verb|-mcpu=cortex-m7|, \verb|-mthumb|, \verb|-mfloat-abi=hard| and \verb|-mfpu=fpv5-sp-d16|.They tell GCC compiler that we are compiling for a cortex-m7 processor, that we want to use thumb instruction set and that we want to use hardware floating-point unit with single precision.}
+\footnotetext{ For example, to compile firmware for STM32 we need flags \verb|-mcpu=cortex-m7|, \verb|-mthumb|, \verb|-mfloat-abi=hard| and \verb|-mfpu=fpv5-sp-d16|.They tell GCC compiler that we are compiling for a cortex-m7 processor, that we want to use thumb instruction set and that we want to use hardware floating-point unit with single precision.}
 
 \textit{Compile and flash} stage is then continuously executed during the development process.
 By calling \verb|make flash| directly in our project folder we compile all project files, \verb|microlite.a| and libopencm3 archive files that were created early.
