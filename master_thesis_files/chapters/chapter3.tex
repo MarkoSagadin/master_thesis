@@ -155,7 +155,8 @@ This enabled us to generate the graph seen in Figure \ref{nested_donut1}.
 \end{figure}
 
 We used a total of 13,667 images from the thermal image dataset: almost 88 \% of them were made in Whipsnade Zoo, while the rest of them were made in Assam.
-All images from Assam were made with the FLIR Lepton 2.5, while both cameras were used in Whipsnade zoo.However, more photos were made with the 2.5 version of the thermal camera.
+All images from Assam were made with the FLIR Lepton 2.5, while both cameras were used in Whipsnade zoo.
+However, more photos were made with the 2.5 version of the thermal camera.
 
     \item After inspecting the folder with goat images manually, we saw that it contained mostly images of a herd of goats standing around a single elephant.
 This folder was usable only for object localisation ML models, where each goat could be tagged with a bounding box. 
@@ -247,7 +248,7 @@ While specifying layers, we only had to specify what type of layer we wanted, it
 We did not have to keep track of any connections between or in layers, as this was done automatically by Keras.
 
 For a model architecture we decided to use a simplified version of the common CNN architecture that was shown in Figure \ref{convnet}.
-The best way to present the model is by inspecting the Sequential API code that creates it, and the code is shown in Figure \ref{model_code}.
+The best way to present the model is by inspecting the Sequential API code that creates it, and the code is shown in Listing \ref{model_code}.
 
 The model consisted of two pairs of convolutional and max-pooling layers, followed by a final convolutional layer.
 For activation the function ReLu was chosen, as it is currently the most effective and popular option\cite{cs231n}\cite{geron}.
@@ -275,7 +276,7 @@ The exact configuration of a Keras Tuner module and comparison of trained models
 
 \lstset{style=mystyle}
 \begin{figure}[ht] 
-    \begin{lstlisting}[language=Python]
+\begin{lstlisting}[language=Python]
 model = models.Sequential()
 
 model.add(Conv2D(FilterNum1, FilterSize, 
@@ -298,10 +299,9 @@ model.add(Dense(DenseSize, activation='relu'))
 model.add(Dropout(DropoutRate))
 model.add(Dense(4), activation='softmax')
 \end{lstlisting}
-    \caption{ CNN architecture written in Python using Keras Sequential API.}
-    \label{model_code}
+\captionof{lstlisting}{ CNN architecture written in Python using Keras Sequential API.}
+\label{model_code}
 \end{figure}
-
 
 \section{ Model optimisation}
 

@@ -36,7 +36,7 @@ Diagram of the described procedure can also be seen in Figure \ref{system_flow}.
 \begin{figure}[ht]
         \centering
         \includegraphics[width=1.0\linewidth]{system_flow.pdf} 
-        \caption{ Diagram describing behavior of embedded early warning system} 
+        \caption{ Diagram describing behaviour of embedded early warning system} 
         \label{system_flow}
 \end{figure}
 
@@ -183,14 +183,14 @@ Instead we used terminal text editor Vim for writing and editing the code.
 As we were programming two different microcontrollers, we were using different tools for each one.
 
 
-\subsubsection{ Development environment for STM32f767ZI}
+\subsubsection{ Development environment for STM32F767ZI}
 
 For building our firmware programs we used GNU Make, build automation that builds software according to user written \textit{Makefiles}.
 To compile code we used the Arm embedded version of GNU GCC.
 To program binaries into our microcontroller we used OpenOCD.
 
 For hardware abstraction library we used libopencm3, which is an open-source low-level library that supports many of Arm's Cortex-M processors cores, which can be found in a variety of microcontroller families such as ST's STM32, Toshiba's TX03, Atmel's SAM3U, NXP's LPC1000, Silabs's EFM32 and others.
-Libopencm3 provided us with linker files, startup routines, thinly wrapped peripheral drivers and a starting template makefile, which served as a starting point for our project.
+Libopencm3 provided us with linker files, start-up routines, thinly wrapped peripheral drivers and a starting template makefile, which served as a starting point for our project.
 
 As libopencm3 does not provide \verb|printf| functionality out of the box we used an excellent library by GitHub user mpaland\cite{printf_lib}.
 
@@ -238,10 +238,6 @@ That meant that nRF52 had to spend most of its time in low-power mode, only waki
 When PIR trigger signal would be received, the interrupt would wake up the nRF52, which would then enable a boost converter, thus enabling power to STM32 and FLIR Lepton camera.
 
 For the communication interface, we decided to implement a simple UART shell module.
-nRF52 microcontroller would act as a host and send commands to STM32.
-STM32 would execute commands and send back results.
-Once we knew that UART communication worked correctly, we could issue commands directly from the computer's serial port, which enabled us to develop and test firmware for STM32 separately from nRF52 firmware.
-
 We also wrote a communication module, which took care of controlling the LR1110 chip, joining the LoRaWAN network, preparing outgoing messages and sending them over the LoRaWAN network.
 
 
@@ -261,10 +257,10 @@ Whenever we are communicating with the FLIR camera we have to specify which subs
 \end{figure}
 
 We wrote the driver in such a way that API hid low-level details of exact data transfers. 
-Two examples of such API can be seen in Figure \ref{flir_api}.
+Two examples of such API can be seen in Listing \ref{flir_api}.
 
 \lstset{style=mystyle}
-\begin{figure}[ht] 
+\begin{figure}[ht]
 \begin{lstlisting}[language=C]
 /*!
  * @brief               Function sets position of shutter
@@ -296,8 +292,8 @@ void set_flir_agc(bool enable)
     }
 }
 \end{lstlisting}
-    \caption{ Examples of FLIR Lepton driver API.}
-    \label{flir_api}
+\captionof{lstlisting}{ Examples of FLIR Lepton driver API.}
+\label{flir_api}
 \end{figure}
 
 Lepton's VoSPI protocol (which is variation of SPI protocol) is used only to stream image data from the camera module to the microcontroller, which means that the MOSI line is not used.
@@ -307,7 +303,7 @@ ID field of a valid VoSPI packet contains the number of equivalent frame row.
 The refresh rate of VoSPI frames is 27 \si{\hertz}, however, only every third frame is unique from the last one.
 It is the job of the microcontroller to control the SPI clock speed and process each frame fast enough so that the each unique frame is not discarded.
 
-Figure \ref{vospi_code} shows our implementation of a \verb|get_picture| function that was reading images from VoSPI protocol.
+Listing \ref{vospi_code} shows our implementation of a \verb|get_picture| function that was reading images from VoSPI protocol.
 To capture images from VoSPI stream we implemented finite state machine with three states: \verb|INIT|, \verb|OUT_OF_SYNC| and \verb|READING_FRAME|.
 State \verb|INIT| executes chip select sequence expected by the FLIR camera.
 After it, we start clocking out a stream of VoSPI frames over MISO line.
@@ -316,9 +312,8 @@ To solve this problem we have to check ID field of every VoSPI packet and look f
 When first frame row is detected we simply start storing all incoming frame rows into \verb|frame| variable, while checking that ID byte is correct.
 We continue doing until all VoSPI packets of a single frame are received.
 If we somehow miss the VoSPI packet, we returned early from the function.
-
 \lstset{style=mystyle}
-\begin{figure}[ht] 
+\begin{figure}[ht]
 \begin{lstlisting}[language=C]
 bool get_picture(uint16_t frame[60][82])
 {
@@ -372,13 +367,71 @@ bool get_picture(uint16_t frame[60][82])
     }
 }
 \end{lstlisting}
-    \caption{ Finite state machine implementation for reading FLIR images over SPI.}
-    \label{vospi_code}
+\captionof{lstlisting}{Example of finite state machine implementation for reading FLIR images over SPI.}
+\label{vospi_code}
 \end{figure}
 
 \footnotetext{ Because images pixel values fit into the 14-bit range by default, it means that one-pixel value needs two bytes of data (two most significant bytes are zero). That means that each image line (80 pixels) is stored in 160 bytes. If AGC conversion is turned on, each pixel is then mapped into an 8-bit range, however, the size of one line in the VoSPI packet remains 160 bytes, 8 most significant bits are simply zeros.}
 
 \subsection{ Simple shell}
+
+Module simple shell controls the execution of all subroutines inside STM32 firmware.
+nRF52 microcontroller acts as a host and sends commands to STM32.
+STM32 executes commands and sends back results.
+Listing \ref{simple_shell_code} shows main \verb|simple_shell| function.
+In the start of the while loop, function \verb|get_line()| returns when it received a string, terminated with a newline character.
+Function \verb|parse_cmd| then decides with a set of \verb|strcmp| functions, if received command is supported.
+If yes, that command is later executed by function \verb|execute_cmd| and response is returned, signalling results in case of successful execution or a fail reason in case of failure.
+
+The module is written to be easily scalable, when new functionality is added, it is trivial to extend the number of possible commands.
+Once we knew that UART communication worked correctly, we could issue commands directly from the computer's serial port, which enabled us to develop and test firmware for STM32 separately from nRF52 firmware.
+
+\lstset{style=mystyle}
+\begin{figure}[ht]
+\begin{lstlisting}[language=C]
+/*!
+ * @brief       Supported shell commands
+ */
+typedef enum 
+{
+    INVALID_CMD,
+    BLINK,
+    ML,
+    FLIR,
+} shell_cmd; 
+
+/*!
+ * @brief       Entry point to simple shell, which does not
+ *              ever return. It calls all other modules and 
+ *              functions.
+ */
+void simple_shell()
+{
+    char buf[SHELL_BUF_LEN];
+    uint16_t len;
+    shell_cmd cmd;
+
+    put_line("$");
+    while (1) {
+        len = get_line(buf, SHELL_BUF_LEN);
+        if (len) {
+            cmd = parse_command(buf, len);
+
+            if (execute_command(cmd)) {
+                get_command_response(cmd, buf, SHELL_BUF_LEN);
+                put_line(buf);
+            }
+            else {
+                put_line("\nNOT OK\n");
+            }
+        }
+    }
+}
+\end{lstlisting}
+\captionof{lstlisting}{Code snippet of simple shell implementation.}
+\label{simple_shell_code}
+\end{figure}
+
 
 \subsection{ MicroML and build system} \label{build_system_label}
 
@@ -480,10 +533,11 @@ That way we could test ML specific routines fast and quickly remove any mistakes
 \subsection{ Running inference on a microcontroller}
 
 TFLite Micro API is fairly simple to use and general enough that it can be copied from project to project without many modifications.
-Figure \ref{inference_code} shows a simplified inference code example, copied from our project.
+Listing \ref{inference_code} shows a simplified inference code example, copied from our project.
+
 \lstset{style=mystyle}
-\begin{figure}[ht] 
-    \begin{lstlisting}[language=C++]
+\begin{figure}[ht]
+\begin{lstlisting}[language=C]
 // An area of memory to use for input, output, 
 // and intermediate arrays.
 const int kTensorArenaSize = 200 * 1024;
@@ -536,10 +590,11 @@ int main()
     // Print probabilites and time elapsed
     print_result(error_reporter, output, dwt_to_ms(end-start));
 }
-    \end{lstlisting}
-    \caption{ Example of TensorFlow Lite inference code in C++.}
-    \label{inference_code}
+\end{lstlisting}
+\captionof{lstlisting}{ Example of TensorFlow Lite inference code in C++.}
+\label{inference_code}
 \end{figure}
+
 \clearpage
 As a first step, we need to define the size of \verb|tensor_arena| array, which holds memory of input, output, and intermediate arrays.
 Exact size of \verb|tensor_arena| is determined by trail and error: we set it to some big value and then decrease it in steps, until the code does not work any more.

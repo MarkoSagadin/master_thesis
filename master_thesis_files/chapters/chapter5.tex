@@ -11,6 +11,11 @@ Used hyperparameters and achieved accuracy on the validation set for each traine
 After training several different models we picked a few and compared them.
 Comparison of models trained in Edge Impulse Studio was also done.
 
+To distinguish models from one another we decided to mark them with a number and letters \textit{a}, \textit{b}, \textit{ei} and \textit{tl}.
+Models with letters \textit{a} and \textit{b} were trained using our system.
+Models marked with \textit{ei} and \textit{tl} were in Edge Impulse Studio, former with a setup comparable to the ours, latter with Transfer Learning technique.
+Tables that are shown below list one of the metrics as accuracy.
+With accuracy we mean validation accuracy, it tells us how well model performed on a validation dataset.
 
 \subsection{ Hyperparameter search space and results analysis}
 
@@ -207,6 +212,7 @@ Simply classifying all images into elephant class would yield an accuracy of 82.
 When analysing the performance of a model on an imbalanced dataset it is more appropriate to use precision and recall metrics\footnotemark.
 They can give us a better idea of how well the model is performing on data of specific classes.
 Calculated metrics can be seen in Table \ref{precision_recall_table}, we abbreviated precision to P and recall to R for clarity.
+We also colour coded each table row, bright green shows the highest value in the row, red shows the lowest, light-green and orange colours show values in between.
 \footnotetext{Precision tells us what percentage of data points in a specific predicted class fall into that class.
 Recall tells us what percentage of data points inside a certain class were actually predicted correctly\cite{geron}.}
 \begin{table}[ht]
@@ -476,7 +482,7 @@ DWT does not use interrupts, therefore it does not introduce the overhead of cal
 
 Edge Impulse provides examples for testing out of the box, so not much work is needed to get the first-order approximation of performance.
 For profiling, the code execution Mbed API was used, which uses timer interrupts to track elapsed time.
-Figure \ref{speed_comp} shows models ranked from the fastest to the slowest.
+Figure \ref{speed_comp} shows models ranked from the fastest to the slowest with marked corresponding accuracies and inference times.
 
 \begin{figure}[ht]
     \centering
@@ -490,7 +496,7 @@ Best time wise performing model was \textit{338b} with inference time of 51 \si{
 
 We also discovered some unexpected trend in results.
 We assumed that inference time is proportional to the number of parameters if the general structure of the model remains the same.
-As can be seen from the Figure \ref{speed_comp} there are few exceptions to this rule, model \textit{338b} executed inference faster than \textit{460b} although it has more parameters (20K versus 13K).
+As can be seen in Figure \ref{speed_comp} there are few exceptions to this rule, model \textit{338b} executed inference faster than \textit{460b} although it has more parameters (20K versus 13K).
 Model \textit{172b} was slower than \textit{0b}, although it has five times less parameters.
 This behaviour is not exclusive only to our models, but it can be seen in Edge Impulse models as well, for example, models \textit{2ei} and \textit{1ei}.
 
@@ -573,7 +579,7 @@ Elimination of wait states greatly improved the time of inference, it was decrea
 Choosing the best model for on-field deployment is a hard task due to many different metrics: precision and recall values, time of inference, and code size.
 To make this job easier we devised a scoring system: each metric is going to be normalized and multiplied with some weight value.
 All products would then be summed up and the result would represent the final score.
-The Sum of the weights is equal to 100, which means that the possible maximum score is also 100.
+The sum of the weights is equal to 100, which means that the possible maximum score is also 100.
 We decided to allocate 50 weight points to all precision and recall values, 30 points to the time of inference value, 5 points for Flash size and 15 points for RAM size.
 As we care more about precision and recall values of elephant, human and cow classes we gave them 7 weight points each, while nature/random class received only 4.
 We value Flash size less than RAM, as most of the microcontrollers have much less RAM than they do Flash, thus we gave 15 weight points to RAM size and only 5 to Flash size.
@@ -619,18 +625,111 @@ This should not be a surprise, models trained with Transfer Learning achieve hig
 
 
 \section{ Power profiling of an embedded early warning system}
-%
-%To write this section you need to:
-% - wirte uart communication channel for zephyr and your system, has to be simple dont lose time on this.
-% - Basic parsing of results and packing them into lora payload
-% - Zephyr, put system to sleep and wake it up with pir, turn on fet.
-% - Make an image with flir and do inference on it, (subtract mean image, you could test this on real dataset, without subtracted mean)
-%
-%- [ ] Power consumption test of whole setup, 
-%      PIR wakes up wisent, 
-%      wisent turns on stm32f7 and flir, 
-%      which makes a picture, does inference, reports result and wisent sends the result. 
+
+In this section we evaluate power consumption of our embedded early warning system.
+We first measured power consumption of nRF52 microcontroller in sleep mode, then connected the LR1110 evaluation shield to the nRF52840 DK board and repeated the measurement.
+We then added in Nucelo-F767ZI and FLIR camera, and measured power consumption of the whole detection sequence.
+We then conclude the section with estimations of the battery life.
+
+
+\subsection{ Measuring equipment}
+
+To measure power consumption we used product called Otii Arc (Otii), which can be seen in Figure \ref{otii}.
+Otii, made by a company Qoitech, is a small portable box, that contains a power supply, a current and voltage measurement unit and a data acquisition module.
+It connects to a computer over USB cable and can be powered through it or with an external charger.
+
+It can provide output voltage between 0.5 V and 4.55 V and has accuracy of $\pm$(0.1 \% + 50 nA), when measuring current.
+It is a perfect tool for evaluating low-power systems.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.75\linewidth]{otii.jpg}
+    \caption{ Otii Arc with nRF52832 DK and added measurement board made by Irnas.}
+    \label{otii}
+\end{figure}
+
+Analysing measurements is done through desktop application, example of it is seen in Figure \ref{otii_screen}. 
+Application enables users to select a part of the measurement, for which it automatically computes minimum, maximum and average values.
+To present our results we exported current measurements in CVS format and plotted them with Matplotlib.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{otii_screenshot.png}
+    \caption{ Screenshot of Otii user interface.}
+    \label{otii_screen}
+\end{figure}
+
+\subsection{ Current measurements and results}
+
+We conducted all our measurements with Otii's output voltage set to 3.3 V.
+Before measuring current consumption of the whole image processing sequence we wanted to evaluate current consumption of nRF52 microcontroller in the low-power state.
+For this purpose we instructed microcontroller to enter low-power state.
+In Zephyr kernel such procedure is relatively simple, type of sleep mode is configured with Kconfig file and microcontroller enters it whenever it enters lowest idle thread.
+Peripherals required special attention, as we had to specify which one we want to turn off.
+We therefore turned of both of the UART peripherals and SPI peripheral, while GPIO stayed active, as we needed a GPIO interrupt to wakeup nRF52 from low-power state.
+We also had to make sure that nRF52 microcontroller is completely disconnected from on board J-Link debug probe to avoid any unnecessary current leaks.
+Luckily the nRF52840 development board has an analogue switch, which does exactly that.
+To measure current consumption we simply connected voltage output of Otii to external power pins of nRF52840 DK board.
+Figure \ref{mcu_in_sleep} shows us the current consumption of low-power state.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{mcu_in_sleep.pdf}
+    \caption{ Current consumption of nRF52840 microcontroller in low-power state.}
+    \label{mcu_in_sleep}
+\end{figure}
+
+Initial spike at the beginning of graph happens because of many decoupling capacitors on the board.
+Due to the sudden change in voltage their impedance is low, therefore more current is drawn.
+Pyramid looking shape between 0.5 and 1 second happens due to one of the onboard regulators turning on.
+
+Smaller graph inside Figure \ref{mcu_in_sleep} shows close up view of the current consumption.
+The peaks reached 70.3 \si{\micro\ampere}, steady state was at 6.9 \si{\micro\ampere}, while the average was 9.1 \si{\micro\ampere}.
+Peaks were repeating at frequency of 33.3 \si{\hertz}.
+
+Measured average current was higher than expected, according to the nRF52's datasheet\cite{nrf52_datasheet} current consumption should be 3.16 \si{\micro\ampere}\footnotemark.
+
+\footnotetext{ nRF52's datasheet specifies current consumptions at many different conditions, which are: type of sleep mode (System ON or System OFF, latter loses execution context at wakeup), amount of RAM retention and type of wakeup event. Consumption can range from 0.95 \si{\micro\ampere} to 17.37 \si{\microampere}. Because Zephyr provides only abstract interface to power management, implementation of which is platform dependent, we can only guess which exact nRF52 sleep mode Zephyr uses. We assumed expected current consumption of 3.16 \si{\micro\ampere} as this is the specified current consumption in System ON mode with full RAM retention and LFRC set as a wakeup event.}
+
+TODO ADD LFRC IN ABBR file.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{measure_setup.jpg}
+    \caption{ Device under test: nRF52840 DK with attached LR1110 shield, boost converter breakout board, Nucleo-F767ZI and FLIR Lepton camera.}
+    \label{measure_setup}
+\end{figure}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{lora_join.pdf}
+    \caption{ Current profile of LoraWAN join sequence.}
+    \label{lora_join}
+\end{figure}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{one_ml.pdf}
+    \caption{ Current profile of image capture and inference procedure.}
+    \label{one_ml}
+\end{figure}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{five_ml.pdf}
+    \caption{ Current profile of image capture and inference procedure repeated 5 times.}
+    \label{five_ml}
+\end{figure}
+
+
+
+\subsection{ Estimations of battery life}
+
+picture of setup
+image of whole measurement 
+
+close up image of lora join section
+close up image of inference section 
+close up image of 5 time inference section 
+
 %      Otii image of consumption with marked sections.(shouldnt be hard)
-%
+
 %\subsection{ Battery life estimations}
 %Based on numbers and different scenarios estimate how long would this last with different batteries.
