@@ -188,7 +188,7 @@ Chosen models vary greatly in the number of parameters.
 Models \textit{0a}, \textit{2a}, \textit{0b} have high number of parameters but their accuracy is high.
 Models \textit{172b}, \textit{338b} and \textit{460b} were chosen because of their small size and reasonably good accuracy.
 \footnotetext{Retraining was required as Keras Tuner module only saved hyperparameter settings during search and not each trained model.
-As the weights are initially randomized, the accuracy of retrained models is going to be similar but not exact when compared to the accuracy returned by random search.}
+As the weights are initially randomized, the accuracy of retrained models is going to be similar but not exact when compared to the accuracy returned by the random search.}
 
 \begin{table}[ht]
     \centering
@@ -516,7 +516,7 @@ $ arm-none-eabi-size firmware.elf
    text	   data	    bss	    dec	    hex	filename
  149124	    388	  47064	 196576	  2ffe0	firmware.elf
 \end{lstlisting}
-\caption{ Example output of arm-none-eabi-size command.}
+\captionof{lstlisting}{ Example output of arm-none-eabi-size command.}
 \label{size_output}
 \end{figure}
 \footnotetext{ Data section which contains initialized static variables is first placed into Flash memory and is copied to RAM before program enters main function. That is why we have to account for additional \verb|data| section in Flash memory.}
@@ -533,10 +533,10 @@ This is due to how the inference is executed.
 TFLite Micro uses a generic interpreter approach, where the model is loaded at runtime.
 Edge Impulse uses a compiled approach, which they named The EON\textsuperscript{TM} Compiler\cite{eon}.
 The EON\textsuperscript{TM} Compiler still uses TFLite Micro, however, it does not use its interpreter, but directly calls operation kernels.
-This means that linker knows exactly which operations are used and more data can be moved into Flash, thus eliminating unneeded code space\cite{eon}.
+This means that linker knows exactly which operations are used and more data can be moved into Flash, thus eliminating unneeded code size\cite{eon}.
 
 
-\subsection{ Comparison of different optimisation options}
+\subsection{ Comparison of different optimisations}
 
 To be able to run the ML inference at maximum possible efficiency under MicroML some extra amount of work and research was required.
 Figure \ref{opt_comp} shows reductions in inference time of \textit{0b} model while using different optimisation methods.
@@ -620,19 +620,16 @@ $MIN(X)$ - Function that finds minimum element in vector X
     \label{score_comp}
 \end{figure}
 
-Final verdict: model \textit{3tl} received the highest score, models \textit{1tl}, \textit{2tl} follow.
-This should not be a surprise, models trained with Transfer Learning achieve high accuracies and execute inference in about 100 ms or less while compiled approach for computing Neural Networks keeps used Flash and RAM sizes to a minimum.
+\section{ Summary of model testing}
 
+As we saw in Figure \ref{score_comp} model \textit{3tl} received the highest score, models \textit{1tl}, \textit{2tl} follow.
+This should not be a surprise, models trained with Transfer Learning achieved high accuracies and executed inference in about 100 \si{\milli\second}. 
+Additionally, compiled approach for computing Neural Networks keeps used Flash and RAM sizes to a minimum.
+We saw that using a number of different optimisations is critical to achieving low inference times, thus making ML on embedded device viable.
 
 \section{ Power profiling of an embedded early warning system}
 
-In this section we evaluate power consumption of our embedded early warning system.
-We first measured power consumption of nRF52 microcontroller in sleep mode, then connected the LR1110 evaluation shield to the nRF52840 DK board and repeated the measurement.
-We then added in Nucelo-F767ZI and FLIR camera, and measured power consumption of the whole detection sequence.
-We then conclude the section with estimations of the battery life.
-
-
-\subsection{ Measuring equipment}
+\subsection{ Measuring setup}
 
 To measure power consumption we used product called Otii Arc (Otii), which can be seen in Figure \ref{otii}.
 Otii, made by a company Qoitech, is a small portable box, that contains a power supply, a current and voltage measurement unit and a data acquisition module.
@@ -644,11 +641,11 @@ It is a perfect tool for evaluating low-power systems.
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.75\linewidth]{otii.jpg}
-    \caption{ Otii Arc with nRF52832 DK and added measurement board made by Irnas.}
+    \caption{ Otii Arc with nRF52832 DK and added measurement board made by IRNAS.}
     \label{otii}
 \end{figure}
 
-Analysing measurements is done through desktop application, example of it is seen in Figure \ref{otii_screen}. 
+Measurements analysis is done through desktop application, example of it is seen in Figure \ref{otii_screen}. 
 Application enables users to select a part of the measurement, for which it automatically computes minimum, maximum and average values.
 To present our results we exported current measurements in CVS format and plotted them with Matplotlib.
 
@@ -659,18 +656,22 @@ To present our results we exported current measurements in CVS format and plotte
     \label{otii_screen}
 \end{figure}
 
-\subsection{ Current measurements and results}
+In the next section we evaluate power consumption of our embedded early warning system.
+We first measured power consumption of the nRF52 microcontroller in low-power state, then we connected the LR1110 evaluation shield to the nRF52840 DK board and repeated the measurement.
+We then connected Nucelo-F767ZI and FLIR camera, and measured power consumption of the whole detection sequence.
+
+
+\subsection{ Current measurements}
 
 We conducted all our measurements with Otii's output voltage set to 3.3 V.
 Before measuring current consumption of the whole image processing sequence we wanted to evaluate current consumption of nRF52 microcontroller in the low-power state.
-For this purpose we instructed microcontroller to enter low-power state.
-In Zephyr kernel such procedure is relatively simple, type of sleep mode is configured with Kconfig file and microcontroller enters it whenever it enters lowest idle thread.
-Peripherals required special attention, as we had to specify which one we want to turn off.
-We therefore turned of both of the UART peripherals and SPI peripheral, while GPIO stayed active, as we needed a GPIO interrupt to wakeup nRF52 from low-power state.
+In Zephyr kernel such procedure is relatively simple, type of sleep mode is configured with Kconfig file and microcontroller transitions into it whenever it enters lowest idle thread.
+Peripherals require special attention, as needs to be explicitly specified which one needs to be turned off.
+We turned off both of the UART peripherals and SPI peripheral, while keeping GPIO active, as we needed a GPIO interrupt to wakeup nRF52 from low-power state.
 We also had to make sure that nRF52 microcontroller is completely disconnected from on board J-Link debug probe to avoid any unnecessary current leaks.
 Luckily the nRF52840 development board has an analogue switch, which does exactly that.
 To measure current consumption we simply connected voltage output of Otii to external power pins of nRF52840 DK board.
-Figure \ref{mcu_in_sleep} shows us the current consumption of low-power state.
+Figure \ref{mcu_in_sleep} shows us the current consumption in the low-power state.
 
 \begin{figure}[ht]
     \centering
@@ -681,17 +682,43 @@ Figure \ref{mcu_in_sleep} shows us the current consumption of low-power state.
 
 Initial spike at the beginning of graph happens because of many decoupling capacitors on the board.
 Due to the sudden change in voltage their impedance is low, therefore more current is drawn.
-Pyramid looking shape between 0.5 and 1 second happens due to one of the onboard regulators turning on.
+Pyramid looking shape between 0.5 and 1 second happens due to the onboard regulators turning on.
 
 Smaller graph inside Figure \ref{mcu_in_sleep} shows close up view of the current consumption.
 The peaks reached 70.3 \si{\micro\ampere}, steady state was at 6.9 \si{\micro\ampere}, while the average was 9.1 \si{\micro\ampere}.
 Peaks were repeating at frequency of 33.3 \si{\hertz}.
 
-Measured average current was higher than expected, according to the nRF52's datasheet\cite{nrf52_datasheet} current consumption should be 3.16 \si{\micro\ampere}\footnotemark.
+Measured average current was higher than expected, according to the nRF52's datasheet\cite{nrf52_datasheet} current consumption should be 3.16 \si{\micro\ampere}.
 
-\footnotetext{ nRF52's datasheet specifies current consumptions at many different conditions, which are: type of sleep mode (System ON or System OFF, latter loses execution context at wakeup), amount of RAM retention and type of wakeup event. Consumption can range from 0.95 \si{\micro\ampere} to 17.37 \si{\microampere}. Because Zephyr provides only abstract interface to power management, implementation of which is platform dependent, we can only guess which exact nRF52 sleep mode Zephyr uses. We assumed expected current consumption of 3.16 \si{\micro\ampere} as this is the specified current consumption in System ON mode with full RAM retention and LFRC set as a wakeup event.}
+In next measurement we connected LR1110 shield to the nRF52840 DK board and observed current consumption of the initial LoRaWAN join sequence.
+Current profile of it can be see in Figure \ref{lora_join}.
+Besides initial spike we can see additional four pulses afterwards with some smaller spikes in between. 
+As we are using Over-The-Air Activation (OTAA) LR1110 first has to negotiate for a set of keys with the server before it can start transmitting.
+This happens in first two pulses, in third pulse LR1110 confirms the set of keys and fourth one first message is sent.
+First LoRa message is sent automatically, as it is a part of the LoRa Cloud service.
+Although we do not use this service we can not completely disable it.
+Average current consumption of LoRaWan join procedure is 11.4 \si{\milli\ampere} and lasts for about 34 seconds.
+Average current consumption in sleep state has increased to 76.8 \si{\micro\ampere}.
 
-TODO ADD LFRC IN ABBR file.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{lora_join.pdf}
+    \caption{ Current profile of LoRaWAN join sequence.}
+    \label{lora_join}
+\end{figure}
+
+In our next test we connected nRF52 to boost converter circuit, Nucleo-F767ZI and FLIR Lepton camera, setup can be seen in Figure \ref{measure_setup}.
+We did not use PIR sensor as a wakeup source as we saw that its detection was too sensitive to surroundings and we could not completely control it.
+We instead used a button on nRF52840 DK as a wakeup interrupt.
+Since we wrote our firmware for libopencm3 in mind we could not use the best performing model \textit{3tl}, as Edge Impulse models only could run on Mbed platform.
+We instead used our model \textit{460b}, as was most similar to \textit{3tl} in terms of inference time (69 \si{\milli\second} compared to 73 \si{\milli\second}).
+In case where image capture and inferencing happened once, we measured total time of the whole detection procedure to be about 1480 \si{\milli\second}, not including time needed for LoRaWAN message.
+Average current consumption for this period was 114 \si{\milli\ampere}.
+If we measure average current of the whole event shown on Figure \ref{one_ml}, between 0 and 6 seconds, we get 30 \si{\milli\ampere}.
+
+In case where image capture and inferencing happened five times, we measured total time of the whole detection procedure to be about 2960 \si{\milli\second}, not including time needed for LoRaWAN message.
+Average current consumption for this period was 131 \si{\milli\ampere}.
+If we add transmission of LoRaWAN message to the measured current consumption, thus increasing the time of the whole detection event to 8 seconds, we measure 51.9 \si{\milli\ampere}.
 
 \begin{figure}[ht]
     \centering
@@ -699,12 +726,11 @@ TODO ADD LFRC IN ABBR file.
     \caption{ Device under test: nRF52840 DK with attached LR1110 shield, boost converter breakout board, Nucleo-F767ZI and FLIR Lepton camera.}
     \label{measure_setup}
 \end{figure}
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=1\linewidth]{lora_join.pdf}
-    \caption{ Current profile of LoraWAN join sequence.}
-    \label{lora_join}
-\end{figure}
+
+We captured two different inference procedures, in first image capture and inference were done once, in second one they were repeated 5 times.
+Procedures can be seen on Figures \ref{one_ml} and \ref{five_ml} respectively.
+Both procedures were followed by a LoRaWAN message that reported results to the server.
+
 \begin{figure}[ht]
     \centering
     \includegraphics[width=1\linewidth]{one_ml.pdf}
@@ -719,17 +745,31 @@ TODO ADD LFRC IN ABBR file.
 \end{figure}
 
 
+\subsection{ Commentary of the current measurement results}
 
-\subsection{ Estimations of battery life}
+Measured low-power state of nRF52, visible in Figure \ref{mcu_in_sleep}, was higher than expected.
+nRF52's datasheet\cite{nrf52_datasheet} specifies current consumptions in many different conditions, which depend on: type of sleep mode (System ON or System OFF, latter loses execution context at wakeup), amount of RAM retention and type of wakeup event.
+Consumption can range from 0.95 \si{\micro\ampere} to 17.37 \si{\micro\ampere}.
+Because Zephyr provides only abstract interface to power management, implementation of which is platform dependant, we can only guess which exact nRF52 sleep mode Zephyr uses.
+We assumed expected current consumption of 3.16 \si{\micro\ampere} as this is the specified current consumption in System ON mode with full RAM retention and LFRC set as a wakeup event.
+Another reason for increased power consumption could also be inadequate support circuitry of nRF52840 DK board.
 
-picture of setup
-image of whole measurement 
+When we connected LR1110 shield to the nRF52840 DK board we saw that average current consumption increased to 76.8 \si{\micro\ampere}, which is much more than expected.
+LR1110 automatically enters sleep mode when it is finished with communication, according to its datasheet\cite{lr1110_datasheet}, current consumption should be around 1.85 \si{\micro\ampere}.
+This current consumption is plausible, as we observed it in other IRNAS's products that use LR1110 chip.
+We suspect that the incorrect state of common GPIO connections between LR1110 and nRF52 is the cause for increased current consumption, however we were not able to fix the problem.
 
-close up image of lora join section
-close up image of inference section 
-close up image of 5 time inference section 
+We mentioned that the time required for detection is about 1480\si{\milli\second} if we capture one image and process it or 2960 \si{\milli\second} if done five times.
+We can see that both detection procedures started with a 700 \si{\milli\second} of delay, according to FLIR Lepton's datasheet \cite{flir_datasheet}, a delay is required before we can start communicating with the camera over TWI interface.
+Two microcontroller resets are visible, during our testing we saw that we could not properly communicate with the camera, if we did not reset STM32 twice before that.
+To accomplish this we simply connected a reset pin of STM32 with one of available nRF52 GPIO pins.
 
-%      Otii image of consumption with marked sections.(shouldnt be hard)
 
-%\subsection{ Battery life estimations}
+\subsection{ Battery life estimations}
+
+
+average currents:
+sleep 76.8 \si{\micro\ampere}.  you should add here PIR sensor consumption.
+5ml detection 51.9 \si{\milli\ampere}.
+
 %Based on numbers and different scenarios estimate how long would this last with different batteries.

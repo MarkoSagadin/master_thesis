@@ -1,13 +1,14 @@
+TODO SUMMARY
 
 
 
 \section{Future work}
 
-Our research into elephant detection with the aid of Machine Learning models yielded promising results, however, some future work is needed.
+Our research into elephant detection with the aid of Machine Learning models yielded promising results and should be improved.
 
 In terms of model performance, we can always improve it by gathering more relevant training data.
-Dataset that we used contained several thousands images of elephants, but only couple of thousands of humans and few hundreds of cows.
-In order to train a more robust and reliable model we should gather more thermal images of humans and livestock.
+Dataset that we used contained several thousands images of elephants, but only couple thousands images of humans and only few hundreds images of cows.
+In order to train a more robust and reliable model we should gather more thermal images of humans and livestock, especially goats.
 
 It would be interesting to further explore models trained with Transfer Learning technique.
 We saw that Transfer Learning models reached higher accuracies with shorter inferencing times compared to other models.
@@ -21,11 +22,16 @@ By observing performance of the model in the field we would see if extremely low
 It might be feasible to run CNN models on slower, low-power, Cortex-M4 microcontrollers.
 Although we are expecting longer inference times, we would benefit from a simpler system design and a lower overall price of the embedded system.
 
+TODO preveri če se napisano sklada prejšnjo sekcijo.
+In terms of battery life performance, we can definitely lower the current consumption of the nRF52 microcontroller in the low-power state, reaching 10\si{\micro\apmere} with LR1110 in sleep mode is completely possible.
+Early detection system should be implemented on a custom printed circuit board, such approach would give use more control over current consumption than the setup that we created from development boards.
+
 TODO You are probably not finished with this section, you need feedback.
+
 
 \section{Final words}
 
-Machine Learning on embedded devices is a field in rapid development.
+Machine Learning on the embedded devices is opening doors to various, wonderful applications that were not possible 3 years ago.
 
 
 

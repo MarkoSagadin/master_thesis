@@ -96,6 +96,8 @@
 % Change title of table of contents
 \renewcommand{\contentsname}{Table of Contents}
 
+% Change title of list of listings
+\renewcommand{\lstlistlistingname}{List of Listings}
 
 % Add new rot command for rotating
 \NewDocumentCommand{\rot}{O{45} O{1em} m}{\makebox[#2][l]{\rotatebox{#1}{#3}}}%
@@ -140,9 +142,10 @@
 %\input{chapters/abstract}
 %\input{chapters/abbrev}
 %%
-%\tableofcontents
-%\listoffigures
-%\listoftables
+\tableofcontents
+\listoffigures
+\listoftables
+\lstlistoflistings
 %
 %
 %\chapter{ Introduction}
@@ -151,12 +154,12 @@
 %
 %\chapter{ Theoretical description of system building blocks}
 %\input{chapters/chapter2}
-
+%
 %\chapter{ Neural Network model design}
 %\input{chapters/chapter3}
-
-%\chapter{ Design and implementation of the early warning system}
-%\input{chapters/chapter4}
+%
+\chapter{ Design and implementation of the early warning system}
+\input{chapters/chapter4}
 %
 \chapter{ Measurements and results}
 \input{chapters/chapter5}
