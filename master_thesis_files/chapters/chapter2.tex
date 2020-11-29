@@ -63,13 +63,14 @@ In step four we deploy our model and monitor its accuracy.
 If accuracy drops we can always collect new data and retrain the model.
 
 
-\subsection{ Machine Learning on embedded devices} \label{ml_on_embedded}
+\subsection{ TinyML} \label{ml_on_embedded}
 
-Machine Learning on embedded devices is an emerging field, which coincides nicely with the Internet of Things.
-Resources about it are limited, especially when compared to the vast number of resources connected with Machine Learning on computers or servers.
-Most of the information about it can be found in the form of scientific papers, blog posts and Machine Learning framework documentation\cite{hello_edge}\cite{tflite_risc-v}\cite{pete_tiny}.
+Machine Learning on embedded devices, also known as TinyML is an emerging field, which coincides nicely with the Internet of Things.
+The field is experiencing a large boom in popularity, when we started working on this thesis in May, 2020, there was considerable fewer resources about it, then they are now, in December, 2020.
+Nevertheless the resources about it are limited, when compared to the vast number of resources connected with Machine Learning on computers or servers.
+Most of the information about it can be found in the form of scientific papers, blog posts and Machine Learning framework documentation\cite{hello_edge}\cite{tflite_risc-v}\cite{pete_tiny}\cite{daniel_edgeimpulse}\cite{eon}.
 
-Running learning algorithms directly on embedded devices comes with many benefits.
+Running machine learning algorithms directly on embedded devices comes with many benefits.
 \textbf{Reduced power consumption} is one of them.
 In most IoT applications devices send raw sensor data over a wireless network to the server, which processes it either for visualisation or for making informed decisions about the system as a whole. 
 Wireless communication is one of the more power hungry operations that embedded devices can do, while computation is one of more energy efficient\cite{pete_tiny}.
@@ -102,7 +103,6 @@ Early models of NNs, such as the one proposed by McCulloch and Pitts, were inspi
 They proved that a very simple model of an artificial neuron, with one or more binary inputs and one binary output, is capable of computing any logical proposition when used as a part of a larger network\cite{geron}.
 
 To learn how NNs work we can refer to Figure \ref{neuron_model}, which shows a generic version of an artificial neuron.
-\newline
 
 \begin{figure}[ht] 
     \begin{subfigure}[b]{0.5\textwidth}
@@ -161,7 +161,7 @@ Softmax is usually used as an activation in the last layer of a classifier netwo
 Where:\\
 $y$ - Input vector\\
 $K$ - Number of elements in the input vector\\
-$\sigma(y_i)$ - Computed probability of the i-th element in the input vector \\
+$\sigma(y_i)$ - Computed probability of the i-th element in the input vector
 
 \subsection{ Backpropagation}
 
@@ -186,7 +186,7 @@ This way, in each step we change weights and biases slowly in the right directio
 Gradient Descent is not only used when training neural networks but also when training other ML algorithms.
 
 We do not have to execute a backpropagation algorithm for each training instance, instead, we can calculate predictions for a small set of training data, calculate the average loss function and then apply backpropagation.
-
+\clearpage
 
 \subsection{ Convolutional Neural Networks}\label{cnn_para}
 
@@ -244,7 +244,7 @@ $V_{i}$ - Input volume size, only width or height\\
 $V_{o}$ - Output volume size, only width or height\\
 $F$ - Filter or receptive field size\\
 $P$ - Amount of zero padding used on the border\\
-$S$ - Stride length\\
+$S$ - Stride length
 
 If we examine the example in Figure \ref{conv1} we can see that input with a size 3 x 3, stride 1, padding 1 and filter with a size 2 x 2, produces an output with size 4 x 4.
 
@@ -483,13 +483,6 @@ For some use cases, a single gateway with an internet connection is enough to pr
 
 Thermal cameras are transducers that convert infrared (IR) radiation into electrical signals, which can be used to form a thermal image.
 A comparison between a normal and a thermal image can be seen in Figure \ref{thermal_comparison}.
-IR is an electromagnetic (EM) radiation, and covers part of the EM spectrum that is invisible to the human eye.
-The IR spectrum covers wavelengths from 780 \si{\micro\meter} to 1 \si{\milli\meter}, but only a small part of that spectrum is used for IR imaging (from 0.9 \si{\micro\meter} to 14 \si{\micro\meter})\cite{thermal_book}.
-We can classify IR cameras broadly into two categories: photon detectors or thermal detectors\cite{thermal_book}.
-Photon detectors convert absorbed EM radiation directly into electric signals by the change of concentration of free charge carriers\cite{thermal_book}.
-Thermal detectors covert absorbed EM radiation into thermal energy, raising the detector temperature\cite{thermal_book}. 
-The change of the detector's temperature is then converted into an electrical signal.
-Since photon detectors are expensive, large and therefore unsuitable for our use case, we will not describe them in greater detail.
 \newline 
 
 \begin{figure}[ht]
@@ -504,6 +497,14 @@ Since photon detectors are expensive, large and therefore unsuitable for our use
     \caption[Comparison between a normal image and thermal image]{Comparison between a normal image and thermal image. Image source: Arribada Initiative\cite{thermal_comparison}}
     \label{thermal_comparison}
 \end{figure}
+
+IR is an electromagnetic (EM) radiation, and covers part of the EM spectrum that is invisible to the human eye.
+The IR spectrum covers wavelengths from 780 \si{\micro\meter} to 1 \si{\milli\meter}, but only a small part of that spectrum is used for IR imaging (from 0.9 \si{\micro\meter} to 14 \si{\micro\meter})\cite{thermal_book}.
+We can classify IR cameras broadly into two categories: photon detectors or thermal detectors\cite{thermal_book}.
+Photon detectors convert absorbed EM radiation directly into electric signals by the change of concentration of free charge carriers\cite{thermal_book}.
+Thermal detectors covert absorbed EM radiation into thermal energy, raising the detector temperature\cite{thermal_book}. 
+The change of the detector's temperature is then converted into an electrical signal.
+Since photon detectors are expensive, large and therefore unsuitable for our use case, we will not describe them in greater detail.
 
 Common examples of thermal detectors are thermopiles and microbolometers. 
 Thermopiles are composed of several thermocouples.
@@ -536,6 +537,7 @@ Each bolometer consists of an absorber material connected to a Readout Integrate
     \caption[Focal point array and bolometer.] {(a) Focal point array under electronic microscope. (b) Bolometer with $\lambda /4$ resonant cavity. Image source: Vollmer, Möllmann\cite{thermal_book}}
     \label{FPA_microbolo}
 \end{figure}
+\clearpage
 
 Absorber material is either made out of metals such as gold, platinum, titanium, or, more commonly, out of semiconductors such as vanadium-oxide (VOx)\cite{thermal_article}.
 The important property of absorber materials is that electrical resistance changes proportionally with the material's temperature\cite{thermal_book}.
@@ -544,15 +546,8 @@ To detect the change in resistance, ROIC applies a steady-state bias current to 
 
 When deciding between different types of thermal cameras we are often comparing them in terms of the cost, size and image resolution.
 One important property that also has to be taken into account is temperature sensitivity, also known as Noise Equivalent Temperature Difference (NETD).
-NETD is measured in \si{\milli\kelvin}, and tells us the minimum temperature difference that can still be detected by a thermal camera.
-In microbolometers, NETD is proportional to the thermal conductance of the absorber material, among other factors\cite{thermal_book}.
-The thermal conductance of bolometers is minimised by enclosing FPA into the vacuum chamber, thus excluding thermal convection and conduction due to the surrounding gases.
-The only means of heat transfer that remain are radiant heat exchange (highly reflective material below the absorber is minimising its radiative losses), and conductive heat exchange through the supportive legs.
-NETD also depends on the temperature inside the camera, as higher ambient temperatures can raise the internal temperature, thus increasing the NETD and noise present in the thermal image.
-Today's thermopiles can achieve NETD of 100 \si{\milli\kelvin}, microbolometers 45 \si{\milli\kelvin}, while photon detectors can have NETD of 10 \si{\milli\kelvin}.
-Although tens of \si{\milli\kelvin} does not seem a lot, we can see in Figure \ref{NETD} what a difference of 20 \si{\milli\kelvin} means for image resolution and noise.
+Comparison between images taken with two cameras with different NETD values can be seen in Figure \ref{NETD}.
 \newline
-
 \begin{figure}[ht]
     \begin{subfigure}{0.5\textwidth}
         \centering
@@ -570,6 +565,13 @@ Although tens of \si{\milli\kelvin} does not seem a lot, we can see in Figure \r
     \label{NETD}
 \end{figure}
 
+NETD is measured in \si{\milli\kelvin}, and tells us the minimum temperature difference that can still be detected by a thermal camera.
+In microbolometers, NETD is proportional to the thermal conductance of the absorber material, among other factors\cite{thermal_book}.
+The thermal conductance of bolometers is minimised by enclosing FPA into the vacuum chamber, thus excluding thermal convection and conduction due to the surrounding gases.
+The only means of heat transfer that remain are radiant heat exchange (highly reflective material below the absorber is minimising its radiative losses), and conductive heat exchange through the supportive legs.
+NETD also depends on the temperature inside the camera, as higher ambient temperatures can raise the internal temperature, thus increasing the NETD and noise present in the thermal image.
+Today's thermopiles can achieve NETD of 100 \si{\milli\kelvin}, microbolometers 45 \si{\milli\kelvin}, while photon detectors can have NETD of 10 \si{\milli\kelvin}.
+Although tens of \si{\milli\kelvin} does not seem a lot, we can see in Figure \ref{NETD} what a difference of 20 \si{\milli\kelvin} means for image resolution and noise.
 
 \subsection{ Choosing the thermal camera} \label{choosing_thermal}
 
@@ -582,7 +584,7 @@ Cameras were tested in Whipsnade Zoo and the Yorkshire Wildlife Park where image
 
 They tested two thermopile cameras (Heimann 80x64, MELEXIS MLX90640) and two microbolometer cameras (ULIS Micro80 Gen2, FLIR Lepton 2.5).
 Although thermopile cameras were cheaper than microbolometer cameras, the quality of images they produced was inferior, as can be seen in Figure \ref{thermal_comparison_images}.
-\newline
+\clearpage
 \begin{figure}[ht]
     \begin{subfigure}{0.5\textwidth}
         \centering
@@ -610,7 +612,7 @@ Although thermopile cameras were cheaper than microbolometer cameras, the qualit
 
 The MELEXIS MLX90640 camera had a resolution of 32 x 24 pixels and NETD of 100 \si{\milli\kelvin}, while the Heimann camera had a resolution of 80 x 64 pixels and NETD of 400 \si{\milli\kelvin}.
 It was concluded that images taken by either one of the thermopile cameras could not be used for object recognition, merely only if the object was present or not\cite{thermal_comparison}.
-\clearpage
+
 Microbolometers produced better results.
 Both the Ulis Micro80 and FLIR Lepton had a similar resolution, 80 x 80 and 80 x 60 respectively, but the Ulis Micro80 had two times bigger NETD compared to the FLIR Lepton camera, 100 \si{\milli\kelvin} and 50 \si{\milli\kelvin}, respectively.
 Images produced by the FLIR Lepton were much cleaner, so it was chosen as an appropriate camera for the task.

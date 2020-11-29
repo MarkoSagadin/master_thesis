@@ -12,10 +12,9 @@ We analysed the dataset, split it into different sets, and applied image correct
 We then decided on a rough CNN architecture with variable hyperparameters, and ran a random search algorithm, which searched for the best performing models based on accuracy.
 
 We finish this chapter by going through the same design process again, but this time using tools provided by Edge Impulse.
-
+\clearpage
 
 \section{ Model objectives}\label{model_obj}
-
 
 The accuracy of our early warning system should be equal or similar to the one of the human observers, no matter if it is operating in daytime or night time.
 Although the system will be placed on paths that are traversed regularly by elephants, they are not the only possible objects that can appear on the taken thermal images.
@@ -34,7 +33,7 @@ As the latter option might not always be possible, we should strive to keep the 
 
 Finally, as our Neural Network has to run on a microcontroller and not on a computer or a server, we have to keep it lightweight in terms of memory.
 Extra model complexity that brings few percents of accuracy does not matter much if the model is too large to fit on a microcontroller or takes too long to run.
-
+\clearpage
 To summarise:
 
 \begin{itemize}
@@ -72,7 +71,7 @@ Assam served as a testing ground.
 The Arribada team positioned two camera traps at two locations that overlook paths commonly used by elephants.
 Cameras were built out of Raspberry Pi, a Passive Infrared Sensor (PIR) sensor, an FLIR Lepton 2.5 camera, and batteries, all of which were enclosed in a plastic housing.
 The insides of the camera and an example of a deployed camera can be seen in Figure \ref{assam_camera}.
-
+\newline
 \begin{figure}[ht]
     \begin{subfigure}{0.5\textwidth}
         \centering
@@ -97,7 +96,7 @@ The PIR sensor trigger approach was dropped in favour of a 5 second time-lapse t
 Two cameras were used again, although, one of them now used an FLIR Lepton 3.5 camera with better resolution.
 
 Images of elephants that came from both locations can be seen in Figure \ref{four_elephants}.
-
+\newline
 \begin{figure}[ht]
     \centering
     \scalebox{.35}{\includegraphics{four_elephants.pdf}}
@@ -110,7 +109,7 @@ A small part of the thermal image dataset was provided by us. This was done beca
 We wanted to gather images as quickly and efficiently as possible, so we built a prototype camera made out of an FLIR Lepton 2.5 breakout board, a Raspberry Pi Zero, and a power bank.
 We used an open-source library \cite{flir_github} for the FLIR Lepton module, which used a simple C program to take a single image with a thermal camera and save it to a Raspberry Pi.
 The image of the setup can be seen in Figure \ref{cow_camera}.
-
+\newline
 \begin{figure}[ht]
     \centering
     \includegraphics[width=1.0\linewidth]{cow_camera.jpg} 
@@ -256,7 +255,6 @@ The padding option was set to same, which meant that a spatial dimension of a vo
 Pooling layer kernel size was set to 2 x 2, with a default stride of 2.
 
 The output volume of the last convolutional layer was flattened out into a single vector and fed into a dense layer, which was followed by a dropout layer\footnotemark.
-
 \footnotetext{ The Dropout layer decides with probability $p$ in each training step how many activations from the previous layer will be passed on to the next layer.
 It is active only during the training phase, during the testing phase activations are multiplied with $(1-p)$ factor to compensate.
 It is a very popular type of regularisation technique, which makes models more robust to the input data\cite{geron}.}
@@ -334,13 +332,12 @@ This can be done either by connecting an S3 bucket\footnotemark with data with t
 We chose the S3 bucket approach, as once the data was uploaded it was trivial to transfer it to different projects.
 
 \footnotetext{Simple Storage Service or S3 is another service provided by Amazon, used for storing a large amount of data in the cloud.}
-
 After the data were uploaded, the rest of the NN design was done through the Edge Impulse web interface.
 In Figure \ref{edge_impulse_screenshot} we can see the so-called Impulse Design tab, where we design a Neural Network by choosing different blocks.
 With input blocks, we tell what kind of data are we inputting, either image or time-series data, and with processing blocks we decide how are we going to extract features.
 Input and preprocessing blocks always return same output given the same input, while learning blocks are trainable and learn from previous experiences.
 For the learning block, we can choose to use a Neural Network provided by Keras, an anomaly detection algorithm, or a pre-trained model for transfer learning.
-
+\newline
 \begin{figure}[ht]
     \centering
     \includegraphics[width=1.0\linewidth]{edge_impulse_screenshot.png} 
@@ -354,6 +351,7 @@ Image input block offers different resize options, which are also shown in Figur
 We chose crop option, where the excess pixel were simply dropped.
 For the processing block, we selected the image processing block as this was the only possible choice.
 For the learning block we were using both Keras's Neural Network block and Transfer Learning block.
+\newline
 \begin{figure}[ht]
     \begin{subfigure}{0.5\textwidth}
         \raggedleft
@@ -389,7 +387,7 @@ After training was done, Edge Impulse showed how well the model was performing o
 
 An example of the output is presented in Figure \ref{edge_impulse_screenshot2}, where inferencing time is estimated for a Cortex-M4 microcontroller, running at 80 \si{\mega\hertz}.
 Edge Impulse also automatically converts trained model to an optimised full-integer model.
-
+\newline
 \begin{figure}[ht]
     \centering
     \includegraphics[width=1.0\linewidth]{edge_impulse_screenshot2.png} 

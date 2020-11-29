@@ -1,33 +1,3 @@
-\contentsline {chapter}{\numberline {1} Design and implementation of the early warning system}{7}{chapter.1}%
-\contentsline {section}{\numberline {1.1} Hardware}{8}{section.1.1}%
-\contentsline {subsection}{\numberline {1.1.1} Nucleo-F767ZI}{9}{subsection.1.1.1}%
-\contentsline {subsection}{\numberline {1.1.2} nRF52840 DK}{10}{subsection.1.1.2}%
-\contentsline {subsection}{\numberline {1.1.3} LR1110 development kit}{10}{subsection.1.1.3}%
-\contentsline {subsection}{\numberline {1.1.4} Boost converter evaluation kit}{11}{subsection.1.1.4}%
-\contentsline {subsection}{\numberline {1.1.5} FLIR Lepton 2.5 camera module and Lepton breakout board}{12}{subsection.1.1.5}%
-\contentsline {subsection}{\numberline {1.1.6} PIR Sensor}{13}{subsection.1.1.6}%
-\contentsline {section}{\numberline {1.2} Firmware}{13}{section.1.2}%
-\contentsline {subsection}{\numberline {1.2.1} Tools and development environment}{13}{subsection.1.2.1}%
-\contentsline {subsubsection}{\numberline {1.2.1.1} Development environment for STM32F767ZI}{14}{subsubsection.1.2.1.1}%
-\contentsline {subsubsection}{\numberline {1.2.1.2} Development environment for nRF52840}{14}{subsubsection.1.2.1.2}%
-\contentsline {subsection}{\numberline {1.2.2} Architecture design}{14}{subsection.1.2.2}%
-\contentsline {subsection}{\numberline {1.2.3} FLIR Lepton driver}{16}{subsection.1.2.3}%
-\contentsline {subsection}{\numberline {1.2.4} Simple shell}{19}{subsection.1.2.4}%
-\contentsline {subsection}{\numberline {1.2.5} MicroML and build system}{19}{subsection.1.2.5}%
-\contentsline {subsection}{\numberline {1.2.6} Running inference on a microcontroller}{22}{subsection.1.2.6}%
-\contentsline {section}{\numberline {1.3} Server-side components and software}{28}{section.1.3}%
-\contentsline {chapter}{\numberline {2} Measurements and results}{31}{chapter.2}%
-\contentsline {section}{\numberline {2.1} Comparison of models}{31}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1} Hyperparameter search space and results analysis}{32}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2} Comparison of selected, re-trained models}{37}{subsection.2.1.2}%
-\contentsline {subsection}{\numberline {2.1.3} Comparison of Edge Impulse models}{40}{subsection.2.1.3}%
-\contentsline {section}{\numberline {2.2} On-device performance testing}{42}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1} Comparison of code sizes}{44}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2} Comparison of different optimisations}{45}{subsection.2.2.2}%
-\contentsline {subsection}{\numberline {2.2.3} Scoring trained models}{47}{subsection.2.2.3}%
-\contentsline {section}{\numberline {2.3} Summary of model testing}{48}{section.2.3}%
-\contentsline {section}{\numberline {2.4} Power profiling of an embedded early warning system}{49}{section.2.4}%
-\contentsline {subsection}{\numberline {2.4.1} Measuring setup}{49}{subsection.2.4.1}%
-\contentsline {subsection}{\numberline {2.4.2} Current measurements}{50}{subsection.2.4.2}%
-\contentsline {subsection}{\numberline {2.4.3} Commentary of the current measurement results}{54}{subsection.2.4.3}%
-\contentsline {subsection}{\numberline {2.4.4} Battery life estimations}{56}{subsection.2.4.4}%
+\contentsline {chapter}{\numberline {1} Conclusion}{xiv}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Future work}{xiv}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Final words}{xv}{section.1.2}%
