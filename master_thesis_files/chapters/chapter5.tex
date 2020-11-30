@@ -587,7 +587,7 @@ We value Flash size less than RAM, as most of the microcontrollers have much les
 Since the time of inference, Flash and RAM sizes are properties, which should give a larger score, the smaller they are, we mapped them into a range between 0 and 1.
 The smallest value inside the set would be assigned 1, the biggest 0, the values in between are mapped linearly.
 
-Scoring is described mathematically in \ref{score_equ}, while the final results can be seen in Figure \ref{score_comp}
+Scoring is described mathematically in \ref{score_equ}, while the final results can be seen in Figure \ref{score_comp}.
 \begin{equation}\label{score_equ}
     \begin{aligned}
         Score[i] ={} & 7 K(P_{elephant},i) + 7 K(P_{human},i) + 7 K(P_{human},i) + 4 K(P_{ntr/rnd},i) \\
@@ -671,7 +671,7 @@ We turned off both of the UART peripherals and SPI peripheral, while keeping GPI
 We also had to make sure that nRF52 microcontroller is completely disconnected from on board J-Link debug probe to avoid any unnecessary current leaks.
 Luckily the nRF52840 development board has an analogue switch, which does exactly that.
 To measure current consumption we simply connected voltage output of Otii to external power pins of nRF52840 DK board.
-Figure \ref{mcu_in_sleep} shows us the current consumption in the low-power state.
+Figure \ref{mcu_in_sleep} shows the current consumption in the low-power state.
 
 \begin{figure}[ht]
     \centering
@@ -680,7 +680,7 @@ Figure \ref{mcu_in_sleep} shows us the current consumption in the low-power stat
     \label{mcu_in_sleep}
 \end{figure}
 
-Initial spike at the beginning of graph happens because of many decoupling capacitors on the board.
+Initial spike at the beginning of graph happens due to many decoupling capacitors on the board.
 Due to the sudden change in voltage their impedance is low, therefore more current is drawn.
 Pyramid looking shape between 0.5 and 1 second happens due to the onboard regulators turning on.
 
@@ -694,9 +694,11 @@ In next measurement we connected LR1110 shield to the nRF52840 DK board and obse
 Current profile of it can be see in Figure \ref{lora_join}.
 Besides initial spike we can see additional four pulses afterwards with some smaller spikes in between. 
 As we are using Over-The-Air Activation (OTAA) LR1110 first has to negotiate for a set of keys with the server before it can start transmitting.
-This happens in first two pulses, in third pulse LR1110 confirms the set of keys and fourth one first message is sent.
-First LoRa message is sent automatically, as it is a part of the LoRa Cloud service.
-Although we do not use this service we can not completely disable it.
+This happens in first two pulses, LR1110 first sends join request and then listens for response.
+After receiving response it confirms it.
+In third pulse LR1110 sends a message that is a part of the LoRa Cloud service.
+This message is specific to LR1110 and it can not be completely disabled.
+Last thin pulse belongs to an empty payload message, which LR1110 always transmits in beginning.
 Average current consumption of LoRaWan join procedure is 11.4 \si{\milli\ampere} and lasts for about 34 seconds.
 Average current consumption in sleep state has increased to 76.8 \si{\micro\ampere}.
 
@@ -710,6 +712,8 @@ Average current consumption in sleep state has increased to 76.8 \si{\micro\ampe
 In our next test we connected nRF52 to boost converter circuit, Nucleo-F767ZI and FLIR Lepton camera, setup can be seen in Figure \ref{measure_setup}.
 We did not use PIR sensor as a wakeup source as we saw that its detection was too sensitive to surroundings and we could not completely control it.
 We instead used a button on nRF52840 DK as a wakeup interrupt.
+To account for PIR sensor current consumption in later calculations we measured it separately, we saw that it drew 130 \si{\micro\ampere}.
+
 Since we wrote our firmware for libopencm3 in mind we could not use the best performing model \textit{3tl}, as Edge Impulse models only could run on Mbed platform.
 We instead used our model \textit{460b}, as was most similar to \textit{3tl} in terms of inference time (69 \si{\milli\second} compared to 73 \si{\milli\second}).
 In case where image capture and inferencing happened once, we measured total time of the whole detection procedure to be about 1480 \si{\milli\second}, not including time needed for LoRaWAN message.
@@ -767,9 +771,84 @@ To accomplish this we simply connected a reset pin of STM32 with one of availabl
 
 \subsection{ Battery life estimations}
 
+Table \ref{lifetime_data} shows parameters values that we used in our equation \ref{lifetime} of battery lifetime.
+We define a detection sequence where image capture and inference are repeated 5 times and then followed by a LoRaWAN message.
+In our calculation we also accounted for one daily LoRaWAN message, which is meant for system reporting.
+We assumed that system is in low-power mode when is not performing detection sequence or sending a LoRaWAN message.
 
-average currents:
-sleep 76.8 \si{\micro\ampere}.  you should add here PIR sensor consumption.
-5ml detection 51.9 \si{\milli\ampere}.
+\begin{table}[ht]
+    \centering
+    \caption{ First hyperparameter search space}
+    \rowcolors{2}{white}{gray!25}
+    \begin{tabular}{lr}    \toprule
+        \textbf{Event}                          & \textbf{Current consumption at 3.3 V} \\\midrule
+        low-power state                         & 76.8\si{\micro\ampere}                \\ 
+        PIR                                     & 130\si{\micro\ampere}                 \\ 
+        PIR and low-power state                 & 206.8\si{\micro\ampere}               \\
+        Detection sequence, 8 s                 & 51.9\si{\milli\ampere}                \\
+        LoRaWAN message, 230 \si{\milli\second} & 80 \si{\milli\ampere}                 \\\midrule
+        \textbf{Battery type}                   & \textbf{Properties}                   \\
+        Panasonic NCR 18650B                    & Nominal Voltage: 3.6 V                \\
+                                                & Nominal Capacity: 3350 \si{\milli\ampere\hour}
+    \end{tabular}
+    \label{lifetime_data}
+\end{table}
 
-%Based on numbers and different scenarios estimate how long would this last with different batteries.
+\begin{equation}\label{lifetime_equ}
+\begin{aligned}
+    P_{sleep} ={} & U_{supplied}\; I_{sleep}\\
+P_{detect} ={} & U_{supplied}\; I_{detec}\\
+P_{lora} ={} & U_{supplied}\; I_{lora}\\
+t_{sleep}     ={} & 24h - t_{detect}\; N_{detect} - t_{lora}\\
+P_{average}   ={} & \frac{P_{sleep}\; t_{sleep} + P_{detect}\;t_{detect}\; N_{detect} + P_{lora}\; t_{lora}}{24h}\\
+t_{lifetime}  ={} & \frac{U_{bat}\;Ah_{bat}\;N_{bat}}{P_{average}}
+\end{aligned}
+\end{equation}
+
+Where:\\
+$U_{supplied}$ - Voltage at which we have done our measurements, 3.3 V\\
+$U_{bat}$ - Battery nominal voltage, 3.6 V\\
+$Ah_{bat}$ - Battery nominal capacity, 3350 \si{\milli\ampere\hour}\\
+$I_{lora}$ - Current consumption when sending a LoRaWAN message\\
+$I_{sleep}$ - Current consumption of low-power state with PIR consumption\\
+$I_{detect}$ - Current consumption of detection sequence\\
+$P_{sleep}$ - Used power of low-power state and PIR\\
+$P_{detect}$ - Used power of detection sequence\\
+$P_{lora}$ - Used power of LoRaWAN message send\\
+$P_{average}$ - Average power needed for system to operate\\
+$t_{detect}$ - time spent in detection sequence in hours\\
+$t_{sleep}$ - time spent in low-power state in hours\\
+$t_{lora}$  - time spent sending LoRaWAN messages\\
+$t_{lifetime}$ - battery life time in hours\\
+$N_{detec}$ - Number of detection in a day\\
+$N_{bat}$ - Number of batteries\\
+
+As a power source we chose a lithium-ion cell battery NCR 18650B of manufacturer Panasonic.
+Its properties can be seen in Table \ref{lifetime_data}.
+
+Beacuse we can only assume how frequently will our system need to perform detection sequence, we repeated our calculation for several different numbers of detections per day.
+We also varied the number of battery cells, the enclosure, that we plan to use, has enough space for up to 6 battery cells.
+Results of the estimations can be seen in Figure \ref{lifetime_figure}, X axis represents number of battery cells, Y axis represents system life time in months and the colour of the lines represents number of detections per day, from 100 to 600.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{lifetime.pdf}
+    \caption{ Current profile of image capture and inference procedure.}
+    \label{lifetime_figure}
+\end{figure}
+
+Results are promising, we can see that most battery configurations would last more than 6 months, which is already a long time, considering the application.
+If decide on 6 battery cell configuration, we see that in worst case where we are executing 600 detection per day, we can expected system lifetime of 10 months, which is more than enough.
+There are some things that we have to take into account.
+We assumed 100 \% battery efficiency, meaning that each battery will provide its complete nominal capacity, in our case 3350 \si{\milli\ampere\hour}.
+In practice this is not possible due to effects such as self-discharge rate, high discharge profiles and temperature influences.
+On the other hand we assumed that we will process same amount detections everyday, in worst case 600.
+This number is probably much, and actual system lifetime should be better.
+
+While calculating system lifetime, we tried changing input parameters to see which ones affect final lifetime of the system the most.
+We found out that by decreasing current consumption in low-power state by ten times (from 206.8 \si{\micro\ampere} to 21 \si{\micro\ampere}) we do not dramatically increase the system's lifetime.
+With 6 batteries and 600 detections per day the lifetime increased to 10.5 months from 9.9 months.
+However, we saw large increase in system's lifetime if we halved either current consumption of detection event or its duration, with same conditions as before the system's lifetime increased from 9.9 to 18.5 months.
+This means that in order to increase systems's lifetime or to keep it the same with smaller number of batteries, we should focus on lowering the power consumption of detection event than lowering the low-power state current.
+
+
