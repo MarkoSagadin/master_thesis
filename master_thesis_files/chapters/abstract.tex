@@ -7,7 +7,7 @@
 \bigskip
 \bigskip
 \bigskip
-\textbf{Ključne besede:} strojno učenje, mikrokrmilnik, sklepanje na napravi, termalna kamera, sistem z majhno porabo, 
+\textbf{Ključne besede:} strojno učenje, mikrokrmilnik, inferenca na napravi, termalna kamera, sistem z majhno porabo, 
 \bigskip
 \textbf{UKD:} XXXXX
 
@@ -56,8 +56,8 @@ Iz nabora termalnih slik smo izbrali slike, ki so ustrezale našim zahtevam.
 Nabor termalnih slik je vseboval veliko število slik slonov in ljudi, ampak ne veliko slik krav ali narave.
 Slednje smo posneli sami na terenu, s hitrim prototipom, ki smo ga izdelali sami.
 
-Opisali smo kako smo so slike pripravili za učenje modela in predstavili smo osnovno strukturo modela.
-Ker je iskanje optimalnih hiperparametrov nehevristična naloga, smo določili možni razpon hiperparametrov in izvedli algoritem naključnega iskanja, ki je naučil večje število modelov z različnimi hiperparameteri.
+Opisali smo kako smo so slike pripravili za učenje modela in predstavili smo osnovno arhitekturo modela.
+Odločili smo se za klasično convolucijsko arhitekturo, kjer se konvolucijski sloji in pooling sloji ponovijo nekajkrat nato pa se priklučijo na tesno povezani neuronski sloj.
 Opisali smo tudi, kako poteka optimizacija modelov, ki bodo tekli na mikrokrmilnikih.
 
 Nazadnje ponovno opišemo potek zasnove modela od začetka do konca, ampak tokrat to storimo s Edge Impulse Studijem.
@@ -71,23 +71,58 @@ Mikrokrmilnik NRF52840 kontrolira delovanje celotnega sistema in preživi večin
 Ob signalu iz PIR sensorja se zbudi iz spanja in vklopi drugi mikrokrmilnik, STM32F767ZI.
 STM32F767ZI je visoko zmogljiv mikrokrmilnik s Cortex-M7 jedrom.
 Povezan je s FLIR Lepton termalno kamero in kontrolira zajemanje slik ter njiovo procesiranje s nevronsko mrežo.
-STM32F767ZI sporoči rezultate klasifikacije NRF52840 mikrokrminlniku, ki jih obdela in nato pošlje preko LoRaWAN omrežja na dostopno točko.
+STM32F767ZI sporoči rezultate klasifikacije nRF52840 mikrokrminlniku, ki jih obdela in nato pošlje preko LoRaWAN omrežja na dostopno točko.
 Za LoRa brezžični modul smo uporabili LR1110 čip.
 
 Veliki del magistrskega dela se je ukvarjal s prenosom TensorFlow Lite for Microcontrollers platfrome na platformo naše izbire, libopencm3.
 V procesu prenosa smo se podrobno spoznali s prevajanjem in povezovanjem kode, saj nismo uporabljali programskega okolja, ki bi to naredilo za nas.
 Tako smo ustvarili odprto-kodni projekt MicroMl, ki omogoča uporabo TensorFlow lite kode na platformi libopencm3.
 Sestava in uporabo MicroML-a smo podrobno opisali.
-MicroMl smo uporabili pri pisanju kode za mikrokrmilnik STM32F767ZI, za NRF52840 pa smo uporabili operacijski sistem Zephyr.
+MicroMl smo uporabili pri pisanju kode za mikrokrmilnik STM32F767ZI, za nRF52840 pa smo uporabili operacijski sistem Zephyr.
 
 
 5. Meritve in rezultati 
 
-TODO
+Izvedli smo vrsto različnih meritev in testov.
+V 3. poglavju smo predstavili osnovno arhitekturo modela, ampak nismo določili točnih vrednosti hiperparametrov.
+Ker je iskanje optimalnih hiperparametrov nehevristična naloga, smo določili možni razpon hiperparametrov in izvedli algoritem naključnega iskanja, ki je naučil večje število modelov z različnimi hiperparameteri.
+V prvem koraku smo naučili 300 modelov, največja dosežena natančnost modela je bila 98.35 \%.
+Opazili smo da nekaj je nekaj modelov doseglo primerljive rezultate, s mnogo manjšim številom parametrov.
+Ker se manjše število parametorv prevede v krajši čas inference, smo ponovili iskanje, tokrat z zmanjšanjim možnim razponom hiperparametrov.
+Iz rezultatov smo izbrali nekaj obetajočih modelov in jih primerjali s modeli, ki smo jih ustvarili s Edge Impulse Studijem.
+
+Vse izbrane modele smo tudi stestirali na mikrokrmilniku, beležili smo čas inference in velikost kode v flash in ram pomnilniku.
+Večina modelov je izvedla inferenco pod 200 milisekundami.
+Skoraj vsi modeli so zasedli manj kot 1 MB flash pomnilnika. 
+Vsi Edge Impulse modeli so zasedli manj ram pomnilnika v primerjavi z našimi modeli, saj so uporabljali drugačen pristop izvajanja inference.
+
+Za najbolj uspešne modele so se izkazali modeli, ki so bili trenirani s tehniko prenosnega učenja.
+Dosegali so visoke natančnosti in se kljub večjemu številu parametrov izvajali hitreje kot klasični konvolucijski modeli s manjšimi števili parametrov.
+
+Želeli smo predvideti življensko dobo sistema z baterijskim napajanjem, zato smo izvedli več testov porabe.
+Skupna poraba nRF52840 mikrokrmilnika in LR1110 modula je bila večja kot pričakovana, okoli 207 \si{\micro\ampere}, pričakovali smo porabo pod 10 \si{\micro\ampere}.
+Povprečna poraba celotne sekvence detekcije, kjer je mikrokrmilnik naredil 5 slik in na vsaki izvajal inferenco, ter nato poslal sporočilo preko LoRaWAN omrečja, je bila 52 \si{\milli\ampere} in je trajala 8 sekund.
+Za izračun smo si izbrali litijsko baterijo s nominalno kapaciteto 3350 \si{\milli\ampere\hour}.
+V izračunu smo predvideli število detekcij na dan, omejili smo se na 100, 200, 300, 400, 500 in 600 detekcij.
+Hkrati smo predpostavili, da lahko ima naš sistem do 6 baterij.
+Izračunana življenska doba sistema z šestimi baterijami in 600 detekcijami na da je bil 10 mesecov, v primeru 100 detekcij je bila 44 mesecov.
+
 
 6. Povzetek
 
-TODO
+V tem magistrskem delu smo predstavili rešitev, sistem zgodnje opozoritve, ki bi lahko pripomogla k zmanjševanju konfliktov med ljudmi in sloni.
+Prikazali smo celotni postopek od analize problema, predloga rešitve, analize nabora termalnih slik, procesiranja slik in zasnova modela.
+Opisali smo implementacijo izvedbe inference, kako smo izvedli prenos TensorFlow-a na našo platformo in celotno programsko kodo vgrajenega sistema.
+Podrobno smo primerjali naučene modele in jih stestirali na mikrokrmilniku.
+Izračunali smo predvideno življensko dobo sistema iz zajetih meritev porabe.
+
+Magistrska naloga zajema več različnih področij, vsako je možno izboljšati.
+Da bi izboljšali natančnost modelov, bi bilo potrebno zbrati več termalnih slik in podrobneje raziskati tehniko prenosnega učenja, saj je ta pokazala zelo dobre rezultate.
+
+Iz vidika porabe sistema, bi bilo potrebno nadalje zmanjšati porabo celotne detekcije in porabo v režimu nizke porabe.
+To je izvedljivo s izdelavo primernega tiskanega vezja, kakor tudi proučevanjem nepotrebne programske kode.
+
+Seveda je potrebno celotni sistem stestirati na terenu, tako bi pridobili nove ideje in zahteve za izboljšave.
 }
 \newpage
 

@@ -1,10 +1,38 @@
-TODO SUMMARY
+In this master's thesis we presented a solution, an early warning system, for minimizing Human-Elephant Conflicts.
+In beginning we presented a Machine Learning approach for solving classification of thermal images, we outlined its strengths compared to classical problem solving.
+We described in depth the knowledge required for understanding our work from various sub part of Machine learning, to wireless IoT technologies and thermal cameras.
+
+We presented several Machine learning workflows that we followed during design and planning of our own neural network.
+We analysed thermal image dataset and recognized what kind of data it lacked. 
+We compensated for missing data, by gathering more of them with our own image capturing setup and by resampling them.
+We proposed a basic CNN structure that we used later in model training phase.
+
+As we wanted to execute Machine Learning algorithms on our selected STM32 microcontroller we had to find a way how to make this possible.
+We ported a TensorFlow Lite for Microcontrollers library to the libopencm3 platform and in process created an open-source project MicroML.
+In the process we familiarized our self with specific of cross compiling and build systems.
+
+To implement our early warning system on the hardware we decided for two microcontroller setup, with STM32 as a main inferencing processor and nRF52 as a low-power system controller.
+To communicate with the FLIR Lepton camera we wrote the driver code, we also wrote LoRaWAN communication module.
+
+We ran random search algorithms to find proper hyperparameters for our proposed CNN model.
+We did an in depth comparison of several trained models and compared then to models trained with the help of commercial software.
+
+We saw that we could train CNN models with accuracy as high as 98.04 \% and we saw that models trained with Transfer Learning technique reached 98.7 \% without much additional work needed.
+We ran each trained model on the STM32 and measured its inference time.
+From results we saw that reaching inference time below 200 \si{\milli\second} is not hard, if special care is devoted to low number of parameters and correct microcontroller optimizations.
+
+We also evaluated performance of the embedded system from the battery lifetime perspective and we saw promising results.
+Assuming that our system would have to process 600 events per day and that it has 6 battery cells, we estimated the lifetime of the system to be around 10 months.
+
+This thesis shows that the field of Machine Learning on embedded devices reached a point were it is viable enough to use it in real life applications.
+Running inference directly on the embedded device can provide instant feedback and can extend the device's lifetime, as data does not need to be sent to the server for processing.
+Many use cases from animal conservation filed would benefit from such technology, as there is need for embedded device that require minimal manual care and can provide big value for its cost.
 
 
+\section{ Future work}
 
-\section{Future work}
-
-Our research into elephant detection with the aid of Machine Learning models yielded promising results and should be improved.
+Our research into elephant detection with the aid of Machine Learning models yielded promising results.
+There are several aspects of it that can be improved.
 
 In terms of model performance, we can always improve it by gathering more relevant training data.
 Dataset that we used contained several thousands images of elephants, but only couple thousands images of humans and only few hundreds images of cows.
@@ -22,30 +50,15 @@ By observing performance of the model in the field we would see if extremely low
 It might be feasible to run CNN models on slower, low-power, Cortex-M4 microcontrollers.
 Although we are expecting longer inference times, we would benefit from a simpler system design and a lower overall price of the embedded system.
 
-TODO preveri če se napisano sklada prejšnjo sekcijo.
-In terms of battery life performance, we can definitely lower the current consumption of the nRF52 microcontroller in the low-power state, reaching 10\si{\micro\ampere} with LR1110 in sleep mode is completely possible.
-Early detection system should be implemented on a custom printed circuit board, such approach would give use more control over current consumption than the setup that we created from development boards.
-
-TODO You are probably not finished with this section, you need feedback.
+In terms of battery life performance, creating a custom printed circuit board specially for our application would give us more control over the current consumption of the systems. Reaching lower low-power state current consumption should be easier.
+At the same time we should research how to optimize the detection sequence. 
+Decrease in either current consumption or the duration of detection sequence would provide us with huge improvements in battery life.
 
 
-\section{Final words}
+\section{ Final words}
 
 Machine Learning on the embedded devices is opening doors to various, wonderful applications that were not possible 3 years ago.
+We can see that there is already the demand for intelligence for devices on the "edge" and we expect it to increase as the field matures.
+It is quite possible that future embedded engineers would require some amount of Machine Learning knowledge to stay competitive and interesting to the market.
 
-
-
-
-
-
-Main three sections: summary, results commentary, and looking forward (future work)
-
-, you are summarizing the paper for a reader who had read the introduction and the body of the report already, and should already have a strong sense of key concepts. Your conclusion, then, is for a more informed reader and should look quite different than the introduction.
-
-
-
-Sklep je zadnje poglavje zaključnega dela. V njem podamo objektivno oceno rezultatov in
-jih povežemo s problemom, zastavljenim v uvodu. Če se nam zdi ustrezneje, lahko opis
-rezultatov in diskusijo podamo v sklepu namesto v glavnem delu. Nakažemo morebitne
-težave in opažanja, ki so se nam pojavila med delom, ter podamo napotke za nadaljnje
-delo.
+As Pete Warden said: "The Future of ML is Tiny and Bright".

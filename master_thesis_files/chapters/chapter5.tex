@@ -65,9 +65,18 @@ We kept batch size relatively small, at 100, which meant that weights would get 
 Hyperparameter \verb|MAX_TRIALS| had the biggest impact on the training time, we set it to 300.
 
 The training lasted for about 12 hours. 
-After it was done we compiled a list of all 300 trained models and their different hyperparameter values, number of parameters and achieved accuracies
+After it was done we compiled a list of all 300 trained models and their different hyperparameter values, number of parameters and achieved accuracies.
 Part of it can be seen in Table \ref{hyper_results1}.
+
+After analysing results we came to several conclusions:
+
+\begin{enumerate}
+    \item We saw that almost all trained models, except for the last one, achieved accuracy above 90 \%. This proved that the general architecture of the model was appropriate for the problem.
+    \item We could not see any visible correlation between a specific choice of a certain hyperparameter and accuracy. This showed that selection of hyperparameters is a non-heuristic task, at least for our particular problem.
+    \item Filter of size 3 x 4 did not perform significantly better compared to one with size 3 x 3. 
+    \item First 200 models cover an accuracy range of 0.62 \%. However inside of this range number of parameters varies hugely, for example, the model \textit{192a} has more than 8 times fewer parameters than the model \textit{96a}, although the difference in accuracy (0.27 \%) is negligible.
 \newline
+\end{enumerate}
 \begin{table}[ht]
     \centering
     \caption{ Partial results of first random search of hyperparameters}
@@ -96,19 +105,7 @@ Part of it can be seen in Table \ref{hyper_results1}.
     \end{tabular}
     \label{hyper_results1}
 \end{table}
-
-After analyzing results we came to several conclusions:
-
-\begin{enumerate}
-    \item We saw that almost all trained models, except for the last one, achieved accuracy above 90 \%. This proved that the general architecture of the model was appropriate for the problem.
-    \item We could not see any visible correlation between a specific choice of a certain hyperparameter and accuracy. This showed that selection of hyperparameters is a non-heuristic task, at least for our particular problem.
-    \item Filter of size 3 x 4 did not perform significantly better compared to one with size 3 x 3. 
-    \item There is a weak correlation between the number of parameters (model's complexity) and accuracy, however, models with small size and great accuracy exist, model \textit{2a} is an example of that.
-    \item First 200 models cover an accuracy range of 0.62 \%. However inside of this range model number of parameters varies hugely, for example, model \textit{192a} has more than 8 times fewer parameters than model \textit{96a}, although the difference in accuracy (0.27 \%) is negligible.
-\end{enumerate}
-
-It is apparent from results that large models are not necessary to achieve high accuracy on our training data, so we decided to run the random search of hyperparameters again.
-
+It was apparent from results that large models are not necessary to achieve high accuracy on our training data, so we decided to run the random search of hyperparameters again.
 This time we lowered the maximum and the minimum numbers of filters and size of the dense layer.
 We decreased all steps from 8 to 2, thus increasing the number of possible configurations.
 We decided to lower the bottom boundary of \verb|DropoutRate| from 0.2 to 0.0, which means that some models will not be using dropout layer at all.
@@ -637,7 +634,7 @@ It connects to a computer over USB cable and can be powered through it or with a
 
 It can provide output voltage between 0.5 V and 4.55 V and has accuracy of $\pm$(0.1 \% + 50 nA), when measuring current.
 It is a perfect tool for evaluating low-power systems.
-
+\newline
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.75\linewidth]{otii.jpg}
@@ -648,7 +645,7 @@ It is a perfect tool for evaluating low-power systems.
 Measurements analysis is done through desktop application, example of it is seen in Figure \ref{otii_screen}. 
 Application enables users to select a part of the measurement, for which it automatically computes minimum, maximum and average values.
 To present our results we exported current measurements in CVS format and plotted them with Matplotlib.
-
+\newline
 \begin{figure}[ht]
     \centering
     \includegraphics[width=1\linewidth]{otii_screenshot.png}
@@ -672,7 +669,7 @@ We also had to make sure that nRF52 microcontroller is completely disconnected f
 Luckily the nRF52840 development board has an analogue switch, which does exactly that.
 To measure current consumption we simply connected voltage output of Otii to external power pins of nRF52840 DK board.
 Figure \ref{mcu_in_sleep} shows the current consumption in the low-power state.
-
+\newline
 \begin{figure}[ht]
     \centering
     \includegraphics[width=1\linewidth]{mcu_in_sleep.pdf}
@@ -692,6 +689,14 @@ Measured average current was higher than expected, according to the nRF52's data
 
 In next measurement we connected LR1110 shield to the nRF52840 DK board and observed current consumption of the initial LoRaWAN join sequence.
 Current profile of it can be see in Figure \ref{lora_join}.
+\newline
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{lora_join.pdf}
+    \caption{ Current profile of LoRaWAN join sequence.}
+    \label{lora_join}
+\end{figure}
+
 Besides initial spike we can see additional four pulses afterwards with some smaller spikes in between. 
 As we are using Over-The-Air Activation (OTAA) LR1110 first has to negotiate for a set of keys with the server before it can start transmitting.
 This happens in first two pulses, LR1110 first sends join request and then listens for response.
@@ -702,39 +707,23 @@ Last thin pulse belongs to an empty payload message, which LR1110 always transmi
 Average current consumption of LoRaWan join procedure is 11.4 \si{\milli\ampere} and lasts for about 34 seconds.
 Average current consumption in sleep state has increased to 76.8 \si{\micro\ampere}.
 
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=1\linewidth]{lora_join.pdf}
-    \caption{ Current profile of LoRaWAN join sequence.}
-    \label{lora_join}
-\end{figure}
-
 In our next test we connected nRF52 to boost converter circuit, Nucleo-F767ZI and FLIR Lepton camera, setup can be seen in Figure \ref{measure_setup}.
 We did not use PIR sensor as a wakeup source as we saw that its detection was too sensitive to surroundings and we could not completely control it.
 We instead used a button on nRF52840 DK as a wakeup interrupt.
 To account for PIR sensor current consumption in later calculations we measured it separately, we saw that it drew 130 \si{\micro\ampere}.
-
-Since we wrote our firmware for libopencm3 in mind we could not use the best performing model \textit{3tl}, as Edge Impulse models only could run on Mbed platform.
-We instead used our model \textit{460b}, as was most similar to \textit{3tl} in terms of inference time (69 \si{\milli\second} compared to 73 \si{\milli\second}).
-In case where image capture and inferencing happened once, we measured total time of the whole detection procedure to be about 1480 \si{\milli\second}, not including time needed for LoRaWAN message.
-Average current consumption for this period was 114 \si{\milli\ampere}.
-If we measure average current of the whole event shown on Figure \ref{one_ml}, between 0 and 6 seconds, we get 30 \si{\milli\ampere}.
-
-In case where image capture and inferencing happened five times, we measured total time of the whole detection procedure to be about 2960 \si{\milli\second}, not including time needed for LoRaWAN message.
-Average current consumption for this period was 131 \si{\milli\ampere}.
-If we add transmission of LoRaWAN message to the measured current consumption, thus increasing the time of the whole detection event to 8 seconds, we measure 51.9 \si{\milli\ampere}.
-
+\newline
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=1\linewidth]{measure_setup.jpg}
+    \includegraphics[width=0.75\linewidth]{measure_setup.jpg}
     \caption{ Device under test: nRF52840 DK with attached LR1110 shield, boost converter breakout board, Nucleo-F767ZI and FLIR Lepton camera.}
     \label{measure_setup}
 \end{figure}
 
+Since we wrote our firmware for libopencm3 in mind we could not use the best performing model \textit{3tl}, as Edge Impulse models only could run on Mbed platform.
+We instead used our model \textit{460b}, as was most similar to \textit{3tl} in terms of inference time (69 \si{\milli\second} compared to 73 \si{\milli\second}).
 We captured two different inference procedures, in first image capture and inference were done once, in second one they were repeated 5 times.
 Procedures can be seen on Figures \ref{one_ml} and \ref{five_ml} respectively.
 Both procedures were followed by a LoRaWAN message that reported results to the server.
-
 \begin{figure}[ht]
     \centering
     \includegraphics[width=1\linewidth]{one_ml.pdf}
@@ -747,6 +736,15 @@ Both procedures were followed by a LoRaWAN message that reported results to the 
     \caption{ Current profile of image capture and inference procedure repeated 5 times.}
     \label{five_ml}
 \end{figure}
+\clearpage
+In case where image capture and inferencing happened once, we measured total time of the whole detection procedure to be about 1480 \si{\milli\second}, not including the time needed for LoRaWAN message.
+Average current consumption for this period was 114 \si{\milli\ampere}.
+Measured average current of the whole event shown on Figure \ref{one_ml}, between 0 and 6 seconds, is 30 \si{\milli\ampere}.
+
+In case where image capture and inferencing happened five times, we measured total time of the whole detection procedure to be about 2960 \si{\milli\second}, not including time needed for LoRaWAN message.
+Average current consumption for this period was 131 \si{\milli\ampere}.
+If we add transmission of LoRaWAN message to the measured current consumption, thus increasing the time of the whole detection event to 8 seconds, we measure 51.9 \si{\milli\ampere}.
+
 
 
 \subsection{ Commentary of the current measurement results}
@@ -761,9 +759,9 @@ Another reason for increased power consumption could also be inadequate support 
 When we connected LR1110 shield to the nRF52840 DK board we saw that average current consumption increased to 76.8 \si{\micro\ampere}, which is much more than expected.
 LR1110 automatically enters sleep mode when it is finished with communication, according to its datasheet\cite{lr1110_datasheet}, current consumption should be around 1.85 \si{\micro\ampere}.
 This current consumption is plausible, as we observed it in other IRNAS's products that use LR1110 chip.
-We suspect that the incorrect state of common GPIO connections between LR1110 and nRF52 is the cause for increased current consumption, however we were not able to fix the problem.
+We suspect that the incorrect state of common GPIO connections between LR1110 and nRF52 is the reason for increased current consumption, however we were not able to fix the problem.
 
-We mentioned that the time required for detection is about 1480\si{\milli\second} if we capture one image and process it or 2960 \si{\milli\second} if done five times.
+We mentioned that the time required for detection is about 1480\si{\milli\second}, if we capture one image and process it or 2960 \si{\milli\second}, if done five times.
 We can see that both detection procedures started with a 700 \si{\milli\second} of delay, according to FLIR Lepton's datasheet \cite{flir_datasheet}, a delay is required before we can start communicating with the camera over TWI interface.
 Two microcontroller resets are visible, during our testing we saw that we could not properly communicate with the camera, if we did not reset STM32 twice before that.
 To accomplish this we simply connected a reset pin of STM32 with one of available nRF52 GPIO pins.
@@ -771,10 +769,12 @@ To accomplish this we simply connected a reset pin of STM32 with one of availabl
 
 \subsection{ Battery life estimations}
 
-Table \ref{lifetime_data} shows parameters values that we used in our equation \ref{lifetime} of battery lifetime.
+Table \ref{lifetime_data} shows parameters values that we used in our equation \ref{lifetime_equ} of battery lifetime.
 We define a detection sequence where image capture and inference are repeated 5 times and then followed by a LoRaWAN message.
 In our calculation we also accounted for one daily LoRaWAN message, which is meant for system reporting.
 We assumed that system is in low-power mode when is not performing detection sequence or sending a LoRaWAN message.
+As a power source we chose a lithium-ion cell battery NCR 18650B of manufacturer Panasonic.
+Its properties can be seen in Table \ref{lifetime_data}.
 
 \begin{table}[ht]
     \centering
@@ -789,7 +789,7 @@ We assumed that system is in low-power mode when is not performing detection seq
         LoRaWAN message, 230 \si{\milli\second} & 80 \si{\milli\ampere}                 \\\midrule
         \textbf{Battery type}                   & \textbf{Properties}                   \\
         Panasonic NCR 18650B                    & Nominal Voltage: 3.6 V                \\
-                                                & Nominal Capacity: 3350 \si{\milli\ampere\hour}
+                                                & Nominal Capacity: 3350 \si{\milli\ampere\hour}\\\bottomrule
     \end{tabular}
     \label{lifetime_data}
 \end{table}
@@ -821,12 +821,9 @@ $t_{sleep}$ - time spent in low-power state in hours\\
 $t_{lora}$  - time spent sending LoRaWAN messages\\
 $t_{lifetime}$ - battery life time in hours\\
 $N_{detec}$ - Number of detection in a day\\
-$N_{bat}$ - Number of batteries\\
+$N_{bat}$ - Number of batteries
 
-As a power source we chose a lithium-ion cell battery NCR 18650B of manufacturer Panasonic.
-Its properties can be seen in Table \ref{lifetime_data}.
-
-Beacuse we can only assume how frequently will our system need to perform detection sequence, we repeated our calculation for several different numbers of detections per day.
+Because we can only assume how frequently will our system need to perform detection sequence, we repeated our calculation for several different numbers of detections per day.
 We also varied the number of battery cells, the enclosure, that we plan to use, has enough space for up to 6 battery cells.
 Results of the estimations can be seen in Figure \ref{lifetime_figure}, X axis represents number of battery cells, Y axis represents system life time in months and the colour of the lines represents number of detections per day, from 100 to 600.
 
@@ -837,7 +834,7 @@ Results of the estimations can be seen in Figure \ref{lifetime_figure}, X axis r
     \label{lifetime_figure}
 \end{figure}
 
-Results are promising, we can see that most battery configurations would last more than 6 months, which is already a long time, considering the application.
+Results are promising, we can see that most battery configurations last more than 6 months, which is already a long time, considering the application.
 If decide on 6 battery cell configuration, we see that in worst case where we are executing 600 detection per day, we can expected system lifetime of 10 months, which is more than enough.
 There are some things that we have to take into account.
 We assumed 100 \% battery efficiency, meaning that each battery will provide its complete nominal capacity, in our case 3350 \si{\milli\ampere\hour}.
@@ -850,5 +847,3 @@ We found out that by decreasing current consumption in low-power state by ten ti
 With 6 batteries and 600 detections per day the lifetime increased to 10.5 months from 9.9 months.
 However, we saw large increase in system's lifetime if we halved either current consumption of detection event or its duration, with same conditions as before the system's lifetime increased from 9.9 to 18.5 months.
 This means that in order to increase systems's lifetime or to keep it the same with smaller number of batteries, we should focus on lowering the power consumption of detection event than lowering the low-power state current.
-
-

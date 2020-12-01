@@ -198,6 +198,7 @@ More complex cells responded to boxes, circles and so on.
 CNNs also detect simpler shapes first and use them to detect more complex ones later.}
 
 In Figure \ref{convnet} we can see an example of CNN which takes an image of a car as an input and outputs probability results in five different classes.
+\newline
 \begin{figure}[ht]
         \centering
         \includegraphics[width=1.0\linewidth]{convnet.jpeg} 
@@ -222,7 +223,7 @@ Convolution layers perform dot products between input volume and several \textbf
 In these layers, filters are configured through the training phase.
 We can see a concrete example in Figure \ref{conv1}.
 2D filter with size 2 x 2 covers a part of the input volume, over which element-wise multiplication is computed, elements are summed and the result is written into the first element of output volume.
-
+\newline
 \begin{figure}[ht] 
     \centering
     \includegraphics[width=0.75\linewidth]{conv1.png} 
@@ -269,7 +270,7 @@ The size of the volume is preserved in this step.
 Pooling layers perform the downsampling of input volumes in both width and height dimensions.
 This is done by sliding a filter of fixed size over the input and doing a MAX operation on elements that the filter covers, and only the largest value element is copied into the output (Figure \ref{pool_layer}).
 Pooling is done on each depth slice separately from other slices, so depth size is preserved through the layer.
-
+\newline
 \begin{figure}[ht] 
     \begin{subfigure}[b]{0.5\textwidth}
         \centering
@@ -297,7 +298,7 @@ Pooling layers therefore reduce the number of activations, and prepare them to b
 Transfer Learning is a ML technique, which transfers knowledge that was learned on one problem, to another, similar problem.
 
 We mentioned earlier in Section \ref{cnn_para} that CNNs learn in first few layers how to detect simple shapes, like edges and lines, which are in later layers used to detect boxes, circles, faces and so on. 
-This behavior is not limited only to CNNs, but to all DNNs.
+This behaviour is not limited only to CNNs, but to all DNNs.
 
 The task of detecting simple shapes in first few layers of DNNs can be common between models that are trying to solve a similar problem.
 Example would be a model classifying images depicting different types of objects and a model classifying images with different types of animals.
@@ -306,7 +307,7 @@ First model is trying to solve a more general problem than the seconds one, howe
 And this is exactly what Transfer Learning is all about, it is possible to train a big, complex model on a large dataset and then reuse first few layers in a different model.
 Example Transfer learning is shown in Figure \ref{transfer_learning}.
 It is important to note that the weights of transferred layers are fixed, they are not being trained.
-
+\newline
 \begin{figure}[ht] 
     \centering
     \includegraphics[width=0.75\linewidth]{transfer_learning.png} 
@@ -438,7 +439,7 @@ An example of a LoRa signal that was captured with a software defined radio can 
 Each symbol is modulated into a radio signal whose frequency is either increasing or decreasing with a constant rate inside of a specified bandwidth.
 When the bandwidth boundary is reached, the signal "wraps around" and appears at the other boundary.
 Although the frequency is always changing with a constant rate, it is not continuous inside the bandwidth window, but it can change to a different frequency immediately and continue from there.
-
+\newline
 \begin{figure}[ht]
     \begin{subfigure}{0.3\textwidth}
         \centering
@@ -519,8 +520,6 @@ They are sensitive to IR wavelengths of 8 to 14 \si{\micro\meter}, which is a pa
 Measuring part of a microbolometer is known as Focal Point Array (FPA) (Figure \ref{FPA}).
 FPA consists of IR thermal detectors, bolometers (Figure \ref{FPA_pixel}), that convert IR radiation into an electric signal.
 Each bolometer consists of an absorber material connected to a Readout Integrated Circuit (ROIC) over thermally insulated, but electrically conductive legs\cite{thermal_article}.
-\newline
-
 \begin{figure}[h]
     \begin{subfigure}{0.5\textwidth}
         \centering
@@ -537,7 +536,6 @@ Each bolometer consists of an absorber material connected to a Readout Integrate
     \caption[Focal point array and bolometer.] {(a) Focal point array under electronic microscope. (b) Bolometer with $\lambda /4$ resonant cavity. Image source: Vollmer, Möllmann\cite{thermal_book}}
     \label{FPA_microbolo}
 \end{figure}
-\clearpage
 
 Absorber material is either made out of metals such as gold, platinum, titanium, or, more commonly, out of semiconductors such as vanadium-oxide (VOx)\cite{thermal_article}.
 The important property of absorber materials is that electrical resistance changes proportionally with the material's temperature\cite{thermal_book}.

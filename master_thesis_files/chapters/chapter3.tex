@@ -247,30 +247,7 @@ While specifying layers, we only had to specify what type of layer we wanted, it
 We did not have to keep track of any connections between or in layers, as this was done automatically by Keras.
 
 For a model architecture we decided to use a simplified version of the common CNN architecture that was shown in Figure \ref{convnet}.
-The best way to present the model is by inspecting the Sequential API code that creates it, and the code is shown in Listing \ref{model_code}.
-
-The model consisted of two pairs of convolutional and max-pooling layers, followed by a final convolutional layer.
-For activation the function ReLu was chosen, as it is currently the most effective and popular option\cite{cs231n}\cite{geron}.
-The padding option was set to same, which meant that a spatial dimension of a volume would not change before and after a convolutional layer.
-Pooling layer kernel size was set to 2 x 2, with a default stride of 2.
-
-The output volume of the last convolutional layer was flattened out into a single vector and fed into a dense layer, which was followed by a dropout layer\footnotemark.
-\footnotetext{ The Dropout layer decides with probability $p$ in each training step how many activations from the previous layer will be passed on to the next layer.
-It is active only during the training phase, during the testing phase activations are multiplied with $(1-p)$ factor to compensate.
-It is a very popular type of regularisation technique, which makes models more robust to the input data\cite{geron}.}
-
-The last dense layer was a final output layer with only 4 neurons, each one representing one class.
-Softmax activation was used to calculate class probabilities.
-The model was set to use the Adam optimizer and Sparse Categorical Crossentropy loss function.
-Adam is an upgraded version of the gradient descent method, which adapts the learning rate automatically to decaying gradients\cite{geron}.
-It is generally easier to use than gradient descent, as it requires less tuning or learning rate hyperparameters.
-Sparse Categorical Crossentropy loss function is used when building a multi-class classifier.
-
-The above set hyperparameters follow the general rules of thumb and serve as a good starting point when building CNNs\cite{cs231n}.
-However, hyperparameters such as the number of filters, filter size, size of a hidden dense layer, dropout rate, and learning rate, are specific to each dataset, and cannot be chosen heuristically.
-
-To find hyperparameters that would yield the highest accuracy we used the Keras Tuner module.
-The exact configuration of a Keras Tuner module and comparison of trained models is presented and discussed in Section \ref{model_comparisons}.
+The best way to present the model is by inspecting the Sequential API code that creates it, which is shown in Listing \ref{model_code}.
 
 \lstset{style=mystyle}
 \begin{figure}[ht] 
@@ -301,11 +278,35 @@ model.add(Dense(4), activation='softmax')
 \label{model_code}
 \end{figure}
 
+
+The model consisted of two pairs of convolutional and max-pooling layers, followed by a final convolutional layer.
+For activation the function ReLu was chosen, as it is currently the most effective and popular option\cite{cs231n}\cite{geron}.
+The padding option was set to same, which meant that a spatial dimension of a volume would not change before and after a convolutional layer.
+Pooling layer kernel size was set to 2 x 2, with a default stride of 2.
+
+The output volume of the last convolutional layer was flattened out into a single vector and fed into a dense layer, which was followed by a dropout layer\footnotemark.
+\footnotetext{ The Dropout layer decides with probability $p$ in each training step how many activations from the previous layer will be passed on to the next layer.
+It is active only during the training phase, during the testing phase activations are multiplied with $(1-p)$ factor to compensate.
+It is a very popular type of regularisation technique, which makes models more robust to the input data\cite{geron}.}
+
+The last dense layer was a final output layer with only 4 neurons, each one representing one class.
+Softmax activation was used to calculate class probabilities.
+The model was set to use the Adam optimizer and Sparse Categorical Crossentropy loss function.
+Adam is an upgraded version of the gradient descent method, which adapts the learning rate automatically to decaying gradients\cite{geron}.
+It is generally easier to use than gradient descent, as it requires less tuning or learning rate hyperparameters.
+Sparse Categorical Crossentropy loss function is used when building a multi-class classifier.
+
+The above set hyperparameters follow the general rules of thumb and serve as a good starting point when building CNNs\cite{cs231n}.
+However, hyperparameters such as the number of filters, filter size, size of a hidden dense layer, dropout rate, and learning rate, are specific to each dataset, and cannot be chosen heuristically.
+
+To find hyperparameters that would yield the highest accuracy we used the Keras Tuner module.
+The exact configuration of a Keras Tuner module and comparison of trained models is presented and discussed in Section \ref{model_comparisons}.
+
 \section{ Model optimisation}
 
 Keras supports saving models in h5 format, which model's architecture, values of weights, and information used while compiling the model.
 h5 format cannot be used directly for running trained models on mobile devices and microcontrollers: conversion to a .tflite format has to be done with the TFLite Converter tool.
-
+\clearpage
 The TFLite converter can convert a model in .h5 format into four differently optimised tflite models:
 \begin{itemize}
     \item \textbf{Non-quantized tflite model,} no quantization, just basic conversion from .h5 to .tflite format is done.
@@ -334,9 +335,6 @@ We chose the S3 bucket approach, as once the data was uploaded it was trivial to
 \footnotetext{Simple Storage Service or S3 is another service provided by Amazon, used for storing a large amount of data in the cloud.}
 After the data were uploaded, the rest of the NN design was done through the Edge Impulse web interface.
 In Figure \ref{edge_impulse_screenshot} we can see the so-called Impulse Design tab, where we design a Neural Network by choosing different blocks.
-With input blocks, we tell what kind of data are we inputting, either image or time-series data, and with processing blocks we decide how are we going to extract features.
-Input and preprocessing blocks always return same output given the same input, while learning blocks are trainable and learn from previous experiences.
-For the learning block, we can choose to use a Neural Network provided by Keras, an anomaly detection algorithm, or a pre-trained model for transfer learning.
 \newline
 \begin{figure}[ht]
     \centering
@@ -344,6 +342,10 @@ For the learning block, we can choose to use a Neural Network provided by Keras,
     \caption{Creating a Neural Network in Edge Impulse Studio.}
     \label{edge_impulse_screenshot}
 \end{figure}
+
+With input blocks, we tell what kind of data are we inputting, either image or time-series data, and with processing blocks we decide how are we going to extract features.
+Input and preprocessing blocks always return same output given the same input, while learning blocks are trainable and learn from previous experiences.
+For the learning block, we can choose to use a Neural Network provided by Keras, an anomaly detection algorithm, or a pre-trained model for transfer learning.
 
 Since we were training with image data, we selected an image input block. 
 As Edge Impulse did not support images of different image ratios at the time, we had to resize our images to 60 x 60 pixels.
@@ -376,7 +378,7 @@ For the learning block we were using both Keras's Neural Network block and Trans
 \caption{ Different resizing methods}
     \label{crop_options}
 \end{figure}
-
+\clearpage
 Both of the blocks are configurable.
 We could either define our network with different blocks representing layers, or switch to the text editor with Keras Sequential API code, where we could make our adjustments.
 Settings such as learning rate, number of epochs\footnotemark, and confidence rating are also available, regardless of the option we chose.

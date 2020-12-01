@@ -80,7 +80,7 @@ The development kit, made by Nordic Semiconductor, can be seen in Figure \ref{nr
 
 The main logic on the board is provided by an nRF52840 (nRF52) microcontroller with Cortex-M4 core, which has 1 \si{\mega\byte} of flash, 256 \si{\kilo\byte} of RAM and a Bluetooth 5 support.
 nRF52 has a consumption of 0.5 \si{\micro\ampere} in sleep mode, which makes it ideal for our purpose.
-
+\newline
 \begin{figure}[ht]
         \centering
         \includegraphics[width=0.75\linewidth]{nrf_board.jpg} 
@@ -94,10 +94,9 @@ For the role of the LoRa transceiver module, we decided to use Semtech's develop
 LR1110 is a multi-functional solution as it contains LoRa transceiver, GNSS and WiFi geoposition scanning modules.
 Development kit seen in Figure \ref{lr1110_board} contains an LR1110 chip, three different antennas and their respective tuning networks.
 It comes in a convenient Arduino shield form factor, which means that we can directly attach it to nRF52 without any jumper wires.
-
 \begin{figure}[ht]
         \centering
-        \includegraphics[width=0.75\linewidth]{lr1110_board.jpg} 
+        \includegraphics[width=0.7\linewidth]{lr1110_board.jpg} 
         \caption{ LR1110 development kit}
         \label{lr1110_board}
 \end{figure}
@@ -125,7 +124,7 @@ FLIR Lepton camera is powered from two different sources, 1.2 \si{\volt} and 2.8
 All of this is provided by the Lepton breakout board, which can be seen in Figure \ref{lepton_breakout}.
 The front side of the breakout board contains a FLIR module socket and the backside contains two voltage regulators and an oscillator.
 Breakout board can be powered from 3.3 to 5 \si{\volt} and also conveniently breaks out all communication pins in form of header pins.
-
+\newline
 \begin{figure}[ht] 
     \begin{subfigure}[b]{0.5\textwidth}
         \centering
@@ -160,7 +159,7 @@ The microcontroller communicates with FLIR camera over two interfaces: two-wire 
 We used a cheap, generic PIR sensor, that can be seen in Figure \ref{pir_sensor}.
 It has two potentiometers, which are used to adjust sensor's sensitivity and detection delay.
 PIR sensor runs on 3.3 V, which enables us to directly power it from the nRF52. 
-
+\newline
 \begin{figure}[ht] 
     \begin{subfigure}[b]{0.5\textwidth}
         \centering
@@ -206,7 +205,7 @@ Besides usual RTOS functionalities such as tasks, mutexes, semaphores it also pr
 STM32 firmware was designed to be very efficient and lean, only truly necessary parts of firmware were implemented.
 
 As seen in Figure \ref{firmware_diagram} we split the firmware into two hardware and application modules.
-
+\newline
 \begin{figure}[ht]
         \centering
         \includegraphics[width=1.0\linewidth]{firmware_diagram.pdf} 
@@ -225,7 +224,7 @@ Image data goes in, predictions come out.
 
 The architecture diagram for nRF52 can be seen on Figure \ref{firmware_diagram_wisent}.
 For the nRF52 microcontroller we did not had to write any peripheral drivers, as they were provided by Zephyr itself.
-
+\newline
 \begin{figure}[ht]
         \centering
         \includegraphics[width=1.0\linewidth]{firmware_diagram_nrf.pdf} 
@@ -233,13 +232,16 @@ For the nRF52 microcontroller we did not had to write any peripheral drivers, as
         \label{firmware_diagram_wisent}
 \end{figure}
 
-Utmost importance was achieving low power consumption.
+Extra care was given to low power consumption.
 That meant that nRF52 had to spend most of its time in low-power mode, only waking up for regular system checks and PIR trigger signals.
 When PIR trigger signal would be received, the interrupt would wake up the nRF52, which would then enable a boost converter, thus enabling power to STM32 and FLIR Lepton camera.
+Handling transitions to low-power state in Zephyr is quite straight forward, however, each individual peripheral has to be turned off explicitly.
+When entering low-power state we turned off UART and SPI peripherals, while GPIO stayed active, as we needed a wakeup interrupt.
+After interrupt we had to manually turned on each peripheral.
 
 For the communication interface, we decided to implement a simple UART shell module.
 We also wrote a communication module, which took care of controlling the LR1110 chip, joining the LoRaWAN network, preparing outgoing messages and sending them over the LoRaWAN network.
-
+\clearpage
 
 \subsection{ FLIR Lepton driver}
 
@@ -251,7 +253,7 @@ Whenever we are communicating with the FLIR camera we have to specify which subs
 
 \begin{figure}[ht]
         \centering
-        \includegraphics[height=15cm]{flir_lepton_cci.png} 
+        \includegraphics[height=12cm]{flir_lepton_cci.png} 
         \caption[Command and control interface of FLIR Lepton camera.]{Command and control interface of FLIR Lepton camera. Image source: \cite{flir_datasheet}} 
         \label{flir_lepton_cci}
 \end{figure}
@@ -271,8 +273,7 @@ void set_flir_shutter_position(SHUTTER_POSITION position)
 { 
     if(!set_flir_command32(command_code(SHUTTER_POSITION, 
                            LEP_I2C_COMMAND_TYPE_SET), 
-                           (uint32_t) position))
-    {
+                           (uint32_t) position)) {
         flir_print("Set shutter position : function failed!\n");
     }
 }
@@ -286,8 +287,7 @@ void set_flir_agc(bool enable)
 {
     if(!set_flir_command32(command_code(AGC_ENABLE_STATE, 
                            LEP_I2C_COMMAND_TYPE_SET), 
-                           (uint32_t) enable))
-    {
+                           (uint32_t) enable)) {
         flir_print("AGC mode: function failed!\n");
     }
 }
@@ -303,15 +303,9 @@ ID field of a valid VoSPI packet contains the number of equivalent frame row.
 The refresh rate of VoSPI frames is 27 \si{\hertz}, however, only every third frame is unique from the last one.
 It is the job of the microcontroller to control the SPI clock speed and process each frame fast enough so that the each unique frame is not discarded.
 
+\footnotetext{ Because images pixel values fit into the 14-bit range by default, it means that one-pixel value needs two bytes of data (two most significant bytes are zero). That means that each image line (80 pixels) is stored in 160 bytes. If AGC conversion is turned on, each pixel is then mapped into an 8-bit range, however, the size of one line in the VoSPI packet remains 160 bytes, 8 most significant bits are simply zeros.}
 Listing \ref{vospi_code} shows our implementation of a \verb|get_picture| function that was reading images from VoSPI protocol.
-To capture images from VoSPI stream we implemented finite state machine with three states: \verb|INIT|, \verb|OUT_OF_SYNC| and \verb|READING_FRAME|.
-State \verb|INIT| executes chip select sequence expected by the FLIR camera.
-After it, we start clocking out a stream of VoSPI frames over MISO line.
-Whenever we start communication, we did not know where exactly in stream are we, plus FLIR is also transmitting discard packets between valid frames.
-To solve this problem we have to check ID field of every VoSPI packet and look for a ID byte with a value \verb|0x00|, while discarding packets with values \verb|0xFF|.
-When first frame row is detected we simply start storing all incoming frame rows into \verb|frame| variable, while checking that ID byte is correct.
-We continue doing until all VoSPI packets of a single frame are received.
-If we somehow miss the VoSPI packet, we returned early from the function.
+\clearpage
 \lstset{style=mystyle}
 \begin{figure}[ht]
 \begin{lstlisting}[language=C]
@@ -370,8 +364,17 @@ bool get_picture(uint16_t frame[60][82])
 \captionof{lstlisting}{Example of finite state machine implementation for reading FLIR images over SPI.}
 \label{vospi_code}
 \end{figure}
+\clearpage
 
-\footnotetext{ Because images pixel values fit into the 14-bit range by default, it means that one-pixel value needs two bytes of data (two most significant bytes are zero). That means that each image line (80 pixels) is stored in 160 bytes. If AGC conversion is turned on, each pixel is then mapped into an 8-bit range, however, the size of one line in the VoSPI packet remains 160 bytes, 8 most significant bits are simply zeros.}
+To capture images from VoSPI stream we implemented finite state machine with three states: \verb|INIT|, \verb|OUT_OF_SYNC| and \verb|READING_FRAME|.
+State \verb|INIT| executes chip select sequence expected by the FLIR camera.
+After it, we start clocking out a stream of VoSPI frames over MISO line.
+Whenever we start communication, we did not know where exactly in stream are we, plus FLIR is also transmitting discard packets between valid frames.
+To solve this problem we have to check ID field of every VoSPI packet and look for a ID byte with a value \verb|0x00|, while discarding packets with values \verb|0xFF|.
+When first frame row is detected we simply start storing all incoming frame rows into \verb|frame| variable, while checking that ID byte is correct.
+We continue doing until all VoSPI packets of a single frame are received.
+If we somehow miss the VoSPI packet, we returned early from the function.
+
 
 \subsection{ Simple shell}
 
@@ -385,7 +388,7 @@ If yes, that command is later executed by function \verb|execute_cmd| and respon
 
 The module is written to be easily scalable, when new functionality is added, it is trivial to extend the number of possible commands.
 Once we knew that UART communication worked correctly, we could issue commands directly from the computer's serial port, which enabled us to develop and test firmware for STM32 separately from nRF52 firmware.
-
+\clearpage
 \lstset{style=mystyle}
 \begin{figure}[ht]
 \begin{lstlisting}[language=C]
@@ -462,9 +465,7 @@ This meant that it would be hard to reuse it while porting to a new platform and
 To solve our problem we started developing a small project that we named MicroML\footnotemark.
 MicroML enables users to develop ML applications on microcontrollers supported by libopencm3.
 Project's directory structure can be seen in Figure \ref{microml_dir}
-
 \footnotetext{ Project is open-source and publicly available on GitHub\cite{microml}.}
-
 \begin{figure}[ht] 
     \centering
     \begin{minipage}{7cm}
@@ -535,6 +536,21 @@ That way we could test ML specific routines fast and quickly remove any mistakes
 TFLite Micro API is fairly simple to use and general enough that it can be copied from project to project without many modifications.
 Listing \ref{inference_code} shows a simplified inference code example, copied from our project.
 
+As a first step, we need to define the size of \verb|tensor_arena| array, which holds memory of input, output, and intermediate arrays.
+Exact size of \verb|tensor_arena| is determined by trail and error: we set it to some big value and then decrease it in steps, until the code does not work any more.
+
+In lines 9 and 10 we create an instance of \verb|ErrorReporter| object.
+This object serves as a thin wrapper around platform specific \verb|printf| implementation.
+If some part of TensorFlow code crashes, \verb|ErrorReporter| notifies us what went wrong.
+
+In the line 13 we pull in our ML model in hex dump format that we created with xxd.
+\verb|Full_quant_model| is defined in a different file, not seen in this example.
+
+In lines 16 to 24 we create an operation resolver.
+One way to do it is to specify each required operation specifically (which is done in the example) or simply pull in all operations.
+Latter approach is not recommended, as it results in large binary size.
+To find out exactly which operations were required we used online tool Netron\cite{netron}, which showed us a deconstructed view of a trained model.
+
 \lstset{style=mystyle}
 \begin{figure}[ht]
 \begin{lstlisting}[language=C]
@@ -596,21 +612,6 @@ int main()
 \end{figure}
 
 \clearpage
-As a first step, we need to define the size of \verb|tensor_arena| array, which holds memory of input, output, and intermediate arrays.
-Exact size of \verb|tensor_arena| is determined by trail and error: we set it to some big value and then decrease it in steps, until the code does not work any more.
-
-In lines 9 and 10 we create an instance of \verb|ErrorReporter| object.
-This object serves as a thin wrapper around platform specific \verb|printf| implementation.
-If some part of TensorFlow code crashes, \verb|ErrorReporter| notifies us what went wrong.
-
-In the line 13 we pull in our ML model in hex dump format that we created with xxd.
-\verb|Full_quant_model| is defined in a different file, not seen in this example.
-
-In lines 16 to 24 we create an operation resolver.
-One way to do it is to specify each required operation specifically (which is done in the example) or simply pull in all operations.
-Latter approach is not recommended, as it results in large binary size.
-To find out exactly which operations were required we used online tool Netron\cite{netron}, which showed us a deconstructed view of a trained model.
-
 In lines 27 and 33 we create an \verb|MicroIinterpreter| instance and allocate memory to it that we specified with \verb|tensor_arena| earlier.
 Lines 37 and 38 assign input and output of the interpreter to the new \verb|TfLiteTensor| variables.
 This step enables us to do two things.
@@ -675,7 +676,7 @@ Grafana provides different types of visualizations, such as graphs, gauges, heat
 In our use case, we could display information about various devices in the field, such as battery voltage, number of wakeup triggers, results of each inference and others.
 
 Example of Grafana graph can be seen in Figure \ref{grafana}.
-\clearpage
+\newline
 \begin{figure}[ht]
     \centering
     \includegraphics[width=1.0\linewidth]{grafana.png} 
