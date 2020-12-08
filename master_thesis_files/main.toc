@@ -35,38 +35,38 @@
 \contentsline {section}{\numberline {3.7} Model optimisation}{46}{section.3.7}%
 \contentsline {section}{\numberline {3.8} Neural Network model design in Edge Impulse Studio}{48}{section.3.8}%
 \contentsline {chapter}{\numberline {4} Design and implementation of the early warning system}{52}{chapter.4}%
-\contentsline {section}{\numberline {4.1} Hardware}{53}{section.4.1}%
+\contentsline {section}{\numberline {4.1} Hardware}{54}{section.4.1}%
 \contentsline {subsection}{\numberline {4.1.1} Nucleo-F767ZI}{54}{subsection.4.1.1}%
 \contentsline {subsection}{\numberline {4.1.2} nRF52840 DK}{55}{subsection.4.1.2}%
-\contentsline {subsection}{\numberline {4.1.3} LR1110 development kit}{55}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.3} LR1110 development kit}{56}{subsection.4.1.3}%
 \contentsline {subsection}{\numberline {4.1.4} Boost converter evaluation kit}{56}{subsection.4.1.4}%
 \contentsline {subsection}{\numberline {4.1.5} FLIR Lepton 2.5 camera module and Lepton breakout board}{57}{subsection.4.1.5}%
 \contentsline {subsection}{\numberline {4.1.6} PIR Sensor}{58}{subsection.4.1.6}%
 \contentsline {section}{\numberline {4.2} Firmware}{59}{section.4.2}%
 \contentsline {subsection}{\numberline {4.2.1} Tools and development environment}{59}{subsection.4.2.1}%
 \contentsline {subsubsection}{\numberline {4.2.1.1} Development environment for STM32F767ZI}{59}{subsubsection.4.2.1.1}%
-\contentsline {subsubsection}{\numberline {4.2.1.2} Development environment for nRF52840}{59}{subsubsection.4.2.1.2}%
+\contentsline {subsubsection}{\numberline {4.2.1.2} Development environment for nRF52840}{60}{subsubsection.4.2.1.2}%
 \contentsline {subsection}{\numberline {4.2.2} Architecture design}{60}{subsection.4.2.2}%
 \contentsline {subsection}{\numberline {4.2.3} FLIR Lepton driver}{62}{subsection.4.2.3}%
-\contentsline {subsection}{\numberline {4.2.4} Simple shell}{65}{subsection.4.2.4}%
-\contentsline {subsection}{\numberline {4.2.5} MicroML and build system}{66}{subsection.4.2.5}%
-\contentsline {subsection}{\numberline {4.2.6} Running inference on a microcontroller}{70}{subsection.4.2.6}%
-\contentsline {section}{\numberline {4.3} Server-side components and software}{72}{section.4.3}%
-\contentsline {chapter}{\numberline {5} Measurements and results}{75}{chapter.5}%
-\contentsline {section}{\numberline {5.1} Comparison of models}{75}{section.5.1}%
-\contentsline {subsection}{\numberline {5.1.1} Hyperparameter search space and results analysis}{76}{subsection.5.1.1}%
-\contentsline {subsection}{\numberline {5.1.2} Comparison of selected, re-trained models}{80}{subsection.5.1.2}%
-\contentsline {subsection}{\numberline {5.1.3} Comparison of Edge Impulse models}{83}{subsection.5.1.3}%
-\contentsline {section}{\numberline {5.2} On-device performance testing}{85}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1} Comparison of code sizes}{87}{subsection.5.2.1}%
-\contentsline {subsection}{\numberline {5.2.2} Comparison of different optimisations}{88}{subsection.5.2.2}%
-\contentsline {subsection}{\numberline {5.2.3} Scoring trained models}{90}{subsection.5.2.3}%
-\contentsline {section}{\numberline {5.3} Summary of model testing}{91}{section.5.3}%
-\contentsline {section}{\numberline {5.4} Power profiling of an embedded early warning system}{92}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1} Measuring setup}{92}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2} Current measurements}{93}{subsection.5.4.2}%
-\contentsline {subsection}{\numberline {5.4.3} Commentary of the current measurement results}{98}{subsection.5.4.3}%
-\contentsline {subsection}{\numberline {5.4.4} Battery life estimations}{99}{subsection.5.4.4}%
-\contentsline {chapter}{\numberline {6} Conclusion}{103}{chapter.6}%
-\contentsline {section}{\numberline {6.1} Future work}{104}{section.6.1}%
-\contentsline {section}{\numberline {6.2} Final words}{105}{section.6.2}%
+\contentsline {subsection}{\numberline {4.2.4} Simple shell}{66}{subsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.2.5} MicroML and build system}{67}{subsection.4.2.5}%
+\contentsline {subsection}{\numberline {4.2.6} Running inference on a microcontroller}{71}{subsection.4.2.6}%
+\contentsline {section}{\numberline {4.3} Server-side components and software}{73}{section.4.3}%
+\contentsline {chapter}{\numberline {5} Measurements and results}{76}{chapter.5}%
+\contentsline {section}{\numberline {5.1} Comparison of models}{76}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1} Hyperparameter search space and result's analysis}{77}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2} Comparison of selected, re-trained models}{81}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3} Comparison of Edge Impulse models}{84}{subsection.5.1.3}%
+\contentsline {section}{\numberline {5.2} On-device performance testing}{87}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1} Comparison of code sizes}{88}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2} Comparison of different optimisations}{90}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3} Scoring trained models}{91}{subsection.5.2.3}%
+\contentsline {section}{\numberline {5.3} Summary of model testing}{93}{section.5.3}%
+\contentsline {section}{\numberline {5.4} Power profiling of an embedded early warning system}{94}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1} Measuring setup}{94}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2} Current measurements}{95}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3} Commentary of the current measurement results}{99}{subsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.4.4} Battery life estimations}{101}{subsection.5.4.4}%
+\contentsline {chapter}{\numberline {6} Conclusion}{105}{chapter.6}%
+\contentsline {section}{\numberline {6.1} Future work}{106}{section.6.1}%
+\contentsline {section}{\numberline {6.2} Final words}{107}{section.6.2}%
