@@ -1,0 +1,64 @@
+In this Master's thesis we presented a solution, an early warning system, for minimising Human-Elephant Conflicts.
+In the beginning we presented a Machine Learning approach for solving classification of thermal images and we outlined its strengths compared to classical problem solving.
+We described in depth the knowledge required for understanding our work from various sub parts of Machine Learning, to wireless IoT technologies and thermal cameras.
+
+We presented several Machine Learning workflows that we followed during the design and planning of our own Neural Network.
+We analysed the thermal image dataset and recognized what kind of data it lacked. 
+We compensated for missing data by gathering more of them with our own image capturing setup and by resampling them.
+We proposed a basic CNN structure that we used later in the model training phase.
+
+As we wanted to execute Machine Learning algorithms on our selected STM32 microcontroller, we had to find a way to make this possible.
+We ported a TensorFlow Lite for a Microcontrollers library to the libopencm3 platform and in the process created an open-source project MicroML.
+In the process we familiarised ourselves with the specifics of cross compiling and build systems.
+
+To implement our early warning system on the hardware we decided to use a two microcontroller setup, with an STM32 as a main inferencing processor and nRF52 as a low-power system controller.
+To communicate with the FLIR Lepton camera we wrote the driver code, and we also wrote the LoRaWAN communication module.
+
+We ran random search algorithms to find the proper hyperparameters for our proposed CNN model.
+We did an in depth comparison of several trained models and compared them to the models trained with the help of commercial software.
+
+We saw that we could train CNN models with an accuracy as high as 98.04 \% and we saw that models trained with the Transfer Learning technique reached 98.7 \% without much additional work.
+We ran each trained model on the STM32 and measured its inference time.
+From the results we saw that reaching an inference time below 200 \si{\milli\second} is not hard if special care is devoted to the low number of parameters and correct microcontroller optimisations.
+
+We also evaluated the performance of the embedded system from the battery lifetime perspective and we saw promising results.
+Assuming that our system would have to process 600 events per day, while connected from 6 battery cells, we estimated the lifetime of the system would be around 10 months.
+
+This thesis shows that the field of Machine Learning on embedded devices has reached a point were it is viable enough to use it in real life applications.
+Running inference directly on the embedded device can provide instant feedback and can extend the device's lifetime, as data do not need to be sent to the server for processing.
+Many use cases from the Animal Conservation field would benefit from such technology, as there is a need for the embedded devices that require minimal manual care and can provide big value for their cost.
+
+
+\section{ Future work}
+
+Our research into elephant detection with the aid of Machine Learning models yielded promising results.
+There are several aspects of it that can be improved.
+
+In terms of model performance, we can always improve it by gathering more relevant training data.
+The dataset that we used contained several thousand images of elephants, but only a couple of thousand images of humans and only a few hundred images of cows.
+In order to train a more robust and reliable model, we should gather more thermal images of humans and livestock, especially goats.
+
+It would be interesting to further explore models trained with the Transfer Learning technique.
+We saw that Transfer Learning models reached higher accuracies with shorter inferencing times when compared to other models.
+We expect that running a random hyperparameter search with a smaller version of the pre-trained MobileNetV2 model could produce optimal results.
+
+In terms of the system performance, testing our early warning system in the field would give us key insights into what could be improved.
+With a device deployed in a zoo, we could monitor its performance and see which conditions degrade its performance.
+We could add an SD card to the system, and save every taken image and the result of its inference.
+
+By observing the performance of the model in the field we would see if extremely low inference times are really needed.
+It might be feasible to run CNN models on slower, low-power, Cortex-M4 microcontrollers.
+Although we are expecting longer inference times, we would benefit from a simpler system design and a lower overall price of the embedded system.
+
+In terms of battery life performance, creating a custom printed circuit board specially for our application would give us more control over the current consumption of the systems. Reaching lower low-power state current consumption should be easier.
+At the same time, we should research how to optimise the detection sequence. 
+Decrease in either current consumption or the duration of detection sequence would provide us with huge improvements in battery life.
+
+
+\section{ Final words}
+
+Machine Learning on the embedded devices is opening doors to various, wonderful applications that were not possible a few years ago.
+We can see that there is already a demand for intelligence for devices on the "edge" and we expect it to increase as the field matures.
+It is quite possible that future embedded engineers would require some amount of Machine Learning knowledge to stay competitive and interesting to the market.
+
+As Pete Warden said: "The Future of ML is Tiny and Bright".

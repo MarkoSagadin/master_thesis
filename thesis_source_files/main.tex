@@ -1,0 +1,149 @@
+\documentclass[fleqn,a4paper,12pt]{report}
+\usepackage{graphicx}           % For adding pictures
+\graphicspath{ {./images/} }    % Image folder to include from
+\usepackage{anyfontsize}        % For setting exact font size
+\usepackage{geometry}           % For setting margins
+\geometry{a4paper, 
+          left   = 35 mm, 
+          right  = 25mm, 
+          top    = 30mm, 
+          bottom = 30mm}        % Margins according to Feri guidelines
+\usepackage[utf8]{inputenc}     % For slovenian characters
+\usepackage{sectsty}            % For setting font size of chapters 
+\usepackage{titlesec}           % For setting the shape of chapters
+\usepackage{lipsum}             % Lorem ipsum package for dummy text
+\usepackage[parfill]{parskip}   % No indent
+\usepackage{setspace}           % For 1 and half spacing between lines
+\linespread{1.5}                % Look above
+\usepackage{hyperref}           % Links
+\usepackage{cite}               % Citations
+\usepackage{url}                % Different links 
+\usepackage[binary-units=true]{siunitx}
+\usepackage{subcaption}         % Subcations for figures
+\usepackage{amssymb}            % Additional symbols
+\usepackage{listings}           % For code snippets
+\usepackage[table]{xcolor}      % For color in code snippets and tables
+\usepackage{dirtree}            % For printing directory trees
+\usepackage{bigfoot}            % For code snippets in footnote texts
+\usepackage{booktabs}           % For nicer tables
+\usepackage{adjustbox}          % For rotating
+\usepackage{rotating}           % Same as above
+\usepackage{array}
+\usepackage{xparse}             % http://ctan.org/pkg/xparse
+\usepackage[super]{nth}         % For adding th to numbers
+\usepackage{microtype}          % For converting from pdf to word
+\DisableLigatures[Q,q,f,l,t,i]{}% Same as above
+\usepackage{tabularx}           % For better tables
+\usepackage{longtable}          % You guessed it, for longer tables
+\usepackage{amsmath}            % Matrices and stuff
+
+\setlength{\mathindent}{2cm}    % Indent equations 2cm from text edge
+\setcounter{tocdepth}{4}        % Table of content goes to 4th level
+\setcounter{secnumdepth}{4}     % Same here
+\frenchspacing                  % One space after period dot
+\interfootnotelinepenalty=10000 % Prevent automatic split of footnotes 
+
+% Custom styling according to Feri guide lines
+\def\poglavje{\fontsize{18}{18}\selectfont}
+\def\podpoglavje{\fontsize{14}{18}\selectfont}
+\def\podpodpoglavje{\fontsize{14}{18}\selectfont}
+\def\podpodpodpoglavje{\fontsize{14}{18}\selectfont}
+
+\titleformat{\chapter}[hang]
+  {\poglavje\bfseries}{\thechapter }{0pt}{\poglavje}
+
+\titleformat{\section}[hang]
+  {\podpoglavje}{\thesection }{0pt}{\podpoglavje}
+
+\titleformat{\subsection}[hang]
+  {\podpoglavje}{\thesubsection }{0pt}{\podpodpoglavje}
+
+\titleformat{\subsubsection}[hang]
+  {\podpoglavje}{\thesubsubsection }{0pt}{\podpodpodpoglavje}
+
+
+% Definitions for code formatting and colouring
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{tbgreen}{rgb}{0.50, 1, 0.36}
+\definecolor{tbgreeny}{rgb}{0.8, 1, 0.54}
+\definecolor{tbyellow}{rgb}{1, 0.9, 0.54}
+\definecolor{tborange}{rgb}{0.87, 0.6, 0.11}
+\definecolor{tbred}{rgb}{1, 0.68, 0.54}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\linespread{0.9}\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+% Change title of table of contents
+\renewcommand{\contentsname}{Table of Contents}
+
+% Change title of list of listings
+\renewcommand{\lstlistlistingname}{List of Listings}
+
+% Add new rot command for rotating
+\NewDocumentCommand{\rot}{O{45} O{1em} m}{\makebox[#2][l]{\rotatebox{#1}{#3}}}%
+
+\begin{document}
+
+\pagenumbering{gobble}
+\input{chapters/titlepage}          % We repeat this twice, first for the cover
+\input{chapters/titlepage}          % page, then for the first inside page
+\input{chapters/second_titlepage}
+
+\pagenumbering{roman}
+\input{chapters/acknowledgement}
+\input{chapters/abstract}
+\input{chapters/abbrev}
+
+\tableofcontents
+\listoffigures
+\listoftables
+\lstlistoflistings
+
+
+\chapter{ Introduction}
+\pagenumbering{arabic}
+\input{chapters/chapter1}
+
+\chapter{ Theoretical description of system building blocks}
+\input{chapters/chapter2}
+
+\chapter{ Neural Network model design}
+\input{chapters/chapter3}
+
+\chapter{ Design and implementation of the early warning system}
+\input{chapters/chapter4}
+
+\chapter{ Measurements and results}
+\input{chapters/chapter5}
+
+\chapter{ Conclusion}
+\input{chapters/chapter6}
+
+% Include bibliography and justify it right. Use myunsrt biblio style.
+\begingroup
+\raggedright
+\bibliographystyle{myunsrt}
+\bibliography{chapters/literature}
+\endgroup
+\end{document}
+

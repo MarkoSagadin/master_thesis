@@ -1,0 +1,159 @@
+\begin{poglavje}
+\noindent\bfseries Energetsko učinkovit sistem za detekcijo slonov s pomočjo strojnega učenja
+\end{poglavje}
+
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\textbf{Ključne besede:} strojno učenje, mikrokrmilnik, inferenca na napravi, termalna kamera, sistem z majhno porabo
+
+\bigskip
+\textbf{UKD:} 004.85:004.932(043.2).
+
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\textbf{Povzetek}
+\newline
+\newline
+{\itshape
+1. Uvod
+
+Konflikti med ljudmi in sloni predstavljajo velik problem ohranjanja populacije slonov.
+Zaradi fragmentacije in pomanjkanja habitata sloni, v iskanju hrane, pogosto zaidejo na riževa polja in plantaže, kjer pridejo v stik s človekom.
+Po podatkih skupnosti WILDLABS, zaradi konfliktov, samo v Indiji, letno umre povprečno 400 ljudi in 100 slonov.
+Sistemi zgodnje opozoritve nadomeščajo vlogo človeških stražarjev in opozarjajo bližnjo skupnost o bližini, potencialno nevarnih, slonov in tako pripomorejo k zmanjševanju konfliktov med ljudmi in sloni.
+
+V tem magistrskem delu predstavljamo strukturo sistema zgodnje opozoritve, ki je sestavljen iz večih, nizko porabnih, vgrajenih sistemov, ki so opremljeni s termalnimi kamerami in ene dostopne točke oz. prehoda (gateway).
+Vgrajeni sistemi so postavljeni na terenu, ob zaznavi slona pošljejo opozorilo preko brezžičnega omrežja do dostopne točke, ki nato lahko opozori lokalno skupnost.
+Za prepoznavo slonov iz zajetih termalnih slik smo uporabili metode strojnega učenja, bolj specifično konvolucijske nevronske mreže.
+Glavni cilji tega magistrskega dela so bili zasnova, izvedba in ovrednotenje modelov strojnega učenja, ki jih je možno poganjati na mikrokrmilnkih pod pogoji nizke porabe.
+
+2. Teoretični opis gradnikov sistema
+
+V tem poglavju opisujemo osnovna znanja, ki jih bralec potrebuje za razumevanje tega magistrskega dela.
+Opišemo kako lahko strojno učenje pomaga reševati probleme, ki bi s klasičnimi tehnikami zahtevali kompleksne rešitve. 
+Podrobno predstavimo izvajanje modelov strojnega učenja v vgrajenih sistemih.
+Ugotovimo, da kljub omejitvam kot so nizke procesorske moči in majhni spomini, prednosti kot so hitra odzivnost na dogodke, zmanjšanje porabe zaradi manšje potrebe po pošiljanju podatkov v oblak in povečane stopnje zasebnosti, hitro odtehtajo slabosti.
+Lotimo se opisa nevronskih mrež, aktivacijskih funkcij, konvolucijskih nevronskih mrež in tehnik prenosnega učenja.
+Predstavimo tudi platformo TensorFlow Lite for microcontrollers, ki nam je omogočila implementacijo nevronskih mrež na mikrokrmilnikih.
+Naredimo pregled možnih brezžičnih tehnologij in argumentiramo zakaj smo se odločili za LoRaWAN.
+Nazadnje opišemo delovanje termalnih kamer in predstavimo kako je potekala izbira optimalne termalne kamere.
+Izbrana kamera je bila FLIR Lepton.
+\newline
+
+3. Zasnova modela nevronske mreže
+
+V tem poglavju podrobno opišemo celoten proces zasnove modela, ki je sposoben klasificirati termalne slike in predvideti kateri objekt je na sliki.
+Pri zasnovi smo se omejili na prepoznavo 4 različnih razredov: sloni, ljudje, krave in narava oz. nakjučni objekt. 
+Zadali smo si cilj, da klasificiranje termalne slike ne sme trajati več kot 1 sekundo in da mora biti model dovolj majhen, da ga lahko naložimo na mikrokrmilnik.
+Na začetku opišemo orodja in delovno okolje, ki smo jih uporabljali pri zasnovi modela (uporabljali smo platformo TensorFlow), nato pa se lotimo analize nabora termalnih slik, ki jih je zbralo podjetje Arribada Initiative.
+Iz nabora termalnih slik smo izbrali slike, ki so ustrezale našim zahtevam.
+Nabor termalnih slik je vseboval veliko število slik slonov in ljudi, ampak ne veliko slik krav ali narave.
+Slednje smo posneli sami na terenu, s hitrim prototipom, ki smo ga izdelali sami.
+
+Opisali smo kako smo so slike pripravili za učenje modela in predstavili smo osnovno arhitekturo modela.
+Odločili smo se za klasično convolucijsko arhitekturo, kjer se konvolucijski sloji in pooling sloji ponovijo nekajkrat nato pa se priklučijo na tesno povezani neuronski sloj.
+Opisali smo tudi, kako poteka optimizacija modelov, ki bodo tekli na mikrokrmilnikih.
+
+Nazadnje ponovno opišemo potek zasnove modela od začetka do konca, ampak tokrat to storimo s Edge Impulse Studijem.
+\newline
+
+4. Zasnova in izvedba sistema zgodnje opozoritve
+
+V četrtem poglavju predstavimo sprva generalne gradnike sistema in njihove funkcije, nato pa predstavimo konkretne komponente.
+Odločili smo se za sistem z dvema mikrokrmilnikoma. 
+Mikrokrmilnik NRF52840 kontrolira delovanje celotnega sistema in preživi večino časa v režimu nizke porabe.
+Ob signalu iz PIR sensorja se zbudi iz spanja in vklopi drugi mikrokrmilnik, STM32F767ZI.
+STM32F767ZI je visoko zmogljiv mikrokrmilnik s Cortex-M7 jedrom.
+Povezan je s FLIR Lepton termalno kamero in kontrolira zajemanje slik ter njiovo procesiranje s nevronsko mrežo.
+STM32F767ZI sporoči rezultate klasifikacije nRF52840 mikrokrminlniku, ki jih obdela in nato pošlje preko LoRaWAN omrežja na dostopno točko.
+Za LoRa brezžični modul smo uporabili LR1110 čip.
+
+Veliki del magistrskega dela se je ukvarjal s prenosom TensorFlow Lite for Microcontrollers platfrome na platformo naše izbire, libopencm3.
+V procesu prenosa smo se podrobno spoznali s prevajanjem in povezovanjem kode, saj nismo uporabljali programskega okolja, ki bi to naredilo za nas.
+Tako smo ustvarili odprto-kodni projekt MicroMl, ki omogoča uporabo TensorFlow lite kode na platformi libopencm3.
+Sestava in uporabo MicroML-a smo podrobno opisali.
+MicroMl smo uporabili pri pisanju kode za mikrokrmilnik STM32F767ZI, za nRF52840 pa smo uporabili operacijski sistem Zephyr.
+
+
+5. Meritve in rezultati 
+
+Izvedli smo vrsto različnih meritev in testov.
+V 3. poglavju smo predstavili osnovno arhitekturo modela, ampak nismo določili točnih vrednosti hiperparametrov.
+Ker je iskanje optimalnih hiperparametrov nehevristična naloga, smo določili možni razpon hiperparametrov in izvedli algoritem naključnega iskanja, ki je naučil večje število modelov z različnimi hiperparameteri.
+V prvem koraku smo naučili 300 modelov, največja dosežena natančnost modela je bila 98.35 \%.
+Opazili smo da nekaj je nekaj modelov doseglo primerljive rezultate, s mnogo manjšim številom parametrov.
+Ker se manjše število parametorv prevede v krajši čas inference, smo ponovili iskanje, tokrat z zmanjšanjim možnim razponom hiperparametrov.
+Iz rezultatov smo izbrali nekaj obetajočih modelov in jih primerjali s modeli, ki smo jih ustvarili s Edge Impulse Studijem.
+
+Vse izbrane modele smo tudi stestirali na mikrokrmilniku, beležili smo čas inference in velikost kode v flash in ram pomnilniku.
+Večina modelov je izvedla inferenco pod 200 milisekundami.
+Skoraj vsi modeli so zasedli manj kot 1 MB flash pomnilnika. 
+Vsi Edge Impulse modeli so zasedli manj ram pomnilnika v primerjavi z našimi modeli, saj so uporabljali drugačen pristop izvajanja inference.
+
+Za najbolj uspešne modele so se izkazali modeli, ki so bili trenirani s tehniko prenosnega učenja.
+Dosegali so visoke natančnosti in se kljub večjemu številu parametrov izvajali hitreje kot klasični konvolucijski modeli s manjšimi števili parametrov.
+
+Želeli smo predvideti življensko dobo sistema z baterijskim napajanjem, zato smo izvedli več testov porabe.
+Skupna poraba nRF52840 mikrokrmilnika in LR1110 modula je bila večja kot pričakovana, okoli 207 \si{\micro\ampere}, pričakovali smo porabo pod 10 \si{\micro\ampere}.
+Povprečna poraba celotne sekvence detekcije, kjer je mikrokrmilnik naredil 5 slik in na vsaki izvajal inferenco, ter nato poslal sporočilo preko LoRaWAN omrečja, je bila 52 \si{\milli\ampere} in je trajala 8 sekund.
+Za izračun smo si izbrali litijsko baterijo s nominalno kapaciteto 3350 \si{\milli\ampere\hour}.
+V izračunu smo predvideli število detekcij na dan, omejili smo se na 100, 200, 300, 400, 500 in 600 detekcij.
+Hkrati smo predpostavili, da lahko ima naš sistem do 6 baterij.
+Izračunana življenska doba sistema z šestimi baterijami in 600 detekcijami na da je bil 10 mesecov, v primeru 100 detekcij je bila 44 mesecov.
+
+
+6. Povzetek
+
+V tem magistrskem delu smo predstavili rešitev, sistem zgodnje opozoritve, ki bi lahko pripomogla k zmanjševanju konfliktov med ljudmi in sloni.
+Prikazali smo celotni postopek od analize problema, predloga rešitve, analize nabora termalnih slik, procesiranja slik in zasnova modela.
+Opisali smo implementacijo izvedbe inference, kako smo izvedli prenos TensorFlow-a na našo platformo in celotno programsko kodo vgrajenega sistema.
+Podrobno smo primerjali naučene modele in jih stestirali na mikrokrmilniku.
+Izračunali smo predvideno življensko dobo sistema iz zajetih meritev porabe.
+
+Magistrska naloga zajema več različnih področij, vsako je možno izboljšati.
+Da bi izboljšali natančnost modelov, bi bilo potrebno zbrati več termalnih slik in podrobneje raziskati tehniko prenosnega učenja, saj je ta pokazala zelo dobre rezultate.
+
+Iz vidika porabe sistema, bi bilo potrebno nadalje zmanjšati porabo celotne detekcije in porabo v režimu nizke porabe.
+To je izvedljivo s izdelavo primernega tiskanega vezja, kakor tudi proučevanjem nepotrebne programske kode.
+
+Seveda je potrebno celotni sistem stestirati na terenu, tako bi pridobili nove ideje in zahteve za izboljšave.
+}
+\newpage
+
+\begin{poglavje}
+\noindent\bfseries Energy efficient system for detection of elephants with Machine Learning
+\end{poglavje}
+
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\textbf{Key words:} machine learning, microcontroller, on-device inference, thermal camera, low-power system
+
+\bigskip
+\textbf{UKD:} 004.85:004.932(043.2).
+
+\bigskip
+\textbf{Abstract}
+
+{\itshape
+Human-Elephant Conflicts are a major problem in terms of elephant conservation.
+According to WILDLABS, an average of 400 people and 100 elephants are killed every year in India alone because of them. 
+Early warning systems replace the role of human watchers and warn local communities of nearby, potentially life threatening, elephants, thus minimising the Human-Elephant Conflicts.
+
+In this Master's thesis we present the structure of an early warning system, which consists of several low-power embedded systems equipped with thermal cameras and a single gateway.
+To detect elephants from captured thermal images we used Machine Learning methods, specifically Convolutional Neural Networks.
+The main focus of this thesis was the design, implementation and evaluation of Machine Learning models running on microcontrollers under low-power conditions.
+We designed and trained several accurate image classification models, optimised them for on-device deployment and compared them against models trained with commercial software in terms of accuracy, inference speed and size.
+While writing firmware, we ported a part of the TensorFlow library and created our own build system, suitable for the libopencm3 platform. 
+We also implemented reporting of inference results over the LoRaWAN network and described a possible server-size solution.
+We finally a constructed fully functional embedded system from various development and evaluation boards, and evaluated its performance in terms of power consumption.
+We show that embedded systems with Machine Learning capabilities are a viable solution to many real life problems.
+}
+\newpage

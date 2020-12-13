@@ -1,0 +1,682 @@
+General structure and tasks of an early warning system were already described in chapter \ref{early_detection_system}.
+As mentioned before, an early warning system consists of two different components:
+
+\begin{enumerate} 
+    \item Several small embedded devices, which are deployed in the field. They capture images with a thermal camera and process them. Results are then send over a wireless network.
+    \item One gateway, which is receiving messages and relaying them to an application server over an Internet connection.
+\end{enumerate} 
+
+In this Chapter, we focus on the structure and design of the deployed embedded system, both from the hardware and firmware perspectives.
+We also describe the construction of an application server, and how received data is processed, stored and presented.
+
+The general block diagram of an embedded system with a thermal camera is presented in Figure \ref{system_diagram} 
+
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=1.0\linewidth]{system_diagram.pdf} 
+        \caption{ General block diagram of an embedded system}
+        \label{system_diagram}
+\end{figure}
+
+The embedded system consists of two different microcontrollers with two distinct tasks, a thermal camera, a PIR sensor, a wireless communication module, a power switch and a battery.
+
+The powerful, high-performance microcontroller and thermal camera are usually turned off to conserve battery life.
+A less capable, but low-power microcontroller spends most of the time in low-power mode, waiting for a wakeup trigger from the PIR sensor.
+The PIR sensor points in the same direction as the thermal camera and detects any IR radiation of a passing object.
+
+If an object passes the PIR's field of vision, the PIR sensor produces a trigger signal, which,consequently, wakes up the low-power microcontroller.
+The microcontroller then enables the power supply to the high-performance microcontroller and thermal camera, and sends a command request for image capture and processing.
+
+The thermal camera only communicates with the high-performance microcontroller, which configures it and requests image data.
+Those data are then input into a Neural Network algorithm, which computes probability results that are sent back to the low-power microcontroller.
+The low-power microcontroller then packs the data and sends them over the radio through a wireless communication module.
+The power source to the high-performance microcontroller and thermal camera is then turned off to conserve power.
+A diagram of the described procedure can also be seen in Figure \ref{system_flow}.
+\newline
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=1.0\linewidth]{system_flow.pdf} 
+        \caption{ Diagram describing the behaviour of the embedded early warning system} 
+        \label{system_flow}
+\end{figure}
+
+
+\section{ Hardware}
+
+In this Section, we present the concrete components that we used to implement the embedded part of the early warning system.
+The hardware version of the embedded system diagram is presented in Figure \ref{hardware_diagram}.
+The system consists of various development and evaluation boards.
+
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=1.0\linewidth]{hardware_diagram.pdf} 
+        \caption{ Hardware diagram of the embedded early warning system} 
+        \label{hardware_diagram}
+\end{figure}
+
+
+\subsection{ Nucleo-F767ZI}
+
+Nucleo-F767ZI (seen in Figure \ref{nucleo}) is a development board made by STMicroelectronics.
+It features an STM32F767ZI (STM32) microcontroller with a Cortex-M7 core, which has 2 \si{\mega\byte} of flash, 512 \si{\kilo\byte} of SRAM, and can operate at a clock speed of 216 \si{\mega\hertz}.
+It also features memory caches and a flash accelerator, which provide an extra boost in performance.
+It is convenient to programme, as it includes an onboard ST-LINK programmer circuit.
+
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=0.75\linewidth]{nucleo.jpg} 
+        \caption{ Nucleo-F767ZI development board} 
+        \label{nucleo}
+\end{figure}
+
+We chose this microcontroller simply because it is one of the more powerful general purpose microcontrollers on the market.
+As we knew that Neural Networks are computationally expensive to compute and that models can be quite large in terms of memory, we selected it knowing that we can always scale it down if we have to.
+
+
+\subsection{ nRF52840 DK}
+
+For the part of the system which had to contain the low-power microcontroller and would control the communication module and power control for the Nucleo-F767ZI board, we decided to use the nRF52840 DK development kit.
+The development kit, made by Nordic Semiconductor, can be seen in Figure \ref{nrf_board}
+
+The main logic on the board is provided by an nRF52840 (nRF52) microcontroller with a Cortex-M4 core, which has 1 \si{\mega\byte} of flash, 256 \si{\kilo\byte} of RAM and Bluetooth 5 support.
+nRF52 has a consumption of 0.5 \si{\micro\ampere} in sleep mode, which makes it ideal for our purpose.
+\newline
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=0.75\linewidth]{nrf_board.jpg} 
+        \caption{ nRF52840DK development board}
+        \label{nrf_board}
+\end{figure}
+
+\subsection{ LR1110 development kit}
+
+For the role of the LoRa transceiver module we decided to use Semtech's development kit which uses the LR1110 chip.
+LR1110 is a multi-functional solution, as it contains a LoRa transceiver, and GNSS and WiFi geoposition scanning modules.
+The development kit seen in Figure \ref{lr1110_board} contains an LR1110 chip, three different antennas and their respective tuning networks.
+It comes in a convenient Arduino shield form factor, which means that we can attach it directly to the nRF52 without any jumper wires.
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=0.7\linewidth]{lr1110_board.jpg} 
+        \caption{ LR1110 development kit}
+        \label{lr1110_board}
+\end{figure}
+
+\subsection{ Boost converter evaluation kit}
+
+The power to the Nucleo-F767ZI board and the FLIR camera is provided by the MAX17225ENT+T boost converter chip.
+The breakout board containing the chip is shown in Figure \ref{boost_converter}.
+Operating the boost converter chip is simple, its enable line can be connected directly to a microcontroller pin driving it high enables output, and driving it low disables it.
+The output voltage is controlled by an external resistor.
+
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=0.75\linewidth]{boost_converter.jpg} 
+        \caption{ MAX17225ENT+T boost converter breakout board}
+        \label{boost_converter}
+\end{figure}
+
+\subsection{ FLIR Lepton 2.5 camera module and Lepton breakout board}
+
+Section \ref{thermal_cameras} described what kinds of thermal cameras exist and how they work, and Section \ref{choosing_thermal} described why the FLIR Lepton 2.5 was chosen.
+However, not much was said about what sort of support circuitry the FLIR camera needs and how we use it.
+
+The FLIR Lepton camera is powered from two different sources, 1.2 \si{\volt} and 2.8 \si{\volt}, and requires a reference clock of 25 \si{\mega\hertz}.
+All of this is provided by the Lepton breakout board, which can be seen in Figure \ref{lepton_breakout}.
+The front side of the breakout board contains an FLIR module socket, and the backside contains two voltage regulators and an oscillator.
+The breakout board can be powered from 3.3 to 5 \si{\volt}, and also, conveniently breaks out all communication pins in the form of header pins.
+
+The FLIR Lepton module itself contains five different subsystems that can be configured:
+
+\begin{itemize}
+    \item AGC – Automatic Gain Control, affects image contrast and quality
+    \item SYS – System Information
+    \item VID – Video Processing Control
+    \item OEM – Camera configuration for OEM customers
+    \item RAD – Radiometry
+\end{itemize}
+
+\begin{figure}[ht] 
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{flir_module_front.jpg} 
+    \end{subfigure}
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{flir_module_back.jpg} 
+    \end{subfigure}
+    \caption{ Front and back side of FLIR Lepton breakout board with thermal camera module inserted.}
+    \label{lepton_breakout}
+\end{figure}
+
+The task of an AGC subsystem is to convert a dynamic range of an IR sensor into a compact range that is more suitable for storing and displaying images.
+In the case of the FLIR Lepton, this is a 14-bit to 8-bit conversion.
+For our purposes, the AGC subsystem was turned on, as the inputs to our image classification model were 8-bit values.
+
+The microcontroller communicates with FLIR camera over two interfaces: A Two-Wire interface (TWI) is used for control of the FLIR camera and Lepton's VoSPI protocol is used for image transfer.
+
+\subsection{ PIR Sensor}
+
+We used a cheap, generic PIR sensor, that can be seen in Figure \ref{pir_sensor}.
+It has two potentiometers, which are used to adjust the sensor's sensitivity and detection delay.
+The PIR sensor runs on 3.3 V, which enables us to power it directly from the nRF52. 
+\newline
+\begin{figure}[ht] 
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{pir_top.jpg} 
+    \end{subfigure}
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{pir_bot.jpg} 
+    \end{subfigure}
+    \caption{ Front and back side of a PIR sensor.}
+    \label{pir_sensor}
+\end{figure}
+
+\section{ Firmware}
+\subsection{ Tools and development environment}
+
+For our firmware development we did not choose any of the integrated development environments, provided by different vendors.
+Instead we used the terminal text editor Vim for writing and editing the code.
+
+As we were programming two different microcontrollers, we were using different tools for each one.
+
+
+\subsubsection{ Development environment for STM32F767ZI}
+
+For building our firmware programs we used the GNU Make, a build automation system that builds software according to user written \textit{Makefiles}.
+To compile code we used the Arm embedded version of GNU GCC.
+To programme binaries into our microcontroller we used OpenOCD.
+
+For the hardware abstraction library we used libopencm3, which is an open-source low-level library that supports many of Arm's Cortex-M processors cores, which can be found in a variety of microcontroller families, such as ST's STM32, Toshiba's TX03, Atmel's SAM3U, NXP's LPC1000, Silabs's EFM32 and others.
+Libopencm3 provided us with linker files, start-up routines, thinly wrapped peripheral drivers and a starting template makefile, which served as the starting point for our project.
+
+As libopencm3 does not provide \verb|printf| functionality out of the box we used an excellent library by GitHub user mpaland\cite{printf_lib}.
+
+
+\subsubsection{ Development environment for nRF52840}
+
+To develop the firmware for nRF52 we decided to use The Zephyr OS, which is a small kernel, designed for IoT embedded systems.
+Besides the usual RTOS functionalities such as tasks, mutexes, semaphores, it also provides a common driver API for supported microcontrollers.
+
+
+\subsection{ Architecture design}
+
+The STM32 firmware was designed to be very efficient and lean, and only truly necessary parts of the firmware were implemented.
+
+As seen in Figure \ref{firmware_diagram} we split the firmware into a hardware module and application module.
+\newline
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=1.0\linewidth]{firmware_diagram.pdf} 
+        \caption{ Architecture diagram of the firmware that is running on the STM32 microcontroller.} 
+        \label{firmware_diagram}
+\end{figure}
+
+The hardware specific module is using mostly libopencm3 API to set the system clock and initialise peripherals.
+Small function wrappers had to be written to make use of various peripheral drivers easier.
+
+FLIR Lepton libraries provided by the camera manufacturer or open-source communities were too complex, and implemented way too many features that we did not need.
+We wrote the FLIR Lepton driver from scratch, while reusing some concepts from the official manufacturer's library.
+
+Thanks to TFLite Micro API, the ML inference module could be written as a simple black box: Image data goes in, predictions come out.
+
+The architecture diagram for nRF52 can be seen in Figure \ref{firmware_diagram_wisent}.
+For the nRF52 microcontroller we did not have to write any peripheral drivers, as they were provided by Zephyr itself.
+\newline
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=1.0\linewidth]{firmware_diagram_nrf.pdf} 
+        \caption{ Architecture diagram of the firmware that is running on the nRF52840 microcontroller.} 
+        \label{firmware_diagram_wisent}
+\end{figure}
+
+Extra care was given to low power consumption.
+That meant that the nRF52 had to spend most of its time in low-power mode, only waking up for regular system checks and PIR trigger signals.
+When the a PIR trigger signal is received, the interrupt wakes up the nRF52, which then enables a boost converter, thus enabling power to the STM32 and FLIR Lepton camera.
+Handling transitions to low-power state in Zephyr is quite straightforward, although, each individual peripheral has to be turned off explicitly.
+When entering a low-power state we turned off the UART and SPI peripherals, while GPIO stayed active, as we needed a wakeup interrupt.
+After receiving the interrupt we had to turn on each peripheral manually.
+
+For the communication interface, we decided to implement a simple UART shell module.
+We also wrote a communication module, which took care of controlling the LR1110 chip, joining the LoRaWAN network, preparing outgoing messages and sending them over the LoRaWAN network.
+
+\subsection{ FLIR Lepton driver}
+
+As mentioned before, the FLIR Lepton driver had to implement two different protocols to control the FLIR Lepton camera: TWI for general camera control and VoSPI for receiving images.
+
+TWI is a variation of an I2C protocol, but instead of 8 bits all transfers are 16 bits.
+The internal structure of the Lepton's control block can be seen in Figure \ref{flir_lepton_cci}.
+Whenever we are communicating with the FLIR camera we have to specify which subsystem we are we addressing, what type of action we want to do (get, set or run), length of data and the data themselves.
+
+We wrote the driver in such a way that the API hid low-level details of exact data transfers. 
+Two examples of such an API can be seen in Listing \ref{flir_api}.
+
+Lepton's VoSPI protocol (which is a variation of the SPI protocol) is used only to stream image data from the camera module to the microcontroller, which means that the MOSI line is not used.
+Each image fits into one VoSPI frame, and each frame consists of 60 VoSPI packets.
+One VoSPI packet contains 2 bytes of an ID field, 2 bytes of a CRC field and 160 bytes of data\footnotemark, which represents one image line.
+The ID field of a valid VoSPI packet contains the number of the equivalent frame row.
+The refresh rate of VoSPI frames is 27 \si{\hertz}, however, only every third frame is unique from the last one.
+It is the job of the microcontroller to control the SPI clock speed and process each frame fast enough so that each unique frame is not discarded.
+
+\footnotetext{ Because images pixel values fit into the 14-bit range by default, it means that one-pixel value needs two bytes of data (the two most significant bytes are zero). That means that each image line (80 pixels) is stored in 160 bytes. If AGC conversion is turned on, each pixel is then mapped into an 8-bit range, however, the size of one line in the VoSPI packet remains 160 bytes, and the 8 most significant bits are simply zeros.}
+Listing \ref{vospi_code} shows our implementation of a \verb|get_picture| function that was reading images from VoSPI protocol.
+\newline
+\begin{figure}[ht]
+        \centering
+        \includegraphics[height=17cm]{flir_lepton_cci.png} 
+        \caption[Command and control interface of an FLIR Lepton camera.]{Command and control interface of an FLIR Lepton camera. Image source: \cite{flir_datasheet}} 
+        \label{flir_lepton_cci}
+\end{figure}
+\clearpage
+To capture images from the VoSPI stream we implemented a finite state machine with three states: \verb|INIT|, \verb|OUT_OF_SYNC| and \verb|READING_FRAME|.
+State \verb|INIT| executes the chip select sequence expected by the FLIR camera.
+After that, we start clocking out a stream of VoSPI frames over the MISO line.
+Whenever we start communication, we do not know where exactly in stream we are, additionally, FLIR is also transmitting discard packets between valid frames.
+To solve this problem we have to check the ID field of every VoSPI packet and look for an ID byte with a value \verb|0x00|, while discarding packets with values \verb|0xFF|.
+When the first frame row is detected we simply start storing all incoming frame rows into a \verb|frame| variable, while checking that the ID byte is correct.
+We loop until all VoSPI packets of a single frame are received.
+If we somehow missed the VoSPI packet, we return early from the function.
+\newline
+\lstset{style=mystyle}
+\begin{figure}[ht]
+\begin{lstlisting}[language=C]
+/*!
+ * @brief               Function sets position of shutter
+ *
+ * @param[in] position  
+ */
+void set_flir_shutter_position(SHUTTER_POSITION position)
+{ 
+    if(!set_flir_command32(command_code(SHUTTER_POSITION, 
+                           LEP_I2C_COMMAND_TYPE_SET), 
+                           (uint32_t) position)) {
+        flir_print("Set shutter position : function failed!\n");
+    }
+}
+/*!
+ * @brief               Enable or disable AGC processing
+ *
+ * @param[in] position  If true AGC will be enabled
+ */
+void set_flir_agc(bool enable)
+{
+    if(!set_flir_command32(command_code(AGC_ENABLE_STATE, 
+                           LEP_I2C_COMMAND_TYPE_SET), 
+                           (uint32_t) enable)) {
+        flir_print("AGC mode: function failed!\n");
+    }
+}
+\end{lstlisting}
+\captionof{lstlisting}{ Examples of FLIR Lepton driver API.}
+\label{flir_api}
+\end{figure}
+
+\clearpage
+\lstset{style=mystyle}
+\begin{figure}[ht]
+\begin{lstlisting}[language=C]
+bool get_picture(uint16_t frame[60][82])
+{
+    state_e state = INIT;
+    uint8_t frame_row = 0;
+    while(1) 
+    {
+        switch(state) 
+        {
+            case INIT:
+                enable_flir_cs();
+                disable_flir_cs();
+                delay(185);
+                enable_flir_cs();
+                state = OUT_OF_SYNC;
+            break;
+
+            case OUT_OF_SYNC:
+                spi_read16(frame[frame_row], 82);
+                // Look for the start of the frame
+                if ((frame[frame_row][0] & 0x00FF) == 0x0) 
+                {
+                    // Start of frame detected
+                    frame_row++;
+                    state = READING_FRAME;
+                }
+            break;
+
+            case READING_FRAME:
+                spi_read16(frame[frame_row], 82);
+                // Check each frame row
+                if((frame[frame_row][0] & 0x00FF) == frame_row) 
+                {
+                    // Frame row matches
+                    frame_row++;
+                    if (frame_row == 60) 
+                    {
+                        // Full frame received, return to caller
+                        disable_flir_cs();
+                        return true
+                    }
+                }
+                else 
+                {
+                    // Error, end image reading
+                    disable_flir_cs();
+                    return false;
+                }
+            break;
+        }
+    }
+}
+\end{lstlisting}
+\captionof{lstlisting}{Example of finite state machine implementation for reading FLIR images over SPI.}
+\label{vospi_code}
+\end{figure}
+\clearpage
+\subsection{ Simple shell}
+
+The simple shell module controls the execution of all subroutines inside the STM32 firmware.
+The nRF52 microcontroller acts as a host and sends commands to the STM32, which executes commands and sends back the results.
+Listing \ref{simple_shell_code} shows the main \verb|simple_shell| function.
+
+\lstset{style=mystyle}
+\begin{figure}[ht]
+\begin{lstlisting}[language=C]
+/*!
+ * @brief       Supported shell commands
+ */
+typedef enum 
+{
+    INVALID_CMD,
+    BLINK,
+    ML,
+    FLIR,
+} shell_cmd; 
+
+/*!
+ * @brief       Entry point to simple shell, which does not
+ *              ever return. It calls all other modules and 
+ *              functions.
+ */
+void simple_shell()
+{
+    char buf[SHELL_BUF_LEN];
+    uint16_t len;
+    shell_cmd cmd;
+
+    put_line("$");
+    while (1) {
+        len = get_line(buf, SHELL_BUF_LEN);
+        if (len) {
+            cmd = parse_command(buf, len);
+
+            if (execute_command(cmd)) {
+                get_command_response(cmd, buf, SHELL_BUF_LEN);
+                put_line(buf);
+            }
+            else {
+                put_line("\nNOT OK\n");
+            }
+        }
+    }
+}
+\end{lstlisting}
+\captionof{lstlisting}{Code snippet of simple shell implementation.}
+\label{simple_shell_code}
+\end{figure}
+
+At the start of the while loop, function \verb|get_line()| returns when it receives a string, terminated with a newline character.
+Function \verb|parse_cmd| then decides with a set of \verb|strcmp| functions if the received command is supported.
+If yes, that command is later executed by the function \verb|execute_cmd| and a response is returned, returning result in the case of successful execution, or a fail reason in the case of failure.
+
+The module is written to be easily scalable, and when new functionality is added, it is trivial to extend the number of possible commands.
+Once we knew that the UART communication worked correctly, we could issue commands directly from the computer's serial port, which enabled us to develop and test firmware for the STM32 separately from the nRF52 firmware.
+
+
+\subsection{ MicroML and build system} \label{build_system_label}
+
+A large part of this thesis was concerned with porting TFLite Micro to the libopencm3, our platform of choice.
+To understand how this could be done, we first had to analyse how the code is built in TFLite Micro.
+
+To compile source files and build binaries TFLite Micro uses GNU Make.
+The main makefile includes several platform specific makefiles, which dictate how the firmware is built, and several bash scripts which download various dependencies.
+By providing command-line arguments users decide which example needs to be compiled and for which platform.
+The build system makes some assumptions about the locations of the platform specific files, which, in the case of example projects, are scattered over the whole TensorFlow GitHub repository.
+
+We learned a useful principle while analysing the build process. 
+Each time we would build an example for a new platform, Make would first compile all TensorFlow files, create a static library out of them, compile specific example source files and then link against the library in the linking stage.
+If we wanted to build firmware for a different example, but for the same platform, Make would only have to compile source files of that example, and link them with the previously made library.
+As compilation of required the TensorFlow files takes quite some time, this was an efficient option.
+
+After analysing the TFLite Micro's build system we created a list of the requirements that we wanted to fulfil on our platform:
+\newline
+\begin{enumerate}
+    \item We wanted to keep the project-specific code, libopencm3 code and TFLite Micro code separated.
+    \item We wanted a system where it would be easy to change a microcontroller specific part of a building process.
+    \item We wanted to reuse the static library principle that we saw in the TFLite Micro build process.
+\end{enumerate}
+
+Covering different platforms and use cases made the main TFLite Micro makefile quite complex and hard to understand.
+This meant that it would be hard to reuse it when porting to a new platform and we needed a different approach.
+
+To solve our problem we started developing a small project that we named MicroML\footnotemark.
+MicroML enables users to develop ML applications on microcontrollers supported by libopencm3.
+The project's directory structure can be seen in Figure \ref{microml_dir}
+\footnotetext{ Project is open-source and publicly available on GitHub\cite{microml}.}
+\newline
+\begin{figure}[ht] 
+    \centering
+    \begin{minipage}{7cm}
+    \dirtree{%
+    .1 MicroML.
+    .2 tensorflow.
+    .2 libopencm3.
+    .2 projects.
+    .3 hello\_world\_stm32f7.
+    .3 elephant\_stm32f7.
+    .4 test.
+    .4 src.
+    .4 Makefile.
+    .4 project.mk.
+    .4 openocd.cfg.
+    .2 archive\_makefile.
+    .2 rules.mk.
+    }
+    \end{minipage}
+    \caption{ Directory structure of the MicroML project.}
+    \label{microml_dir}
+\end{figure}
+
+Folders \verb|tensorflow| and \verb|libopencm| were cloned directly from their respective sources as Git submodules, which means that they are fixed at specific commits, usually at major release points.
+User specific projects are placed in \verb|projects| folder.
+Besides source files, each project has to contain three specific files:
+\newline
+\begin{itemize}
+    \item \textbf{project.mk} - It contains information on which files need to be compiled inside the project folder. It defines for which microcontroller the code needs to be compiled, and what kind of optimisation flags should be used.
+    \item \textbf{openocd.cfg} - A configuration file that tells OpenOCD which programmer interface needs to be used to flash a microcontroller, and the location of the binary file that needs to be flashed.
+    \item \textbf{Makefile} - The project's makefile that gathers source files inside the project folder. It makes it possible to call \verb|make| directly from the projects directory, which eases the development process. It does not specify any building rules; those are specified in the \verb|rules.mk| file in the root directory of the project.
+\end{itemize}
+Some initial commands need to be executed when the project is cloned from the GitHub for the first time. 
+Figure \ref{build_system} represents the complete build process.
+\newline
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=1.0\linewidth]{build_system.pdf} 
+        \caption{ Build system of MicroML project.} 
+        \label{build_system}
+\end{figure}
+\clearpage
+In the \textit{submodules setup} stage we first compile both of the submodules; this step requires two makefiles that are already provided by each submodule.
+Compiling libopencm3 creates a group of archive files (static libraries), which contain all platform specific code.
+Compiling a TensorFlow Hello World example does not produce any archive files that we would need, although, it does execute several scripts which download several different third party files.
+The TFLite Micro library depends on these files, which means that MicroML does as well.
+The \textit{Submodules setup} stage only has to be executed once.
+
+Whenever we start with a new project that will use ML algorithms, we need to go through the \textit{project setup} stage.
+From the main directory we execute \verb|make| with \verb|archive_makefile| and define the \verb|PROJECT| variable with the name of our project.
+\verb|Archive_makefile| looks into \verb|project.mk| and extracts the \verb|DEVICE| variable.
+Libopencm3's \verb|genlink-config.py| script then determines which microcontroller specific compilation flags\footnotemark are needed. 
+All needed TensorFlow source files and third party files are then compiled and a project specific \verb|microlite.a| archive file is created in our project's folder.
+\footnotetext{ For example, to compile firmware for STM32 we need flags \verb|-mcpu=cortex-m7|, \verb|-mthumb|, \verb|-mfloat-abi=hard| and \verb|-mfpu=fpv5-sp-d16|. They tell the GCC that we are compiling for a cortex-m7 processor, that we want to use a thumb instruction set and that we want to use a hardware floating-point unit with single precision.}
+
+The \textit{compile and flash} stage is then executed continuously during the development process.
+By calling \verb|make flash| directly in our project folder, we compile all project files, \verb|microlite.a| and libopencm3 archive files that were created early.
+Libopencm3 helper scripts (\verb|genlink-config.mk| and \verb|genlink-rules.mk|) provide us with the microcontroller specific flags and a linker script.
+After compilation a \verb|firmware.elf| is created, Make then calls OpenOCD automatically, which flashes a microcontroller.
+
+As flashing a big binary to a microcontroller takes a long time, we also created a similar setup for testing the inference directly on the host machine.
+That way we could test ML specific routines fast and remove any mistakes found on the way quickly.
+
+
+\subsection{ Running inference on a microcontroller}
+
+TFLite Micro API is fairly simple to use, and general enough that it can be copied from project to project without many modifications.
+Listing \ref{inference_code} shows a simplified inference code example, copied from our project.
+As a first step, we needed to define the size of the \verb|tensor_arena| array, which holds the memory of input, output, and intermediate arrays.
+The exact size of the \verb|tensor_arena| is determined by trial and error: We set it to some big value and then decrease it in steps.
+
+In lines 9 and 10 we created an instance of the \verb|ErrorReporter| object.
+This object serves as a thin wrapper around the platform specific \verb|printf| implementation.
+If some part of TensorFlow code crashes, \verb|ErrorReporter| notifies us what went wrong.
+In line 13 we pull in our ML model in hex dump format that we created with xxd.
+\verb|Full_quant_model| is defined in a different file, not seen in this example.
+
+In lines 16 to 24 we created an operation resolver.
+One way to do it is to specify each required operation specifically (which is done in the example) or simply pull in all operations.
+The latter approach is not recommended, as it results in a large binary size.
+To find out exactly which operations were required we used the online tool Netron\cite{netron}, which showed us a deconstructed view of a trained model.
+
+In lines 27 and 33 we created an \verb|MicroInterpreter| instance and allocated the memory to it that we specified with \verb|tensor_arena| earlier.
+Lines 37 and 38 assigned input and output of the interpreter to the new \verb|TfLiteTensor| variables.
+This step enabled us to do two things.
+Firstly, variables \verb|input| and \verb|output| now point to information about data format: We can find out how many dimensions are needed, what is the size of those dimensions, and what is the expected type of the variable (\verb|uint8_t|, \verb|int8_t|, \verb|float|...).
+In tests that we were running on the laptop, we tested exactly for these values to confirm that the model worked as expected.
+Secondly, we now had a way to feed data directly into input, and this is done in the for loop on line 41.
+One of the \verb|TfLiteTensor| members is a union variable \verb|data| which contains variables of all possible types.
+This type of structure enabled us to load input with any kind of data, in our case \verb|int8|.
+
+
+\lstset{style=mystyle}
+\begin{figure}[ht]
+\begin{lstlisting}[language=C]
+// An area of memory to use for input, output, 
+// and intermediate arrays.
+const int kTensorArenaSize = 200 * 1024;
+static uint8_t tensor_arena[kTensorArenaSize];
+
+int main() 
+{
+    // Debug print setup
+    tflite::MicroErrorReporter micro_error_reporter;
+    tflite::ErrorReporter *error_reporter = &micro_error_reporter;
+
+    // Map the model into a usable data structure
+    const tflite::Model* model = tflite::GetModel(full_quant_tflite);
+
+    // Pull in needed operations
+    static tflite::MicroMutableOpResolver<8> micro_op_resolver;
+    micro_op_resolver.AddConv2D();
+    micro_op_resolver.AddMaxPool2D();
+    micro_op_resolver.AddReshape();
+    micro_op_resolver.AddFullyConnected();
+    micro_op_resolver.AddSoftmax();
+    micro_op_resolver.AddDequantize();
+    micro_op_resolver.AddMul();
+    micro_op_resolver.AddAdd();
+
+    // Build an interpreter to run the model with.
+    static tflite::MicroInterpreter interpreter(model, 
+                                                micro_op_resolver, 
+                                                tensor_arena,
+                                                kTensorArenaSize, 
+                                                error_reporter);
+    // Allocate memory from the tensor_arena
+    interpreter->AllocateTensors();
+
+    // Get information about the memory area 
+    // to use for the model's input.
+    TfLiteTensor* input  = interpreter->input(0);
+    TfLiteTensor* output = interpreter->output(0);
+
+    // Load data from image array
+    for (int i = 0; i < input->bytes; ++i) {
+        input->data.int8[i] = image_array[i];
+    }
+
+    // Run the model on this input and time it
+    uint32_t start = dwt_read_cycle_counter();
+    interpreter->Invoke();
+    uint32_t end   = dwt_read_cycle_counter();
+    
+    // Print probabilites and time elapsed
+    print_result(error_reporter, output, dwt_to_ms(end-start));
+}
+\end{lstlisting}
+\captionof{lstlisting}{ Example of TensorFlow Lite inference code in C++.}
+\label{inference_code}
+\end{figure}
+
+\clearpage
+In line 47 we finally invoked interpreter and ran inference on input data.
+The whole expression was surrounded by the timing functions, which were used to keep track of the time spent computing inference.
+
+We finally called \verb|print_results|, written by us, where we passed \verb|error_reporter| for printing, \verb|output| for extracting computed probabilities and elapsed time.
+
+After the initial setup, we could load data, call invoke, and print results as many times we wanted.
+
+
+\section{ Server-side components and software}
+
+In this Section, we describe the possible server-side construction of various frameworks which enable us to receive LoRaWAN messages, parse them, store them in a database and visualise them.
+We did not implement this specific setup as it was not required for testing purposes, however, at IRNAS, we use this setup for our IoT products and implementation of a such system would be trivial.
+
+The system that we use consists of different tools, each one with a distinct task.
+These tools are The Things Network (TTN), Node-RED, InfluxDB and Grafana.
+The flow of information and tasks for each tool is presented in Figure \ref{server_side}.
+\newline
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\linewidth]{server_side.pdf} 
+    \caption[Server side flow of information.]{Server side flow of information. Icons source:\cite{icons}}
+    \label{server_side}
+\end{figure}
+
+TTN is responsible for routing packets that are captured by a gateway to the application server.
+Since it is open-source and free, anyone can register their gateway device into the network and, thus, help to extend it.
+TTN is web-based, so we can see payload messages directly in the browser.
+Since data are usually encoded in binary format, we can provide a decoder-script written in JavaScript and TTN will pass each message into it automatically, thus decoding it.
+
+Node-RED functions as a glue logic that parses packets and shapes them into a format that is required by InfluxDB.
+Node-RED provides a browser-based flow editor, where actual programming can be done graphically.
+Logic is programmed by choosing different blocks, called \textit{nodes}, and connecting them.
+This is convenient, as Node-RED provides different nodes for communicating with different technologies, such as MQTT, HTTP requests, emails, Twitter accounts and others.
+In our use case, we needed to use the nodes seen in Figure \ref{nodered_flow}.
+The node \textit{Elephant Gateway} is connected to a specific application on TTN, which is used for the collection of packets from our devices in the field.
+Any packet that will appear in that TTN application will also appear in Node-RED.
+The node \textit{Parse packet} extracts information contained in each packet and stores it in a specific format, which is finally sent to the \textit{Elephant Database} node.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\linewidth]{nodered_flow.png} 
+    \caption{ Node-RED flow}
+    \label{nodered_flow}
+\end{figure}
+
+\textit{Elephant Database} is connected to InfluxDB, which is a time-series database.
+Any packet that is saved in it is timestamped automatically.
+
+Data are then visualised in Grafana. 
+Grafana is an open-source analytics and monitoring solution.
+Users define which database is set as a source, and Grafana provides graphical controls which are, at some point, converted into SQL-like language, understandable to InfluxDB.
+Grafana provides different types of visualisations, such as graphs, gauges, heat maps, alert lists and others.
+In our use case, we could display information about various devices in the field, such as battery voltage, number of wakeup triggers, results of each inference, and others.
+
+An example of a Grafana graph can be seen in Figure \ref{grafana}.
+\newline
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\linewidth]{grafana.png} 
+    \caption{ Example of a Grafana graph.}
+    \label{grafana}
+\end{figure}
+
+One important quality of Node-RED, InfluxDB and Grafana is that they can run directly on an embedded Linux system, such as Raspberry Pi or BeagleBone, which lowers the cost of hardware that is needed greatly .
