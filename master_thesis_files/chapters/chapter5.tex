@@ -654,7 +654,7 @@ Measurements analysis is done with a desktop application, example of it is seen 
 The application enables users to select a part of the measurement, for which it computes minimum, maximum and average values automatically.
 To present our results we exported the current measurements in CVS format and plotted them with Matplotlib.
 
-In the next Section we evaluate the power consumption of our embedded early warning system.
+In the following Section we evaluated the power consumption of our embedded early warning system.
 We first measured the power consumption of the nRF52 microcontroller in a low-power state, then we connected the LR1110 evaluation shield to the nRF52840 DK board and repeated the measurement.
 We then connected Nucelo-F767ZI and the FLIR camera, and measured power consumption of the whole detection sequence.
 \begin{figure}[ht]
@@ -688,7 +688,7 @@ Due to the sudden change in voltage their impedance is low, therefore, more curr
 The pyramid looking shape between 0.5 and 1 second happens due to the onboard regulators turning on.
 
 The smaller graph inside Figure \ref{mcu_in_sleep} shows a close up view of the current consumption.
-The peaks reached 70.3 \si{\micro\ampere}, steady state was at 6.9 \si{\micro\ampere}, while the average was 9.1 \si{\micro\ampere}.
+The peaks reached 70.3 \si{\micro\ampere}, steady state was at 6.9 \si{\micro\ampere}, while the average current was 9.1 \si{\micro\ampere}.
 Peaks were repeating at a frequency of 33.3 \si{\hertz}.
 \clearpage
 The measured average current was higher than expected, according to the nRF52's datasheet\cite{nrf52_datasheet} current consumption should be 3.16 \si{\micro\ampere}.
@@ -756,7 +756,7 @@ If we add the transmission of the LoRaWAN message to the measured current consum
 The measured low-power state of nRF52, visible in Figure \ref{mcu_in_sleep}, was higher than expected.
 nRF52's datasheet\cite{nrf52_datasheet} specifies current consumptions in many different conditions, which depend on: Type of sleep mode (System ON or System OFF, the latter loses execution context at wakeup), the amount of RAM retention and type of wakeup event.
 Consumption can range from 0.95 \si{\micro\ampere} to 17.37 \si{\micro\ampere}.
-Because Zephyr provides only abstract interface to power management, implementation of which is platform dependent, we can only guess which exact nRF52 sleep mode Zephyr uses.
+Because Zephyr provides only abstract interface to power management, implementation of which is platform dependent, further research is needed to determine which exact nRF52 sleep mode Zephyr uses.
 We assumed an expected current consumption of 3.16 \si{\micro\ampere} as this is the specified current consumption in System ON mode with full RAM retention and LFRC set as a wakeup event.
 Another reason for increased power consumption could also be inadequate support circuitry of the nRF52840 DK board.
 
@@ -765,7 +765,7 @@ LR1110 enters sleep mode automatically when it is finished with communication; a
 This current consumption is plausible, as we observed it in other IRNAS's products that use the LR1110 chip.
 We suspect that the incorrect state of common GPIO connections between LR1110 and nRF52 was the reason for the increased current consumption, although, we were not able to fix the problem.
 
-We mentioned that the time required for detection was about 1480\si{\milli\second}, if we captured one image and processed it or 2960 \si{\milli\second} if done five times.
+We mentioned that the time required for detection was about 1480\si{\milli\second}, if we captured one image and processed it or 2960 \si{\milli\second}, if done five times.
 We can see that both detection procedures started with 700 \si{\milli\second} of delay.
 According to the FLIR Lepton's datasheet \cite{flir_datasheet}, a delay is required before we can start communicating with the camera over the TWI interface.
 Two microcontroller resets are visible, during our testing we saw that we could not communicate with the camera properly, if we did not reset the STM32 twice before that.
@@ -774,9 +774,9 @@ To accomplish this we simply connected the reset pin of STM32 with one of availa
 
 \subsection{ Battery life estimations}
 
-Table \ref{lifetime_data} shows parameters values that we used in \ref{lifetime_equ} of battery lifetime.
+Table \ref{lifetime_data} shows parameters values that we used in \ref{lifetime_equ} to calculate battery lifetime.
 We defined a detection as a sequence where image capture and inference were repeated 5 times and then followed by a LoRaWAN message.
-In our calculation we also accounted for one daily LoRaWAN message, which was meant for system reporting.
+In our calculation we also accounted for one daily LoRaWAN message, which would report system status.
 We assumed that the system is in low-power mode when it is not performing detection sequence or sending a LoRaWAN message.
 As a power source we chose a lithium-ion cell battery NCR 18650B of the manufacturer Panasonic.
 Its properties can be seen in Table \ref{lifetime_data}.
@@ -830,7 +830,7 @@ $N_{bat}$ - Number of batteries
 
 Because we could only assume how frequently our system had to perform the detection sequence, we repeated our calculation for several different numbers of detections per day.
 We also varied the number of battery cells.
-The enclosure that we planned to use has enough space for up to 6 battery cells.
+The enclosure that we planned to use had enough space for up to 6 battery cells.
 The results of the estimations can be seen in Figure \ref{lifetime_figure}.
 The X axis represents the number of battery cells, the Y axis represents the system life time in months, and the colour of the lines represents the number of detections per day, from 100 to 600.
 
@@ -847,11 +847,11 @@ There are some things that we have to take into account.
 We assumed 100 \% battery efficiency, meaning that each battery would provide its complete nominal capacity, in our case 3350 \si{\milli\ampere\hour}.
 In practice this is not possible, due to effects such as self-discharge rate, high discharge profiles and temperature influences.
 On the other hand, we assumed that we would process same amount of detections everyday, which was in the worst case 600.
-This number is probably too high, and the actual system lifetime should be longer.
+This is unlikely to happen and 600 detection per day is quite high so we expected the actual system lifetime to be longer.
 Such effects and conditions can drastically change the lifetime of the system and can be hard to estimate.
 
 While calculating the system lifetime, we tried changing the input parameters to see which ones affected the final lifetime of the system the most.
-We found out that, by decreasing current consumption in the low-power state by ten times (from 206.8 \si{\micro\ampere} to 21 \si{\micro\ampere}), we did not increase the system's lifetime dramatically.
+We found out that, by decreasing current consumption in the low-power state by a factor of ten (from 206.8 \si{\micro\ampere} to 21 \si{\micro\ampere}), we did not increase the system's lifetime dramatically.
 With 6 batteries and 600 detections per day the lifetime increased to 10.5 months from 9.9 months.
 However, we saw a large increase in the system's lifetime if we halved either the current consumption of a detection event or its duration, with same conditions as before the system's lifetime increased from 9.9 to 18.5 months.
 This means that in order to increase the system's lifetime or to keep it the same with a smaller number of batteries, we should focus on lowering the power consumption of detection events rather than lowering the low-power state current.
