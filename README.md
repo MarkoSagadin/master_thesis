@@ -4,7 +4,7 @@
 
 This repository contains files that were created while writing my Master's thesis, as well as presentation files for thesis defence.
 
-Final version of the thesis is available in `final_thesis_pdf` folder, as well as in Digital library of University of Maribor (Todo add link).
+Final version of the thesis is available in `final_thesis_pdf` folder, as well as in Digital library of University of Maribor, available [here](https://dk.um.si/IzpisGradiva.php?id=78319&lang=slv).
 
 ## Abstract
 
